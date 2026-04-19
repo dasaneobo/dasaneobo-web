@@ -203,7 +203,7 @@ export default function AdminPage() {
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '1rem' }}>
                   <input type="text" defaultValue={billboard.title} onBlur={(e) => updateAd(billboard.id, { title: e.target.value })} style={{ padding: '0.6rem', border: '1px solid #ddd', borderRadius: '4px' }} placeholder="광고 제목" />
                   <input type="text" defaultValue={billboard.description} onBlur={(e) => updateAd(billboard.id, { description: e.target.value })} style={{ padding: '0.6rem', border: '1px solid #ddd', borderRadius: '4px' }} placeholder="상세 설명 / 축제 기간 등" />
-                  <input type="text" defaultValue={billboard.target_url} onBlur={(e) => updateAd(billboard.id, { target_url: e.target.value })} style={{ padding: '0.6rem', border: '1px solid var(--primary)', borderRadius: '4px', background: '#f0fdf4' }} placeholder="랜딩 페이지 URL (http://...)" />
+                  <input type="text" defaultValue={billboard.link_url} onBlur={(e) => updateAd(billboard.id, { link_url: e.target.value })} style={{ padding: '0.6rem', border: '1px solid var(--primary)', borderRadius: '4px', background: '#f0fdf4' }} placeholder="랜딩 페이지 URL (http://...)" />
                 </div>
             </div>
 
@@ -220,7 +220,7 @@ export default function AdminPage() {
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '1rem' }}>
                   <input type="text" defaultValue={sidebar.title} onBlur={(e) => updateAd(sidebar.id, { title: e.target.value })} style={{ padding: '0.6rem', border: '1px solid #ddd', borderRadius: '4px' }} placeholder="광고 제목" />
                   <input type="text" defaultValue={sidebar.description} onBlur={(e) => updateAd(sidebar.id, { description: e.target.value })} style={{ padding: '0.6rem', border: '1px solid #ddd', borderRadius: '4px' }} placeholder="연락처 / URL 등" />
-                  <input type="text" defaultValue={sidebar.target_url} onBlur={(e) => updateAd(sidebar.id, { target_url: e.target.value })} style={{ padding: '0.6rem', border: '1px solid var(--primary)', borderRadius: '4px', background: '#f0fdf4' }} placeholder="랜딩 페이지 URL (http://...)" />
+                  <input type="text" defaultValue={sidebar.link_url} onBlur={(e) => updateAd(sidebar.id, { link_url: e.target.value })} style={{ padding: '0.6rem', border: '1px solid var(--primary)', borderRadius: '4px', background: '#f0fdf4' }} placeholder="랜딩 페이지 URL (http://...)" />
                 </div>
             </div>
           </div>

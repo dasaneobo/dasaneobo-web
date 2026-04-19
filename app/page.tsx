@@ -40,7 +40,7 @@ export default async function Home() {
       {/* 1. Top Billboard Ad (Strategy #1) */}
       {billboardAd && (
         <div className="container" style={{ marginTop: '1.5rem' }}>
-          <Link href={billboardAd.target_url || '#'} style={{ textDecoration: 'none' }} target={billboardAd.target_url?.startsWith('http') ? '_blank' : '_self'}>
+          <Link href={billboardAd.link_url || '#'} style={{ textDecoration: 'none' }} target={billboardAd.link_url?.startsWith('http') ? '_blank' : '_self'}>
             <div style={{ 
               width: '100%', 
               height: '110px', 
@@ -128,7 +128,7 @@ export default async function Home() {
 
              {/* Ad / Sponsorship Inquiry (Strategy #1-3) */}
              {sidebarAd && (
-               <Link href={sidebarAd.target_url || '#'} style={{ textDecoration: 'none', color: 'inherit' }} target={sidebarAd.target_url?.startsWith('http') ? '_blank' : '_self'}>
+               <Link href={sidebarAd.link_url || '#'} style={{ textDecoration: 'none', color: 'inherit' }} target={sidebarAd.link_url?.startsWith('http') ? '_blank' : '_self'}>
                  <div style={{ 
                    marginTop: '1.5rem', 
                    padding: '1.5rem', 
