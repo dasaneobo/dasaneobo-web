@@ -179,7 +179,7 @@ export default async function Home() {
                   </Link>
                 ))}
                 {safeArticles.filter(a => a.region === region).length === 0 && <p style={{ color: '#ccc', fontSize: '0.8rem' }}>최신 소식이 없습니다.</p>}
-                <Link href={`/category/${region}`} style={{ fontSize: '0.8rem', color: '#666', textDecoration: 'none', fontWeight: 700 }}>{region} 소식 더보기 +</Link>
+                <Link href={`/${region === '강진' ? 'gangjin' : region === '보성' ? 'boseong' : region === '장흥' ? 'jangheung' : 'goheung'}`} style={{ fontSize: '0.8rem', color: '#666', textDecoration: 'none', fontWeight: 700 }}>{region} 소식 더보기 +</Link>
               </div>
             ))}
           </div>
