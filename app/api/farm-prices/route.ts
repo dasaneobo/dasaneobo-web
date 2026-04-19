@@ -6,20 +6,8 @@ const supabaseAdmin = createClient(
   process.env.SUPABASE_SERVICE_ROLE_KEY || ''
 );
 
-const ITEMS = [
-  { category: '100', code: '111', name: '쌀', unit: '20kg' }, // 쌀은 곡류(100), 품목 111 (보통 쌀 20kg)
-  { category: '200', code: '211', name: '배추', unit: '1포기' }, // 채소류(200), 품목 211
-  { category: '200', code: '214', name: '마늘', unit: '1kg' },
-  { category: '100', code: '143', name: '고구마', unit: '1kg' },
-  { category: '200', code: '245', name: '양파', unit: '1kg' },
-  { category: '100', code: '141', name: '감자', unit: '1kg' },
-];
-
 /**
- * KAMIS API codes change occasionally. 
- * Based on user requested mapping (simplified):
- * 쌀 (100, 01) -> p_item_category_code=100, p_item_code=111 typically
- * we'll use a mapping that tries to match the user's intent.
+ * KAMIS API codes mapping
  */
 const TARGET_ITEMS = [
   { cat: '100', item: '111', name: '쌀', unit: '20kg' },
@@ -31,9 +19,6 @@ const TARGET_ITEMS = [
 ];
 
 export async function GET(req: Request) {
-  // Check auth for Cron (Vercel sets CRON_SECRET or check headers)
-  // For simplicity here, we allow it, but in production check headers.
-  
   const apiKey = process.env.KAMIS_API_KEY;
   if (!apiKey) {
     return NextResponse.json({ error: 'KAMIS_API_KEY missing' }, { status: 500 });
@@ -43,7 +28,6 @@ export async function GET(req: Request) {
   const results: any[] = [];
 
   try {
-    // We need to fetch for categories 100 and 200
     const categories = ['100', '200'];
     
     for (const cat of categories) {
@@ -55,15 +39,13 @@ export async function GET(req: Request) {
       if (data.data && data.data.item) {
         const items = Array.isArray(data.data.item) ? data.data.item : [data.data.item];
         
-        // Filter for 광주 각화동 (Gwangju Gakhwa market often has name '각화' or '광주각화')
-        // We'll filter items belonging to target list
         items.forEach((item: any) => {
           const target = TARGET_ITEMS.find(t => t.cat === cat && t.item === item.item_code);
           if (target && (item.county_name?.includes('광주') || item.market_name?.includes('각화'))) {
             results.push({
               item_name: target.name,
               price: item.dpr1?.replace(/,/g, '') || '0',
-              diff: item.dpr2?.replace(/,/g, '') || '0', // dpr2 is often the change
+              diff: item.dpr2?.replace(/,/g, '') || '0',
               unit: target.unit,
               updated_at: new Date().toISOString()
             });
@@ -72,7 +54,6 @@ export async function GET(req: Request) {
       }
     }
 
-    // Update Supabase
     if (results.length > 0) {
       const { error } = await supabaseAdmin
         .from('farm_prices')
