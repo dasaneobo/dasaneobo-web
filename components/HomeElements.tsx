@@ -267,11 +267,11 @@ export function TransparencyBanner({ settings }: { settings?: any }) {
           <ShieldCheck size={24} color="var(--primary)" />
           <h4 style={{ margin: 0, fontSize: '1.2rem', fontWeight: 800 }}>유리알 보도원칙</h4>
         </div>
-        <p style={{ fontSize: '0.9rem', lineHeight: '1.6', opacity: 0.9, marginBottom: '1.5rem', whiteSpace: 'pre-line' }}>
+        <p style={{ fontSize: '0.9rem', lineHeight: '1.6', opacity: 0.9, marginBottom: '1.5rem', whiteSpace: 'pre-line', wordBreak: 'keep-all' }}>
           강진·고흥·보성·장흥의 이야기,{"\n"}
           우리가 직접 씁니다.{"\n\n"}
-          오직 구독자와 마을 리포터 여러분의 힘으로 운영되는{"\n"}
-          독립 지역 언론입니다.
+          오직 구독자와 마을 리포터 여러분의{"\n"}
+          힘으로 운영되는 독립 지역 언론입니다.
         </p>
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
           <div style={{ background: 'rgba(255,255,255,0.1)', padding: '1rem', borderRadius: '8px', textAlign: 'center' }}>
