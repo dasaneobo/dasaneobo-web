@@ -4,10 +4,10 @@ import React, { useState, useEffect } from 'react';
 import emailjs from '@emailjs/browser';
 import Header from '@/components/Header';
 
-// Constants - Use environment variables if available
-const EMAILJS_PUBLIC_KEY = process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY || 'YOUR_EMAILJS_PUBLIC_KEY';
-const EMAILJS_SERVICE_ID = process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID || 'YOUR_SERVICE_ID';
-const EMAILJS_TEMPLATE_ID = process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID || 'YOUR_TEMPLATE_ID';
+// Constants - Use environment variables
+const EMAILJS_PUBLIC_KEY = process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY || '';
+const EMAILJS_SERVICE_ID = process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID || '';
+const EMAILJS_TEMPLATE_ID = process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID || '';
 
 export default function SubscribePage() {
   const [currentPlan, setCurrentPlan] = useState('연간 구독');
@@ -528,19 +528,6 @@ export default function SubscribePage() {
           .notice.error  { background: #fdf1ef; border-left: 3px solid var(--red); color: #7a1a14; }
           .notice.success{ background: var(--green-l); border-left: 3px solid var(--green-d); color: #1a4a2e; }
 
-          .setup-banner {
-            max-width: 560px; margin: 20px auto 0;
-            padding: 14px 16px;
-            background: var(--paper2);
-            border: 1px dashed var(--rule);
-            border-radius: 6px;
-            font-size: 12px; color: var(--ink2); line-height: 1.9;
-          }
-          .setup-banner code {
-            font-size: 11px; background: #fff;
-            padding: 1px 5px; border-radius: 3px;
-            font-family: monospace; color: var(--red);
-          }
 
           .footer-sub {
             max-width: 860px; margin: 48px auto 0;
@@ -754,11 +741,6 @@ export default function SubscribePage() {
           )}
         </div>
 
-        <div className="setup-banner">
-          <strong>⚙️ 설정 안내</strong> — EmailJS 3곳을 .env.local에 설정하세요.<br />
-          <code>NEXT_PUBLIC_EMAILJS_PUBLIC_KEY</code> · <code>NEXT_PUBLIC_EMAILJS_SERVICE_ID</code> · <code>NEXT_PUBLIC_EMAILJS_TEMPLATE_ID</code><br />
-          템플릿 변수: <code>{"{{plan}}"}</code> <code>{"{{amount}}"}</code> <code>{"{{name}}"}</code> <code>{"{{phone}}"}</code> <code>{"{{email}}"}</code> <code>{"{{address}}"}</code> <code>{"{{note}}"}</code> <code>{"{{submitted_at}}"}</code>
-        </div>
 
         <div className="footer-sub">
           다산어보 언론협동조합 · 전라남도 강진군<br />

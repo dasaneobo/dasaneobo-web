@@ -23,6 +23,14 @@ export default function ReportPage() {
     senderName: '', senderContact: ''
   });
 
+  // EmailJS Setup
+  useEffect(() => {
+    const pubKey = process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY;
+    if (pubKey) {
+      emailjs.init({ publicKey: pubKey });
+    }
+  }, []);
+
   useEffect(() => {
     const checkAuth = async () => {
       const { data: { session } } = await supabase.auth.getSession();
@@ -98,6 +106,37 @@ export default function ReportPage() {
       });
 
       if (!response.ok) throw new Error('업로드 중 오류가 발생했습니다.');
+
+      const responseData = await response.json();
+      const highResUrl = responseData.data?.high_res_url || '';
+      const lowResUrl = responseData.data?.low_res_url || '';
+
+      // 2. EmailJS 데스크 알림 전송 (신규 추가)
+      const serviceId = process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID;
+      const templateId = process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID_REPORT;
+      
+      if (serviceId && templateId) {
+        try {
+          await emailjs.send(serviceId, templateId, {
+            report_style: selectedStyle,
+            who: formData.who,
+            what: formData.what,
+            when: formData.when,
+            where: formData.where,
+            how: formData.how,
+            why: formData.why,
+            extra: formData.extra || '(없음)',
+            sender_name: formData.senderName,
+            sender_contact: formData.senderContact,
+            high_res_url: highResUrl,
+            low_res_url: lowResUrl,
+            submitted_at: todayStr()
+          });
+        } catch (mailErr) {
+          console.error('Email Notification Error:', mailErr);
+          // 알림 전송 실패해도 DB 저장은 완료되었으므로 알림만 로깅
+        }
+      }
 
       setNotice({ msg: '✓ 제보가 DB에 저장되었으며, 사진이 구글 드라이브와 데스크로 전송되었습니다.', success: true });
       
