@@ -105,7 +105,7 @@ import { supabase } from '@/lib/supabase';
 import { BarChart3, Users, HandCoins, TreePalm, ShieldCheck, PieChart, TrendingUp, Info, CloudSun, Thermometer, ShoppingBag, Tags, Newspaper, ExternalLink, MapPin } from 'lucide-react';
 
 export function InfographicDashboard({ settings }: { settings?: any }) {
-  const [activeTab, setActiveTab] = useState<'data' | 'news'>('data');
+  const [activeTab, setActiveTab] = useState<'data' | 'news'>('news');
   const [selectedRegion, setSelectedRegion] = useState('강진');
   const [agriPrices, setAgriPrices] = useState<any[]>([]);
   const [localNews, setLocalNews] = useState<any[]>([]);
@@ -153,17 +153,6 @@ export function InfographicDashboard({ settings }: { settings?: any }) {
         {/* Tab Switcher */}
         <div style={{ background: '#eee', padding: '4px', borderRadius: '8px', display: 'flex', gap: '4px' }}>
           <button 
-            onClick={() => setActiveTab('data')}
-            style={{ 
-              padding: '0.6rem 1.2rem', borderRadius: '6px', border: 'none', fontSize: '0.85rem', fontWeight: 700, cursor: 'pointer',
-              background: activeTab === 'data' ? 'white' : 'transparent',
-              color: activeTab === 'data' ? '#111' : '#777',
-              boxShadow: activeTab === 'data' ? '0 2px 4px rgba(0,0,0,0.05)' : 'none'
-            }}
-          >
-            데이터 지표
-          </button>
-          <button 
             onClick={() => setActiveTab('news')}
             style={{ 
               padding: '0.6rem 1.2rem', borderRadius: '6px', border: 'none', fontSize: '0.85rem', fontWeight: 700, cursor: 'pointer',
@@ -173,6 +162,17 @@ export function InfographicDashboard({ settings }: { settings?: any }) {
             }}
           >
             지역 뉴스
+          </button>
+          <button 
+            onClick={() => setActiveTab('data')}
+            style={{ 
+              padding: '0.6rem 1.2rem', borderRadius: '6px', border: 'none', fontSize: '0.85rem', fontWeight: 700, cursor: 'pointer',
+              background: activeTab === 'data' ? 'white' : 'transparent',
+              color: activeTab === 'data' ? '#111' : '#777',
+              boxShadow: activeTab === 'data' ? '0 2px 4px rgba(0,0,0,0.05)' : 'none'
+            }}
+          >
+            데이터 지표
           </button>
         </div>
       </div>

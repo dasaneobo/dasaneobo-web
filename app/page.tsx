@@ -139,7 +139,7 @@ export default async function Home() {
                   <div style={{ fontSize: '0.7rem', color: 'var(--primary-dark)', fontWeight: 800, marginBottom: '0.4rem', border: '1px solid var(--primary)', display: 'inline-block', padding: '1px 6px', borderRadius: '4px' }}>PARTNERSHIP</div>
                   <h5 style={{ margin: '0.5rem 0 1rem', fontSize: '1.1rem', fontWeight: 800 }}>{sidebarAd.title}</h5>
                   <p style={{ fontSize: '0.8rem', color: '#666', lineHeight: '1.5', marginBottom: '1.2rem' }}>{sidebarAd.description}</p>
-                  <Link href={sidebarAd.link_url || "/ad-inquiry"} style={{ textDecoration: 'none' }}>
+                  <Link href="/reporter-recruit" style={{ textDecoration: 'none' }}>
                     <button style={{ 
                       width: '100%', 
                       padding: '0.7rem', 
@@ -150,7 +150,7 @@ export default async function Home() {
                       fontWeight: 'bold', 
                       cursor: 'pointer',
                       fontSize: '0.85rem'
-                    }}>광고 및 후원 문의하기</button>
+                    }}>마을리포터 신청</button>
                   </Link>
                </div>
              )}

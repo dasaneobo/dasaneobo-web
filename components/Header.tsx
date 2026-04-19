@@ -181,20 +181,38 @@ export default function Header() {
             color: '#333',
             whiteSpace: 'nowrap'
           }}>
-            {categories.map((cat, idx) => (
-              <li key={idx} style={{ 
-                padding: '1rem 1.2rem', 
-                cursor: 'pointer',
-                color: idx < 5 ? 'var(--primary-dark)' : '#333', // Highlight region menus
-                borderBottom: '3px solid transparent',
-                transition: 'all 0.2s'
-              }} 
-              onMouseEnter={(e) => e.currentTarget.style.borderBottom = '3px solid var(--primary)'}
-              onMouseLeave={(e) => e.currentTarget.style.borderBottom = '3px solid transparent'}
-              >
-                {cat}
-              </li>
-            ))}
+            {categories.map((cat, idx) => {
+              const categoryLinks: { [key: string]: string } = {
+                '지역별': '/region',
+                '강진': '/gangjin',
+                '보성': '/boseong',
+                '장흥': '/jangheung',
+                '고흥': '/goheung',
+                '리포터 수첩': '/reporter',
+                '행정': '/administration',
+                '정치': '/politics',
+                '경제': '/economy',
+                '사회': '/society',
+                '문화': '/culture',
+                '칼럼': '/column'
+              };
+              return (
+                <Link key={idx} href={categoryLinks[cat] || '#'} style={{ textDecoration: 'none', color: 'inherit' }}>
+                  <li style={{ 
+                    padding: '1rem 1.2rem', 
+                    cursor: 'pointer',
+                    color: idx < 5 ? 'var(--primary-dark)' : '#333', // Highlight region menus
+                    borderBottom: '3px solid transparent',
+                    transition: 'all 0.2s'
+                  }} 
+                  onMouseEnter={(e) => e.currentTarget.style.borderBottom = '3px solid var(--primary)'}
+                  onMouseLeave={(e) => e.currentTarget.style.borderBottom = '3px solid transparent'}
+                  >
+                    {cat}
+                  </li>
+                </Link>
+              );
+            })}
           </ul>
         </div>
       </div>
