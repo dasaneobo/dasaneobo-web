@@ -110,7 +110,10 @@ export default function Header() {
           {userProfile ? (
             <div style={{ display: 'flex', alignItems: 'center', gap: '1.2rem', paddingRight: '1rem', borderRight: '1px solid #eee' }}>
                <div style={{ textAlign: 'right' }}>
-                 <div style={{ fontSize: '0.8rem', fontWeight: 700, color: '#333' }}>{userProfile.name} 님</div>
+                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', justifyContent: 'flex-end' }}>
+                   <div style={{ fontSize: '0.8rem', fontWeight: 700, color: '#333' }}>{userProfile.name} 님</div>
+                   <Link href="/profile" style={{ fontSize: '0.65rem', color: '#888', textDecoration: 'none', border: '1px solid #ddd', padding: '1px 5px', borderRadius: '4px' }}>정보수정</Link>
+                 </div>
                  <div style={{ fontSize: '0.65rem', color: 'var(--primary-dark)', fontWeight: 600 }}>
                    {userProfile.role === 'admin' ? '최고관리자' : userProfile.role === 'editor' ? '편집국 데스크' : userProfile.role === 'reporter' ? '지역 리포터' : '독자 회원'}
                  </div>
