@@ -10,6 +10,29 @@ import MarkdownRenderer from '@/components/MarkdownRenderer';
 
 export const revalidate = 0; // Ensure data is always fetch freshly
 
+export async function generateMetadata({ params }: { params: Promise<{ id: string }> }) {
+  const resolvedParams = await params;
+  const { id } = resolvedParams;
+  const { data: article } = await supabase.from('articles').select('*').eq('id', id).single();
+  
+  if (!article) return { title: '기사를 찾을 수 없습니다 | 다산어보' };
+  
+  const contentSnippet = article.content ? article.content.substring(0, 150).replace(/<[^>]+>/g, '') + '...' : '다산어보 지역 뉴스';
+
+  return {
+    title: `${article.title} | 다산어보`,
+    description: contentSnippet,
+    openGraph: {
+      title: `${article.title} | 다산어보`,
+      description: contentSnippet,
+      images: article.image_url ? [{ url: article.image_url }] : [{ url: 'https://www.dasaneobo.kr/og-image.png' }],
+      url: `https://www.dasaneobo.kr/article/${article.id}`,
+      type: 'article',
+      publishedTime: article.created_at,
+    }
+  };
+}
+
 export default async function ArticlePage({ params }: { params: Promise<{ id: string }> }) {
   const resolvedParams = await params;
   const { id } = resolvedParams;
@@ -58,8 +81,33 @@ export default async function ArticlePage({ params }: { params: Promise<{ id: st
     .order('created_at', { ascending: false })
     .limit(5);
 
+  const jsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'NewsArticle',
+    headline: article.title,
+    image: article.image_url ? [article.image_url] : ['https://www.dasaneobo.kr/og-image.png'],
+    datePublished: article.created_at,
+    author: [{
+      '@type': 'Person',
+      name: authorName
+    }],
+    publisher: {
+      '@type': 'Organization',
+      name: '다산어보',
+      logo: {
+        '@type': 'ImageObject',
+        url: 'https://www.dasaneobo.kr/og-image.png'
+      }
+    },
+    articleBody: article.content ? article.content.substring(0, 500) : ''
+  };
+
   return (
     <main style={{ minHeight: '100vh', background: '#fcfcfc' }}>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
       <Header />
       
       <div className="container" style={{ paddingTop: '3rem', paddingBottom: '5rem' }}>

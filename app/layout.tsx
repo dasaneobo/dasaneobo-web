@@ -25,8 +25,21 @@ const notoSerifKR = Noto_Serif_KR({
 });
 
 export const metadata: Metadata = {
-  title: "다산어보 — 로컬 미디어",
-  description: "강진 · 고흥 · 보성 · 장흥 로컬 미디어",
+  title: "다산어보 | 강진·고흥·보성·장흥 로컬 미디어",
+  description: "전남 4개 군(강진·고흥·보성·장흥) 밀착 로컬 미디어. 투명한 보도와 주민 참여로 지역의 미래를 씁니다.",
+  keywords: "강진, 고흥, 보성, 장흥, 전남 뉴스, 지역 언론, 로컬 미디어",
+  openGraph: {
+    title: "다산어보 | 강진·고흥·보성·장흥 로컬 미디어",
+    description: "전남 4개 군(강진·고흥·보성·장흥) 밀착 로컬 미디어. 투명한 보도와 주민 참여로 지역의 미래를 씁니다.",
+    url: "https://www.dasaneobo.kr",
+    images: [{ url: "https://www.dasaneobo.kr/og-image.png", width: 1200, height: 630 }],
+    siteName: "다산어보",
+    locale: "ko_KR",
+    type: "website",
+  },
+  verification: {
+    google: "구글_서치콘솔_인증코드입력", // 전달해주실 코드로 변경해주세요
+  },
 };
 
 export default function RootLayout({
