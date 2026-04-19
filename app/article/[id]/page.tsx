@@ -15,7 +15,7 @@ export default async function ArticlePage({ params }: { params: Promise<{ id: st
 
   const { data: article, error } = await supabase
     .from('articles')
-    .select('*, author:profiles(name, role)')
+    .select('*')
     .eq('id', id)
     .single();
 
@@ -23,6 +23,13 @@ export default async function ArticlePage({ params }: { params: Promise<{ id: st
     console.error("Supabase Error fetch article:", error);
     notFound();
   }
+
+  // Fetch author profile separately to avoid join issues
+  const { data: authorProfile } = await supabase
+    .from('profiles')
+    .select('name, role')
+    .eq('id', article.author_id)
+    .single();
 
   const date = new Date(article.created_at).toLocaleDateString('ko-KR', {
     year: 'numeric',
@@ -38,8 +45,8 @@ export default async function ArticlePage({ params }: { params: Promise<{ id: st
     'editor': '기자',
     'reporter': '마을리포터'
   };
-  const authorRole = roleLabels[article?.author?.role] || '기자';
-  const authorName = article?.author?.name || '관리자';
+  const authorRole = roleLabels[authorProfile?.role] || '기자';
+  const authorName = authorProfile?.name || '관리자';
 
   // Fetch recent articles for sidebar
   const { data: recentArticles } = await supabase
