@@ -1,0 +1,138 @@
+.ethics-page {
+  background-color: #f4f7f6;
+  min-height: 100vh;
+  color: #333;
+}
+
+.ethics-container {
+  padding: 4rem 1rem;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.ethics-paper {
+  background: white;
+  padding: 3rem;
+  border-radius: 8px;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.06);
+  border-top: 6px solid var(--primary-dark);
+}
+
+.ethics-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  border-bottom: 2px solid #eee;
+  padding-bottom: 1.5rem;
+  margin-bottom: 2rem;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.subtitle {
+  font-size: 0.9rem;
+  color: var(--primary-dark);
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  display: block;
+  margin-bottom: 0.5rem;
+}
+
+.title {
+  font-family: 'Nanum Myeongjo', serif;
+  font-size: 2.5rem;
+  font-weight: 900;
+  margin: 0;
+  color: #111;
+  letter-spacing: -0.05em;
+}
+
+.ethics-content h2 {
+  font-family: 'Nanum Myeongjo', serif;
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: var(--primary-dark);
+  margin-top: 2.5rem;
+  margin-bottom: 1rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px dashed #d1d5db;
+}
+
+.ethics-content p {
+  font-size: 1.05rem;
+  line-height: 1.8;
+  color: #4b5563;
+  margin-bottom: 1.5rem;
+  word-break: keep-all;
+}
+
+.ethics-footer-stamp {
+  margin-top: 4rem;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 1rem;
+  font-weight: bold;
+  font-family: 'Nanum Myeongjo', serif;
+}
+
+.stamp-circle {
+  width: 50px;
+  height: 50px;
+  border: 2px solid #dc2626;
+  border-radius: 50%;
+  color: #dc2626;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 900;
+  font-size: 0.9rem;
+  letter-spacing: 2px;
+}
+
+.ethics-page-footer {
+  text-align: center;
+  padding: 3rem 1rem;
+  font-size: 0.85rem;
+  color: #6b7280;
+  line-height: 1.6;
+}
+
+@media print {
+  /* Hide unnecessary elements on print */
+  header, .app-header, .print-action, .ethics-page-footer, .fab-container {
+    display: none !important;
+  }
+  .ethics-page {
+    background-color: white;
+  }
+  .ethics-container {
+    padding: 0;
+    max-width: 100%;
+  }
+  .ethics-paper {
+    box-shadow: none;
+    border: none;
+    padding: 0;
+  }
+}
+
+@media (max-width: 600px) {
+  .ethics-paper {
+    padding: 1.5rem;
+  }
+  .title {
+    font-size: 1.8rem;
+  }
+  .ethics-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .print-action {
+    align-self: stretch;
+  }
+  .print-btn {
+    width: 100%;
+    justify-content: center;
+  }
+}

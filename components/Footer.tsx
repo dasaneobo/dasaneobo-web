@@ -69,6 +69,7 @@ export default function Footer() {
             <span style={{ cursor: 'pointer' }}>이용약관</span>
             <span style={{ cursor: 'pointer', fontWeight: 700 }}>개인정보처리방침</span>
             <span style={{ cursor: 'pointer' }}>청소년보호정책</span>
+            <Link href="/ethics" style={{ cursor: 'pointer', color: 'inherit', textDecoration: 'none' }}>윤리규정</Link>
           </div>
         </div>
       </div>
