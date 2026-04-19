@@ -15,7 +15,7 @@ export default async function ArticlePage({ params }: { params: Promise<{ id: st
 
   const { data: article, error } = await supabase
     .from('articles')
-    .select('*')
+    .select('*, author:profiles(name, role)')
     .eq('id', id)
     .single();
 
@@ -31,6 +31,15 @@ export default async function ArticlePage({ params }: { params: Promise<{ id: st
     hour: '2-digit',
     minute: '2-digit'
   });
+
+  // Role display mapping
+  const roleLabels: any = {
+    'admin': '기자',
+    'editor': '기자',
+    'reporter': '마을리포터'
+  };
+  const authorRole = roleLabels[article?.author?.role] || '기자';
+  const authorName = article?.author?.name || '관리자';
 
   // Fetch recent articles for sidebar
   const { data: recentArticles } = await supabase
@@ -84,10 +93,10 @@ export default async function ArticlePage({ params }: { params: Promise<{ id: st
               <div className="meta-info" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', color: '#777', fontSize: '0.85rem' }}>
                 <div style={{ display: 'flex', gap: '1.5rem', alignItems: 'center' }}>
                   <span style={{ display: 'inline-flex', alignItems: 'center', gap: '0.4rem' }}>
-                    <div style={{ width: '24px', height: '24px', background: '#eee', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '10px' }}>
-                      <User size={12} />
+                    <div style={{ width: '24px', height: '24px', background: 'var(--primary-light)', color: 'var(--primary-dark)', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '10px', fontWeight: 900 }}>
+                      {authorName[0]}
                     </div>
-                    편집국 기자
+                    <strong>{authorRole}</strong> {authorName}
                   </span>
                   <span style={{ display: 'inline-flex', alignItems: 'center', gap: '0.3rem' }}>
                     <Clock size={12} /> {date}

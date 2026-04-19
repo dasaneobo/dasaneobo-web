@@ -29,8 +29,10 @@ function EditArticleForm() {
     content: '',
     image_url: '',
     category: '사회',
-    region: '강진'
+    region: '강진',
+    author_id: ''
   });
+  const [authors, setAuthors] = useState<any[]>([]);
 
   useEffect(() => {
     const checkAuth = async () => {
@@ -62,9 +64,23 @@ function EditArticleForm() {
             content: article.content,
             image_url: article.image_url,
             category: article.category,
-            region: article.region
+            region: article.region,
+            author_id: article.author_id
           });
         }
+      } else {
+        // Default author is the current user
+        setFormData(prev => ({ ...prev, author_id: session.user.id }));
+      }
+
+      // If admin or editor, fetch all possible authors
+      if (profile.role === 'admin' || profile.role === 'editor') {
+        const { data: allProfiles } = await supabase
+          .from('profiles')
+          .select('id, name, role')
+          .in('role', ['admin', 'editor', 'reporter'])
+          .order('name');
+        if (allProfiles) setAuthors(allProfiles);
       }
     };
     checkAuth();
@@ -133,6 +149,7 @@ function EditArticleForm() {
         image_url: formData.image_url,
         category: formData.category,
         region: formData.region,
+        author_id: formData.author_id
       };
 
       if (isEditMode && articleId) {
@@ -141,7 +158,7 @@ function EditArticleForm() {
         alert('기사가 성공적으로 수정되었습니다!');
       } else {
         const finalStatus = userProfile.role === 'reporter' ? 'pending' : 'published';
-        const { error } = await supabase.from('articles').insert([{ ...payload, status: finalStatus, author_id: userProfile.id }]);
+        const { error } = await supabase.from('articles').insert([{ ...payload, status: finalStatus }]);
         if (error) throw error;
         alert('기사가 성공적으로 접수/발행되었습니다!');
       }
@@ -207,6 +224,23 @@ function EditArticleForm() {
                  <option>강진</option><option>보성</option><option>장흥</option><option>고흥</option><option>전국/일반</option>
               </select>
             </div>
+            {(userProfile?.role === 'admin' || userProfile?.role === 'editor') && authors.length > 0 && (
+              <div style={{ marginTop: '1rem', paddingTop: '1rem', borderTop: '1px solid #eee' }}>
+                <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: 600, marginBottom: '0.5rem' }}>작성 기자 선택</label>
+                <select 
+                  value={formData.author_id} 
+                  onChange={(e) => setFormData({...formData, author_id: e.target.value})} 
+                  style={{ width: '100%', padding: '0.8rem', borderRadius: '8px', border: '1px solid #ddd', background: '#fff9db' }}
+                >
+                  {authors.map(a => (
+                    <option key={a.id} value={a.id}>
+                      [{a.role === 'reporter' ? '마을리포터' : '기자'}] {a.name}
+                    </option>
+                  ))}
+                </select>
+                <p style={{ fontSize: '0.7rem', color: '#666', marginTop: '0.4rem' }}>* 편집국 권한으로 기사 바이라인을 변경할 수 있습니다.</p>
+              </div>
+            )}
           </div>
 
           <div style={{ background: 'white', padding: '1.5rem', borderRadius: '12px', boxShadow: '0 4px 12px rgba(0,0,0,0.05)' }}>
