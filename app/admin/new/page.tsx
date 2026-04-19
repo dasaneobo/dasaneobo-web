@@ -6,6 +6,14 @@ import { Save, Image as ImageIcon, Layout, ChevronLeft, Type } from 'lucide-reac
 import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { supabase } from '@/lib/supabase';
+import dynamic from 'next/dynamic';
+import "@uiw/react-md-editor/markdown-editor.css";
+import "@uiw/react-markdown-preview/markdown.css";
+
+const MDEditor = dynamic(
+  () => import("@uiw/react-md-editor"),
+  { ssr: false }
+);
 
 function EditArticleForm() {
   const router = useRouter();
@@ -173,11 +181,15 @@ function EditArticleForm() {
             value={formData.title} onChange={(e) => setFormData({...formData, title: e.target.value})}
             style={{ width: '100%', padding: '1rem 0', fontSize: '2.2rem', fontWeight: 800, border: 'none', borderBottom: '2px solid #eee', outline: 'none', fontFamily: '"Nanum Myeongjo", serif' }}
           />
-          <textarea 
-            placeholder="내용을 입력하세요..."
-            value={formData.content} onChange={(e) => setFormData({...formData, content: e.target.value})}
-            style={{ width: '100%', minHeight: '600px', border: 'none', outline: 'none', fontSize: '1.15rem', lineHeight: '1.8', resize: 'none', color: '#333' }}
-          />
+          <div data-color-mode="light">
+            <MDEditor
+              value={formData.content}
+              onChange={(val) => setFormData({ ...formData, content: val || '' })}
+              preview="edit"
+              height={600}
+              style={{ border: 'none' }}
+            />
+          </div>
         </div>
 
         <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>

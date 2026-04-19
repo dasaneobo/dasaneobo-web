@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { ChevronLeft, Clock, User, Share2 } from 'lucide-react';
 import DeleteArticleButton from '@/components/DeleteArticleButton';
 import Comments from '@/components/Comments';
+import MarkdownRenderer from '@/components/MarkdownRenderer';
 
 export const revalidate = 0; // Ensure data is always fetch freshly
 
@@ -129,8 +130,8 @@ export default async function ArticlePage({ params }: { params: Promise<{ id: st
                 </figure>
               )}
 
-            {article.content}
-          </div>
+              <MarkdownRenderer content={article.content || ''} />
+            </div>
 
           {/* Comments Section */}
           <Comments articleId={article.id} />
