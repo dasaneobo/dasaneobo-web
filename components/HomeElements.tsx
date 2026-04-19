@@ -269,8 +269,7 @@ export function TransparencyBanner({ settings }: { settings?: any }) {
         <p style={{ fontSize: '0.9rem', lineHeight: '1.6', opacity: 0.9, marginBottom: '1.5rem', whiteSpace: 'pre-line' }}>
           강진·고흥·보성·장흥의 이야기,{"\n"}
           우리가 직접 씁니다.{"\n\n"}
-          광고주도, 보조금도, 큰손도 없습니다.{"\n"}
-          오직 구독자 여러분의 힘으로 운영되는{"\n"}
+          오직 구독자와 마을 리포터 여러분의 힘으로 운영되는{"\n"}
           독립 지역 언론입니다.
         </p>
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
