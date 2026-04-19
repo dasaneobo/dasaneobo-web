@@ -378,3 +378,86 @@ h1, h2, h3, h4, h5, h6 {
   display: grid;
 }
 
+/* Mobile Touch & Inputs */
+@media (max-width: 480px) {
+  input, select, textarea {
+    font-size: 16px !important; /* Prevent iOS zoom */
+  }
+  button, .btn {
+    min-height: 44px;
+    min-width: 44px;
+    width: 100%;
+  }
+  .mobile-full-width {
+    width: 100% !important;
+  }
+  .mobile-stack-480 {
+    flex-direction: column !important;
+    gap: 1rem !important;
+  }
+  .main-headline-grid, .category-grid, .region-grid, .sub-story-grid, .newspaper-main-grid, .article-layout {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+/* Tablet overrides if needed (768px handled mostly, but ensure 2 columns if appropriate) */
+@media (min-width: 481px) and (max-width: 768px) {
+  .region-grid {
+    grid-template-columns: 1fr 1fr !important;
+  }
+}
+
+/* Floating Action Button for Mobile */
+.fab-container {
+  display: none;
+}
+@media (max-width: 768px) {
+  .fab-container {
+    display: block;
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 1000;
+  }
+  .fab-button {
+    background: #ea580c;
+    color: white;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+    font-size: 0.8rem;
+    font-weight: bold;
+    text-align: center;
+    line-height: 1.2;
+    border: none;
+  }
+}
+
+/* Base structural classes added during refactoring */
+.article-layout {
+  grid-template-columns: minmax(0, 800px) 300px;
+}
+.article-card {
+  padding: 2rem;
+}
+
+@media (max-width: 480px) {
+  .article-card {
+    padding: 1rem;
+    border-radius: 0;
+  }
+  .article-figure {
+    margin-left: -1rem !important;
+    margin-right: -1rem !important;
+  }
+  /* Disable animations on mobile */
+  * {
+    animation: none !important;
+  }
+}
+
+

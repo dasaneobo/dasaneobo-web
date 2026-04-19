@@ -55,7 +55,7 @@ export default function Header() {
       </div>
 
       <div className="container header-container" style={{
-        padding: '1.2rem 0'
+        padding: '0.8rem 0'
       }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
           <Menu size={28} style={{ cursor: 'pointer', color: '#333' }} />
@@ -83,9 +83,8 @@ export default function Header() {
 
         <Link href="/" style={{ textDecoration: 'none' }}>
           <div style={{ textAlign: 'center' }}>
-            <h1 style={{ 
+            <h1 className="header-logo" style={{ 
               margin: 0, 
-              fontSize: '2.4rem', 
               color: 'var(--primary-dark)',
               fontFamily: '"Nanum Myeongjo", serif',
               fontWeight: 900,
@@ -93,9 +92,17 @@ export default function Header() {
             }}>
               다산어보
             </h1>
-            <span style={{ fontSize: '0.65rem', color: '#666', letterSpacing: '3px', textTransform: 'uppercase' }}>Local Media Transparency</span>
+            <span className="desktop-only" style={{ fontSize: '0.65rem', color: '#666', letterSpacing: '3px', textTransform: 'uppercase' }}>Local Media Transparency</span>
           </div>
         </Link>
+
+        {/* Global style for logo size */}
+        <style jsx>{`
+          .header-logo { font-size: 2.4rem; }
+          @media (max-width: 768px) {
+            .header-logo { font-size: 1.8rem; }
+          }
+        `}</style>
 
         {/* Action Area (Strategy #3) */}
         <div className="header-actions" style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
@@ -129,7 +136,7 @@ export default function Header() {
             <Link href="/login" style={{ fontSize: '0.85rem', color: '#666', textDecoration: 'none', marginRight: '0.5rem' }}>로그인</Link>
           )}
           
-          <Link href="/admin/report">
+          <Link href="/admin/report" className="desktop-only">
             <button style={{ 
               background: 'var(--primary-dark)', 
               color: 'white', 
@@ -144,7 +151,7 @@ export default function Header() {
               마을 제보·참여
             </button>
           </Link>
-          <Link href="/subscribe">
+          <Link href="/subscribe" className="desktop-only">
             <button style={{ 
               background: '#ef4444', // Red for CTA
               color: 'white', 

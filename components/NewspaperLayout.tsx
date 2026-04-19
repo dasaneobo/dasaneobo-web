@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { supabase } from '@/lib/supabase';
 import { Clock, User as UserIcon, Calendar, ArrowRight, Tag } from 'lucide-react';
 
@@ -91,8 +92,8 @@ export default function NewspaperLayout({ title, type, value }: NewspaperLayoutP
         <Link href={`/article/${featured.id}`} style={{ textDecoration: 'none', color: 'inherit' }}>
           <div className="newspaper-featured" style={{ cursor: 'pointer' }}>
             {featured.image_url && (
-              <div style={{ width: '100%', height: '400px', overflow: 'hidden', borderRadius: '4px', marginBottom: '1.5rem' }}>
-                <img src={featured.image_url} alt={featured.title} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+              <div style={{ width: '100%', height: '400px', overflow: 'hidden', borderRadius: '4px', marginBottom: '1.5rem', position: 'relative' }}>
+                <Image src={featured.image_url} alt={featured.title} fill style={{ objectFit: 'cover' }} />
               </div>
             )}
             <h3 style={{ fontSize: '2.2rem', fontWeight: 900, marginBottom: '1rem', lineHeight: 1.2, letterSpacing: '-1px' }}>{featured.title}</h3>
@@ -113,8 +114,8 @@ export default function NewspaperLayout({ title, type, value }: NewspaperLayoutP
             <Link key={article.id} href={`/article/${article.id}`} style={{ textDecoration: 'none', color: 'inherit' }}>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', borderBottom: '1px solid #eee', paddingBottom: '1.5rem', cursor: 'pointer' }}>
                 {article.image_url && (
-                  <div style={{ width: '100%', height: '180px', overflow: 'hidden', borderRadius: '4px' }}>
-                    <img src={article.image_url} alt={article.title} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                  <div style={{ width: '100%', height: '180px', overflow: 'hidden', borderRadius: '4px', position: 'relative' }}>
+                    <Image src={article.image_url} alt={article.title} fill style={{ objectFit: 'cover' }} />
                   </div>
                 )}
                 <h4 style={{ fontSize: '1.3rem', fontWeight: 800, margin: 0, lineHeight: 1.3 }}>{article.title}</h4>
@@ -138,9 +139,9 @@ export default function NewspaperLayout({ title, type, value }: NewspaperLayoutP
             {others.map(article => (
               <Link key={article.id} href={`/article/${article.id}`} style={{ textDecoration: 'none', color: 'inherit' }}>
                 <div style={{ cursor: 'pointer' }}>
-                  <div style={{ width: '100%', height: '200px', overflow: 'hidden', borderRadius: '8px', background: '#f5f5f5', marginBottom: '1rem' }}>
+                  <div style={{ width: '100%', height: '200px', overflow: 'hidden', borderRadius: '8px', background: '#f5f5f5', marginBottom: '1rem', position: 'relative' }}>
                     {article.image_url ? (
-                      <img src={article.image_url} alt={article.title} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                      <Image src={article.image_url} alt={article.title} fill style={{ objectFit: 'cover' }} />
                     ) : (
                       <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#ccc' }}>이미지 없음</div>
                     )}

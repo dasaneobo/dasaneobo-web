@@ -2,6 +2,7 @@ import Header from '@/components/Header';
 import { NewsTicker, InfographicDashboard, TransparencyBanner } from '@/components/HomeElements';
 import { supabase } from '@/lib/supabase';
 import Link from 'next/link';
+import Image from 'next/image';
 
 export const revalidate = 0;
 
@@ -77,9 +78,9 @@ export default async function Home() {
             {topStory && (
               <Link href={`/article/${topStory.id}`} style={{ textDecoration: 'none', color: 'inherit' }}>
                 <div style={{ position: 'relative', marginBottom: '2.5rem' }}>
-                  <div style={{ width: '100%', aspectRatio: '16/8.5', overflow: 'hidden', borderRadius: '8px', background: '#f5f5f5' }}>
+                  <div style={{ width: '100%', aspectRatio: '16/8.5', overflow: 'hidden', borderRadius: '8px', background: '#f5f5f5', position: 'relative' }}>
                     {topStory.image_url ? (
-                      <img src={topStory.image_url} alt={topStory.title} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                      <Image src={topStory.image_url} alt={topStory.title} fill style={{ objectFit: 'cover' }} />
                     ) : (
                       <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#ccc' }}>No Image</div>
                     )}
@@ -102,8 +103,8 @@ export default async function Home() {
                {subStories.slice(0, 2).map(art => (
                  <Link key={art.id} href={`/article/${art.id}`} style={{ textDecoration: 'none', color: 'inherit' }}>
                    <div style={{ display: 'flex', gap: '1rem', alignItems: 'start' }}>
-                      <div style={{ width: '100px', aspectRatio: '1', flexShrink: 0, overflow: 'hidden', borderRadius: '6px' }}>
-                        <img src={art.image_url || 'https://via.placeholder.com/100'} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                      <div style={{ width: '100px', aspectRatio: '1', flexShrink: 0, overflow: 'hidden', borderRadius: '6px', position: 'relative' }}>
+                        <Image src={art.image_url || 'https://via.placeholder.com/100'} alt={art.title} fill style={{ objectFit: 'cover' }} />
                       </div>
                       <div>
                         <h4 style={{ margin: '0 0 0.4rem', fontSize: '1.1rem', fontWeight: 700, lineHeight: '1.3' }}>{art.title}</h4>
@@ -240,6 +241,13 @@ export default async function Home() {
           </div>
         </div>
       </footer>
+
+      {/* Floating Action Button (Mobile) */}
+      <div className="fab-container">
+        <Link href="/admin/report" style={{ textDecoration: 'none' }}>
+          <button className="fab-button">제보<br/>하기</button>
+        </Link>
+      </div>
     </main>
   );
 }

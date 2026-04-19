@@ -2,6 +2,7 @@ import Header from '@/components/Header';
 import { supabase } from '@/lib/supabase';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
+import Image from 'next/image';
 import { ChevronLeft, Clock, User, Share2 } from 'lucide-react';
 import DeleteArticleButton from '@/components/DeleteArticleButton';
 import Comments from '@/components/Comments';
@@ -62,9 +63,8 @@ export default async function ArticlePage({ params }: { params: Promise<{ id: st
       <Header />
       
       <div className="container" style={{ paddingTop: '3rem', paddingBottom: '5rem' }}>
-        <div className="article-layout" style={{ display: 'grid', gridTemplateColumns: 'minmax(0, 800px) 300px', gap: '3rem' }}>
-          
-          <article style={{ background: 'white', padding: '2rem', borderRadius: '8px', boxShadow: '0 2px 10px rgba(0,0,0,0.02)' }}>
+        <div className="article-layout" style={{ display: 'grid', gap: '3rem' }}>
+          <article className="article-card" style={{ background: 'white', borderRadius: '8px', boxShadow: '0 2px 10px rgba(0,0,0,0.02)' }}>
             {/* Breadcrumb */}
             <div style={{ marginBottom: '2rem' }}>
               <Link href="/" style={{ display: 'inline-flex', alignItems: 'center', gap: '0.4rem', color: '#888', textDecoration: 'none', fontSize: '0.85rem' }}>
@@ -134,11 +134,14 @@ export default async function ArticlePage({ params }: { params: Promise<{ id: st
             {/* Content */}
             <div style={{ fontSize: '1.1rem', lineHeight: '2', color: '#333', fontFamily: '"Nanum Myeongjo", serif' }}>
               {article.image_url && (
-                <figure style={{ margin: '0 0 2.5rem 0', textAlign: 'center' }}>
-                  <img 
+                <figure className="article-figure" style={{ margin: '0 0 2.5rem 0', textAlign: 'center' }}>
+                  <Image 
                     src={article.image_url} 
                     alt={article.title} 
-                    style={{ width: '100%', borderRadius: '4px', overflow: 'hidden' }} 
+                    width={800}
+                    height={500}
+                    priority
+                    style={{ width: '100%', height: 'auto', borderRadius: '4px', overflow: 'hidden' }} 
                   />
                   <figcaption style={{ fontSize: '0.8rem', color: '#999', marginTop: '0.7rem', paddingLeft: '0.5rem', borderLeft: '2px solid var(--primary)' }}>
                     {article.title} 관련 자료 사진. ⓒ 다산어보
