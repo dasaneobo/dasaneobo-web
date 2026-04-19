@@ -38,7 +38,7 @@ export const metadata: Metadata = {
     type: "website",
   },
   verification: {
-    google: "구글_서치콘솔_인증코드입력", // 전달해주실 코드로 변경해주세요
+    google: "FafkuE0YBRZtLsqTthBQeQT2wWpk90jfoLvp5OGXhCw",
   },
 };
 
