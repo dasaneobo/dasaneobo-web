@@ -102,10 +102,13 @@ export function HeroSlider() {
 }
 
 import { supabase } from '@/lib/supabase';
-import { BarChart3, Users, HandCoins, TreePalm, ShieldCheck, PieChart, TrendingUp, Info, CloudSun, Thermometer, ShoppingBag, Tags } from 'lucide-react';
+import { BarChart3, Users, HandCoins, TreePalm, ShieldCheck, PieChart, TrendingUp, Info, CloudSun, Thermometer, ShoppingBag, Tags, Newspaper, ExternalLink, MapPin } from 'lucide-react';
 
 export function InfographicDashboard({ settings }: { settings?: any }) {
+  const [activeTab, setActiveTab] = useState<'data' | 'news'>('data');
+  const [selectedRegion, setSelectedRegion] = useState('강진');
   const [agriPrices, setAgriPrices] = useState<any[]>([]);
+  const [localNews, setLocalNews] = useState<any[]>([]);
 
   useEffect(() => {
     const fetchPrices = async () => {
@@ -113,85 +116,167 @@ export function InfographicDashboard({ settings }: { settings?: any }) {
         .from('farm_prices')
         .select('*')
         .order('item_name', { ascending: true });
-      
-      if (data && data.length > 0) {
-        setAgriPrices(data);
-      } else {
-        // Fallback for demo if DB is empty
-        setAgriPrices([
-          { item_name: '쌀', price: '52400', diff: '1200', unit: '20kg' },
-          { item_name: '배추', price: '4500', diff: '-300', unit: '1포기' },
-        ]);
-      }
+      if (data) setAgriPrices(data);
     };
+
+    const fetchNews = async () => {
+      const { data } = await supabase
+        .from('local_news')
+        .select('*')
+        .order('pub_date', { ascending: false });
+      if (data) setLocalNews(data);
+    };
+
     fetchPrices();
+    fetchNews();
   }, []);
 
-  // Weather Simulation (Can be connected to API later)
-  const weather = { temp: 22, status: '맑음', location: '강진군' };
+  // Weather Simulation
+  const weatherMap: any = {
+    '강진': { temp: 22, status: '맑음' },
+    '고흥': { temp: 21, status: '구름조금' },
+    '보성': { temp: 20, status: '맑음' },
+    '장흥': { temp: 22, status: '맑음' },
+  };
+  const currentWeather = weatherMap[selectedRegion] || weatherMap['강진'];
+
+  const filteredNews = localNews.filter(n => n.region === selectedRegion).slice(0, 5);
 
   return (
     <section style={{ margin: '3rem 0', background: '#f9fafb', padding: '2.5rem', borderRadius: '12px', border: '1px solid #eee' }}>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: '2rem' }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '2rem', gap: '1rem', flexWrap: 'wrap' }}>
         <div>
           <h3 style={{ margin: 0, fontSize: '1.5rem', fontWeight: 800, color: '#111' }}>실시간 지역 데이터 대시보드</h3>
           <p style={{ margin: '0.4rem 0 0', fontSize: '0.9rem', color: '#666' }}>다산어보가 데이터로 본 4개 권역 현황입니다.</p>
         </div>
-        <div style={{ fontSize: '0.8rem', color: '#888', display: 'flex', alignItems: 'center', gap: '0.3rem' }}>
-          <Info size={14} /> 매일 오전 9시 갱신
+        
+        {/* Tab Switcher */}
+        <div style={{ background: '#eee', padding: '4px', borderRadius: '8px', display: 'flex', gap: '4px' }}>
+          <button 
+            onClick={() => setActiveTab('data')}
+            style={{ 
+              padding: '0.6rem 1.2rem', borderRadius: '6px', border: 'none', fontSize: '0.85rem', fontWeight: 700, cursor: 'pointer',
+              background: activeTab === 'data' ? 'white' : 'transparent',
+              color: activeTab === 'data' ? '#111' : '#777',
+              boxShadow: activeTab === 'data' ? '0 2px 4px rgba(0,0,0,0.05)' : 'none'
+            }}
+          >
+            데이터 지표
+          </button>
+          <button 
+            onClick={() => setActiveTab('news')}
+            style={{ 
+              padding: '0.6rem 1.2rem', borderRadius: '6px', border: 'none', fontSize: '0.85rem', fontWeight: 700, cursor: 'pointer',
+              background: activeTab === 'news' ? 'white' : 'transparent',
+              color: activeTab === 'news' ? '#111' : '#777',
+              boxShadow: activeTab === 'news' ? '0 2px 4px rgba(0,0,0,0.05)' : 'none'
+            }}
+          >
+            지역 뉴스
+          </button>
         </div>
       </div>
 
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.5rem' }}>
-        {/* Weather Card */}
-        <div style={{ background: 'linear-gradient(135deg, #3b82f6, #60a5fa)', color: 'white', padding: '1.5rem', borderRadius: '12px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-          <div>
-            <div style={{ fontSize: '0.85rem', fontWeight: 600, opacity: 0.9 }}>현재 지역 날씨 ({weather.location})</div>
-            <div style={{ fontSize: '2.5rem', fontWeight: 900, marginTop: '0.5rem' }}>{weather.temp}°C</div>
-            <div style={{ fontSize: '1rem', display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
-              <CloudSun size={20} /> {weather.status}
+      {activeTab === 'data' ? (
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '1.5rem' }}>
+          {/* Weather Card */}
+          <div style={{ background: 'linear-gradient(135deg, #3b82f6, #60a5fa)', color: 'white', padding: '1.5rem', borderRadius: '12px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <div>
+              <div style={{ fontSize: '0.85rem', fontWeight: 600, opacity: 0.9 }}>현재 지역 날씨 (강진군)</div>
+              <div style={{ fontSize: '2.5rem', fontWeight: 900, marginTop: '0.5rem' }}>22°C</div>
+              <div style={{ fontSize: '1rem', display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+                <CloudSun size={20} /> 맑음
+              </div>
+            </div>
+            <Thermometer size={60} style={{ opacity: 0.2 }} />
+          </div>
+
+          {/* Agri Price Card */}
+          <div style={{ background: 'white', border: '1px solid #ddd', padding: '1.5rem', borderRadius: '12px' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '1.2rem', color: '#111', justifyContent: 'space-between' }}>
+               <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                 <ShoppingBag size={18} /> <span style={{ fontWeight: 800 }}>오늘의 농산물 가격</span>
+               </div>
+               <span style={{ fontSize: '0.75rem', color: '#888' }}>광주 각화동 경락가 기준</span>
+            </div>
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+              {(agriPrices.length > 0 ? agriPrices : [
+                { item_name: '쌀', price: '52400', diff: '1200', unit: '20kg' },
+                { item_name: '배추', price: '4500', diff: '-300', unit: '1포기' },
+              ]).slice(0, 4).map((p, i) => {
+                const diffNum = parseInt(p.diff || '0');
+                return (
+                  <div key={i} style={{ padding: '0.8rem', background: '#f8fafc', borderRadius: '8px', border: '1px solid #f1f5f9' }}>
+                    <div style={{ fontSize: '0.75rem', color: '#64748b', marginBottom: '0.3rem' }}>{p.item_name} ({p.unit})</div>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                      <span style={{ fontWeight: 800, fontSize: '1.05rem' }}>{parseInt(p.price).toLocaleString()}원</span>
+                      <span style={{ fontSize: '0.75rem', color: diffNum > 0 ? '#ef4444' : '#3b82f6' }}>{diffNum > 0 ? '▲' : '▼'}{Math.abs(diffNum).toLocaleString()}</span>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+            <div style={{ marginTop: '1rem', paddingTop: '0.8rem', borderTop: '1px solid #f1f5f9', fontSize: '0.7rem', color: '#94a3b8', textAlign: 'center' }}>
+              출처: 농산물유통정보(KAMIS) · 매일 오전 9시 기준
             </div>
           </div>
-          <Thermometer size={60} style={{ opacity: 0.2 }} />
         </div>
+      ) : (
+        <div style={{ background: 'white', border: '1px solid #eee', borderRadius: '12px', padding: '1.5rem' }}>
+          {/* Region Filters */}
+          <div style={{ display: 'flex', gap: '0.5rem', marginBottom: '1.5rem', overflowX: 'auto', paddingBottom: '0.5rem' }}>
+            {['강진', '고흥', '보성', '장흥'].map(region => (
+              <button 
+                key={region}
+                onClick={() => setSelectedRegion(region)}
+                style={{ 
+                  padding: '0.5rem 1rem', borderRadius: '99px', border: '1px solid', fontSize: '0.85rem', fontWeight: 600, cursor: 'pointer', whiteSpace: 'nowrap',
+                  borderColor: selectedRegion === region ? 'var(--primary-dark)' : '#ddd',
+                  background: selectedRegion === region ? 'var(--primary-dark)' : 'white',
+                  color: selectedRegion === region ? 'white' : '#666'
+                }}
+              >
+                {region}군
+              </button>
+            ))}
+          </div>
 
-        {/* Agri Price Card */}
-        <div style={{ background: 'white', border: '1px solid #ddd', padding: '1.5rem', borderRadius: '12px' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '1.2rem', color: '#111', justifyContent: 'space-between' }}>
-             <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-               <ShoppingBag size={18} /> <span style={{ fontWeight: 800 }}>오늘의 농산물 가격</span>
-             </div>
-             <span style={{ fontSize: '0.75rem', color: '#888' }}>광주 각화동 경락가 기준</span>
-          </div>
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
-            {agriPrices.map((p, i) => {
-              const diffNum = parseInt(p.diff || '0');
-              const isUp = diffNum > 0;
-              const isDown = diffNum < 0;
-              return (
-                <div key={i} style={{ padding: '0.8rem', background: '#f8fafc', borderRadius: '8px', border: '1px solid #f1f5f9' }}>
-                  <div style={{ fontSize: '0.75rem', color: '#64748b', marginBottom: '0.3rem' }}>{p.item_name} ({p.unit})</div>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                    <span style={{ fontWeight: 800, fontSize: '1.05rem', color: '#1e293b' }}>
-                      {parseInt(p.price).toLocaleString()}원
-                    </span>
-                    <span style={{ 
-                      fontSize: '0.75rem', 
-                      fontWeight: 700,
-                      color: isUp ? '#ef4444' : isDown ? '#3482f6' : '#94a3b8'
-                    }}>
-                      {isUp && '▲'}{isDown && '▼'}{isUp || isDown ? Math.abs(diffNum).toLocaleString() : '-'}
-                    </span>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.8rem' }}>
+            {filteredNews.length > 0 ? filteredNews.map((news, i) => (
+              <a 
+                key={i} 
+                href={news.link} 
+                target="_blank" 
+                rel="noopener noreferrer"
+                style={{ 
+                  display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '1rem', borderRadius: '8px', border: '1px solid #f1f5f9', background: '#fcfcfc', textDecoration: 'none', transition: 'all 0.2s'
+                }}
+                className="news-hover-item"
+              >
+                <div style={{ flex: 1, marginRight: '1rem' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', marginBottom: '0.4rem' }}>
+                    <span style={{ fontSize: '0.65rem', padding: '2px 6px', background: '#e5e7eb', color: '#4b5563', borderRadius: '4px', fontWeight: 700 }}>외부뉴스</span>
+                    <span style={{ fontSize: '0.75rem', color: '#9ba3af' }}>{news.source} · {new Date(news.pub_date).toLocaleDateString()}</span>
                   </div>
+                  <div style={{ fontSize: '1rem', fontWeight: 600, color: '#1f2937', lineHeight: '1.4' }}>{news.title}</div>
                 </div>
-              );
-            })}
+                <ExternalLink size={18} color="#cbd5e1" />
+              </a>
+            )) : (
+              <div style={{ padding: '3rem', textAlign: 'center', color: '#999' }}>
+                <Newspaper size={40} style={{ opacity: 0.2, marginBottom: '1rem' }} />
+                <p>표시할 뉴스가 없습니다. 1시간마다 자동 갱신됩니다.</p>
+              </div>
+            )}
           </div>
-          <div style={{ marginTop: '1rem', paddingTop: '0.8rem', borderTop: '1px solid #f1f5f9', fontSize: '0.7rem', color: '#94a3b8', textAlign: 'center' }}>
-            출처: 농산물유통정보(KAMIS) · 광주 각화동 도매 · 오전 9시 기준
+          <div style={{ marginTop: '1.5rem', fontSize: '0.75rem', color: '#94a3b8', textAlign: 'center' }}>
+            제공: 네이버 지역 뉴스 검색 결과 (1시간 주기 자동 갱신)
           </div>
         </div>
-      </div>
+      )}
+      <style jsx global>{`
+        .news-hover-item:hover { border-color: var(--primary); background: white; box-shadow: 0 4px 12px rgba(0,0,0,0.03); transform: translateX(4px); }
+      `}</style>
     </section>
   );
 }
