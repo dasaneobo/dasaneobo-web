@@ -1,0 +1,278 @@
+:root {
+  --ink:       #1a1612;
+  --ink2:      #4a4540;
+  --ink3:      #8a8580;
+  --paper:     #faf7f2;
+  --paper2:    #f0ece4;
+  --paper3:    #e4dfd5;
+  --red:       #c0392b;
+  --red-light: #fdf1ef;
+  --gold:      #9a7c3a;
+  --report-rule:      #d0cbc0;
+}
+
+.report-body {
+  background: var(--paper);
+  color: var(--ink);
+  font-family: 'Noto Sans KR', sans-serif;
+  min-height: 100vh;
+  padding: 2rem 0 80px;
+}
+
+/* ─── masthead ─── */
+.report-masthead {
+  border-bottom: 3px double var(--ink);
+  padding: 28px 24px 20px;
+  text-align: center;
+  position: relative;
+  margin-bottom: 2rem;
+}
+.report-masthead::before {
+  content: '';
+  display: block;
+  height: 1px;
+  background: var(--ink);
+  margin-bottom: 10px;
+}
+.report-masthead-name {
+  font-family: 'Noto Serif KR', serif;
+  font-size: 32px;
+  font-weight: 700;
+  letter-spacing: .12em;
+  color: var(--ink);
+  line-height: 1;
+}
+.report-masthead-sub {
+  margin-top: 6px;
+  font-size: 11px;
+  letter-spacing: .22em;
+  color: var(--ink3);
+  text-transform: uppercase;
+}
+.report-masthead-date {
+  margin-top: 4px;
+  font-size: 11px;
+  color: var(--ink3);
+}
+
+/* ─── layout ─── */
+.report-container {
+  max-width: 680px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+/* ─── section head ─── */
+.report-section-head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 32px 0 16px;
+}
+.report-section-head::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--report-rule);
+}
+.report-section-head span {
+  font-family: 'Noto Serif KR', serif;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: .12em;
+  color: var(--ink2);
+  white-space: nowrap;
+}
+
+/* ─── style tabs ─── */
+.report-style-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin-bottom: 4px;
+}
+.report-style-btn {
+  appearance: none;
+  background: var(--paper2);
+  border: 1px solid var(--report-rule);
+  border-radius: 4px;
+  padding: 10px 12px;
+  cursor: pointer;
+  text-align: left;
+  transition: all .15s;
+  position: relative;
+}
+.report-style-btn:hover {
+  background: var(--paper3);
+  border-color: var(--ink3);
+}
+.report-style-btn.active {
+  background: var(--ink);
+  border-color: var(--ink);
+}
+.report-style-btn .s-name {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--ink);
+  display: block;
+  line-height: 1;
+}
+.report-style-btn .s-desc {
+  font-size: 11px;
+  color: var(--ink3);
+  display: block;
+  margin-top: 3px;
+  line-height: 1.4;
+}
+.report-style-btn.active .s-name,
+.report-style-btn.active .s-desc {
+  color: #fff;
+}
+.report-style-btn.active .s-desc { color: rgba(255,255,255,.65); }
+
+/* ─── fields ─── */
+.report-fields-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+.report-field {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+.report-field.full { grid-column: 1 / -1; }
+
+.report-label {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: .08em;
+  color: var(--ink2);
+}
+.report-badge {
+  font-family: 'Noto Serif KR', serif;
+  font-size: 10px;
+  font-weight: 600;
+  padding: 1px 6px;
+  border-radius: 2px;
+  letter-spacing: .06em;
+}
+.b-who   { background: #e8f0fa; color: #1a4a8a; }
+.b-what  { background: #e8f5ee; color: #1a5c32; }
+.b-when  { background: #fef4e4; color: #7a4e00; }
+.b-where { background: #f0ebfa; color: #4a1a8a; }
+.b-how   { background: #fce9e8; color: #8a1a14; }
+.b-why   { background: #e4f0f0; color: #0a4a4a; }
+
+.report-input,
+.report-textarea {
+  font-family: 'Noto Sans KR', sans-serif;
+  font-size: 14px;
+  color: var(--ink);
+  background: #fff;
+  border: 1px solid var(--report-rule);
+  border-radius: 4px;
+  padding: 9px 11px;
+  width: 100%;
+  outline: none;
+  transition: border-color .15s, box-shadow .15s;
+}
+.report-input:focus,
+.report-textarea:focus {
+  border-color: var(--ink2);
+  box-shadow: 0 0 0 2px rgba(26,22,18,.06);
+}
+.report-textarea { resize: vertical; min-height: 88px; line-height: 1.6; }
+
+/* ─── sender info ─── */
+.report-sender-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+/* ─── submit ─── */
+.report-submit-wrap {
+  margin-top: 28px;
+  border-top: 1px solid var(--report-rule);
+  padding-top: 24px;
+}
+.report-submit-btn {
+  width: 100%;
+  padding: 14px;
+  font-family: 'Noto Serif KR', serif;
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: .1em;
+  background: var(--ink);
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background .15s, transform .1s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+.report-submit-btn:hover  { background: #2e2a24; }
+.report-submit-btn:active { transform: scale(.99); }
+.report-submit-btn:disabled { background: var(--ink3); cursor: not-allowed; transform: none; }
+
+/* ─── notice ─── */
+.report-notice {
+  margin-top: 14px;
+  padding: 12px 14px;
+  background: var(--red-light);
+  border-left: 3px solid var(--red);
+  border-radius: 2px;
+  font-size: 12px;
+  color: #7a1a14;
+  line-height: 1.6;
+}
+.report-notice.success {
+  background: #edf5ed;
+  border-color: #2e7d32;
+  color: #1a4a1a;
+}
+
+/* ─── spinner ─── */
+.report-spinner {
+  width: 16px; height: 16px;
+  border: 2px solid rgba(255,255,255,.3);
+  border-top-color: #fff;
+  border-radius: 50%;
+  animation: report-spin .7s linear infinite;
+}
+@keyframes report-spin { to { transform: rotate(360deg); } }
+
+/* ─── setup banner ─── */
+.report-setup-banner {
+  margin-top: 20px;
+  padding: 14px 16px;
+  background: var(--paper2);
+  border: 1px dashed var(--report-rule);
+  border-radius: 4px;
+  font-size: 12px;
+  color: var(--ink2);
+  line-height: 1.8;
+}
+
+.report-footer-rule {
+  margin-top: 40px;
+  border: none;
+  border-top: 3px double var(--report-rule);
+  padding-top: 12px;
+  text-align: center;
+  font-size: 10px;
+  letter-spacing: .15em;
+  color: var(--ink3);
+}
+
+@media (max-width: 480px) {
+  .report-fields-grid, .report-sender-grid, .report-style-grid { grid-template-columns: 1fr; }
+  .report-field.full { grid-column: auto; }
+}

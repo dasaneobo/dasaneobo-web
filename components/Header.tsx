@@ -1,0 +1,204 @@
+'use client';
+
+import Link from 'next/link';
+import { Search, Menu, User, BookOpen, LogOut, LogIn, FileText, MessageCircle } from 'lucide-react';
+import { useEffect, useState } from 'react';
+import { supabase } from '@/lib/supabase';
+import { useRouter } from 'next/navigation';
+
+export default function Header() {
+  const [userProfile, setUserProfile] = useState<any>(null);
+  const [searchTerm, setSearchTerm] = useState('');
+  const router = useRouter();
+
+  const handleSearch = (e?: React.FormEvent) => {
+    if (e) e.preventDefault();
+    if (searchTerm.trim()) {
+      router.push(`/search?q=${encodeURIComponent(searchTerm.trim())}`);
+    }
+  };
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (session?.user) {
+        const { data } = await supabase.from('profiles').select('name, role').eq('id', session.user.id).single();
+        if (data) setUserProfile(data);
+      } else {
+        setUserProfile(null);
+      }
+    };
+    
+    fetchUser();
+    
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(() => {
+      fetchUser();
+    });
+
+    return () => subscription.unsubscribe();
+  }, []);
+
+  const handleLogout = async () => {
+    await supabase.auth.signOut();
+  };
+
+  // Reordered categories based on strategy #2
+  const categories = ['지역별', '강진', '보성', '장흥', '고흥', '리포터 수첩', '행정', '정치', '경제', '사회', '문화', '칼럼'];
+
+  return (
+    <header style={{
+      position: 'sticky',
+      top: 0,
+      zIndex: 100,
+      background: 'white',
+      borderBottom: '3px solid var(--primary-dark)',
+      boxShadow: '0 2px 10px rgba(0,0,0,0.05)'
+    }}>
+      {/* Top Banner CTA (Strategy #3) */}
+      <div style={{ background: '#1a1a1a', color: '#fff', fontSize: '0.75rem', padding: '0.4rem 0', textAlign: 'center', letterSpacing: '0.05em' }}>
+        지금 <strong>다산어보 정기구독자</strong>가 되어 지역의 변화를 함께 만드세요! <Link href="/subscribe" style={{ color: 'var(--primary)', marginLeft: '10px', fontWeight: 700 }}>구독 신청하기 →</Link>
+      </div>
+
+      <div className="container" style={{
+        display: 'flex',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        padding: '1.2rem 0'
+      }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+          <Menu size={28} style={{ cursor: 'pointer', color: '#333' }} />
+          <div className="desktop-search" style={{
+            position: 'relative',
+            display: 'flex',
+            alignItems: 'center',
+            border: '1px solid #ddd',
+            padding: '0.3rem 0.6rem',
+            borderRadius: '4px',
+            background: '#f8f9fa'
+          }}>
+            <form onSubmit={handleSearch}>
+              <input 
+                type="text" 
+                placeholder="검색" 
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                style={{ border: 'none', background: 'transparent', outline: 'none', width: '80px', fontSize: '0.8rem' }}
+              />
+            </form>
+            <Search size={14} style={{ color: '#666' }} />
+          </div>
+        </div>
+
+        <Link href="/" style={{ textDecoration: 'none' }}>
+          <div style={{ textAlign: 'center' }}>
+            <h1 style={{ 
+              margin: 0, 
+              fontSize: '2.4rem', 
+              color: 'var(--primary-dark)',
+              fontFamily: '"Nanum Myeongjo", serif',
+              fontWeight: 900,
+              letterSpacing: '-1.5px'
+            }}>
+              다산어보
+            </h1>
+            <span style={{ fontSize: '0.65rem', color: '#666', letterSpacing: '3px', textTransform: 'uppercase' }}>Local Media Transparency</span>
+          </div>
+        </Link>
+
+        {/* Action Area (Strategy #3) */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+          {userProfile ? (
+            <div style={{ display: 'flex', alignItems: 'center', gap: '1.2rem', paddingRight: '1rem', borderRight: '1px solid #eee' }}>
+               <div style={{ textAlign: 'right' }}>
+                 <div style={{ fontSize: '0.8rem', fontWeight: 700, color: '#333' }}>{userProfile.name} 님</div>
+                 <div style={{ fontSize: '0.65rem', color: 'var(--primary-dark)', fontWeight: 600 }}>
+                   {userProfile.role === 'admin' ? '최고관리자' : userProfile.role === 'editor' ? '편집국 데스크' : userProfile.role === 'reporter' ? '지역 리포터' : '독자 회원'}
+                 </div>
+               </div>
+               
+               {/* Admin/Editor Links */}
+               {(userProfile.role === 'admin' || userProfile.role === 'editor') && (
+                 <Link href="/admin" style={{ textDecoration: 'none', color: '#059669', display: 'flex', alignItems: 'center', gap: '0.3rem', fontSize: '0.8rem', fontWeight: 700, background: '#e6fffa', padding: '0.4rem 0.8rem', borderRadius: '4px' }}>
+                   <BookOpen size={16} /> 편집국
+                 </Link>
+               )}
+               {(userProfile.role === 'admin' || userProfile.role === 'editor' || userProfile.role === 'reporter') && (
+                 <Link href="/admin/new" style={{ textDecoration: 'none', color: '#333', display: 'flex', alignItems: 'center', gap: '0.3rem', fontSize: '0.8rem', fontWeight: 700, background: '#f8f9fa', padding: '0.4rem 0.8rem', borderRadius: '4px', border: '1px solid #ddd' }}>
+                   <FileText size={16} /> 기사작성
+                 </Link>
+               )}
+               
+               <button onClick={handleLogout} style={{ border: 'none', background: 'none', cursor: 'pointer', color: '#888', fontSize: '0.75rem' }}>로그아웃</button>
+            </div>
+          ) : (
+            <Link href="/login" style={{ fontSize: '0.85rem', color: '#666', textDecoration: 'none', marginRight: '0.5rem' }}>로그인</Link>
+          )}
+          
+          <Link href="/admin/report">
+            <button style={{ 
+              background: 'var(--primary-dark)', 
+              color: 'white', 
+              border: 'none', 
+              padding: '0.6rem 1.2rem', 
+              borderRadius: '4px', 
+              fontSize: '0.85rem', 
+              fontWeight: 'bold',
+              cursor: 'pointer',
+              boxShadow: '0 4px 0 #047857' // Deep green shadow
+            }}>
+              마을 제보·참여
+            </button>
+          </Link>
+          <Link href="/subscribe">
+            <button style={{ 
+              background: '#ef4444', // Red for CTA
+              color: 'white', 
+              border: 'none', 
+              padding: '0.6rem 1.2rem', 
+              borderRadius: '4px', 
+              fontSize: '0.85rem', 
+              fontWeight: 'bold',
+              cursor: 'pointer',
+              boxShadow: '0 4px 0 #b91c1c'
+            }}>
+              정기구독 신청
+            </button>
+          </Link>
+        </div>
+      </div>
+      
+      {/* Category Navigation Bar */}
+      <div style={{ background: '#fff', borderTop: '1px solid #eee' }}>
+        <div className="container">
+          <ul style={{
+            display: 'flex',
+            listStyle: 'none',
+            justifyContent: 'center',
+            margin: 0,
+            padding: '0',
+            fontSize: '0.95rem',
+            fontWeight: 700,
+            color: '#333',
+            whiteSpace: 'nowrap'
+          }}>
+            {categories.map((cat, idx) => (
+              <li key={idx} style={{ 
+                padding: '1rem 1.2rem', 
+                cursor: 'pointer',
+                color: idx < 5 ? 'var(--primary-dark)' : '#333', // Highlight region menus
+                borderBottom: '3px solid transparent',
+                transition: 'all 0.2s'
+              }} 
+              onMouseEnter={(e) => e.currentTarget.style.borderBottom = '3px solid var(--primary)'}
+              onMouseLeave={(e) => e.currentTarget.style.borderBottom = '3px solid transparent'}
+              >
+                {cat}
+              </li>
+            ))}
+          </ul>
+        </div>
+      </div>
+    </header>
+  );
+}
+
