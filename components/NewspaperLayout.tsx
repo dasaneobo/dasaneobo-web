@@ -86,7 +86,7 @@ export default function NewspaperLayout({ title, type, value }: NewspaperLayoutP
       </div>
 
       {/* Main Grid: Featured + Secondary */}
-      <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr', gap: '3rem', marginBottom: '4rem' }}>
+      <div className="newspaper-main-grid" style={{ marginBottom: '4rem' }}>
         {/* Featured Article */}
         <Link href={`/article/${featured.id}`} style={{ textDecoration: 'none', color: 'inherit' }}>
           <div className="newspaper-featured" style={{ cursor: 'pointer' }}>
@@ -134,7 +134,7 @@ export default function NewspaperLayout({ title, type, value }: NewspaperLayoutP
               <ArrowRight size={20} /> 더 많은 소식
             </h4>
           </div>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '2rem' }}>
+          <div className="category-grid" style={{ gap: '2rem' }}>
             {others.map(article => (
               <Link key={article.id} href={`/article/${article.id}`} style={{ textDecoration: 'none', color: 'inherit' }}>
                 <div style={{ cursor: 'pointer' }}>
@@ -169,11 +169,8 @@ export default function NewspaperLayout({ title, type, value }: NewspaperLayoutP
       <style jsx>{`
         @media (max-width: 992px) {
           .container { padding-left: 1.5rem; padding-right: 1.5rem; }
-          div[style*="grid-template-columns: 2fr 1fr"] { grid-template-columns: 1fr !important; }
-          div[style*="grid-template-columns: repeat(3, 1fr)"] { grid-template-columns: 1fr 1fr !important; }
         }
         @media (max-width: 600px) {
-          div[style*="grid-template-columns: repeat(3, 1fr)"] { grid-template-columns: 1fr !important; }
           h2 { font-size: 2rem !important; }
           h3 { font-size: 1.6rem !important; }
         }

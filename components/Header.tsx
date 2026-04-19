@@ -59,10 +59,7 @@ export default function Header() {
         지금 <strong>다산어보 정기구독자</strong>가 되어 지역의 변화를 함께 만드세요! <Link href="/subscribe" style={{ color: 'var(--primary)', marginLeft: '10px', fontWeight: 700 }}>구독 신청하기 →</Link>
       </div>
 
-      <div className="container" style={{
-        display: 'flex',
-        justifyContent: 'space-between',
-        alignItems: 'center',
+      <div className="container header-container" style={{
         padding: '1.2rem 0'
       }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
@@ -106,7 +103,7 @@ export default function Header() {
         </Link>
 
         {/* Action Area (Strategy #3) */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+        <div className="header-actions" style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
           {userProfile ? (
             <div style={{ display: 'flex', alignItems: 'center', gap: '1.2rem', paddingRight: '1rem', borderRight: '1px solid #eee' }}>
                <div style={{ textAlign: 'right' }}>
@@ -176,13 +173,15 @@ export default function Header() {
           <ul style={{
             display: 'flex',
             listStyle: 'none',
-            justifyContent: 'center',
+            justifyContent: 'flex-start',
             margin: 0,
             padding: '0',
             fontSize: '0.95rem',
             fontWeight: 700,
             color: '#333',
-            whiteSpace: 'nowrap'
+            whiteSpace: 'nowrap',
+            overflowX: 'auto',
+            WebkitOverflowScrolling: 'touch'
           }}>
             {categories.map((cat, idx) => {
               const categoryLinks: { [key: string]: string } = {

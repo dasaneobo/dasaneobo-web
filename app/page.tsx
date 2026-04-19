@@ -70,7 +70,7 @@ export default async function Home() {
       <div className="container" style={{ marginTop: '2rem' }}>
         
         {/* TOP SECTION: Headline + Regions (Strategy #2) */}
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 340px', gap: '2.5rem', marginBottom: '3rem' }}>
+        <div className="main-headline-grid" style={{ marginBottom: '3rem' }}>
           
           {/* Main Headline */}
           <section>
@@ -98,7 +98,7 @@ export default async function Home() {
             )}
 
             {/* Sub-Headline list below main */}
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.5rem' }}>
+            <div className="sub-story-grid" style={{ gap: '1.5rem' }}>
                {subStories.slice(0, 2).map(art => (
                  <Link key={art.id} href={`/article/${art.id}`} style={{ textDecoration: 'none', color: 'inherit' }}>
                    <div style={{ display: 'flex', gap: '1rem', alignItems: 'start' }}>
@@ -164,7 +164,7 @@ export default async function Home() {
             <h3 style={{ margin: 0, fontSize: '1.6rem', fontWeight: 900 }}>4대 권역 밀착 소식</h3>
             <div style={{ flex: 1, height: '2px', background: '#eee' }}></div>
           </div>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '1.5rem' }}>
+          <div className="region-grid" style={{ gap: '1.5rem' }}>
             {regions.map(region => (
               <div key={region} style={{ borderRight: region !== '고흥' ? '1px solid #eee' : 'none', paddingRight: region !== '고흥' ? '1.5rem' : '0' }}>
                 <h4 style={{ fontSize: '1.2rem', color: 'var(--primary-dark)', fontWeight: 800, marginBottom: '1.2rem', display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
@@ -189,7 +189,7 @@ export default async function Home() {
         <InfographicDashboard settings={settings} />
 
         {/* CATEGORY GRID (SOCIAL, CULTURE, ETC) */}
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '2.5rem', marginTop: '4rem' }}>
+        <div className="category-grid" style={{ marginTop: '4rem' }}>
           {['행정/정치', '경제/산업', '사회/문화'].map((group, gIdx) => (
             <div key={group}>
               <h3 style={{ fontSize: '1.3rem', fontWeight: 800, marginBottom: '1.5rem', paddingBottom: '0.5rem', borderBottom: '2px solid #333' }}>{group}</h3>
@@ -212,7 +212,7 @@ export default async function Home() {
       {/* FOOTER SAME AS BEFORE */}
       <footer style={{ background: '#111', color: '#888', padding: '5rem 0', marginTop: '6rem' }}>
         <div className="container">
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'start', marginBottom: '3rem' }}>
+          <div className="footer-flex" style={{ marginBottom: '3rem' }}>
              <div>
                 <h2 style={{ color: '#fff', fontSize: '2.2rem', fontFamily: 'serif', margin: '0 0 1.5rem' }}>다산어보</h2>
                 <p style={{ fontSize: '0.9rem', lineHeight: '1.8' }}>
