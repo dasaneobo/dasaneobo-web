@@ -195,8 +195,9 @@ export function InfographicDashboard({ settings }: { settings?: any }) {
               </div>
             )}
           </div>
-          <div style={{ marginTop: '1.5rem', fontSize: '0.7rem', color: '#94a3b8', textAlign: 'center' }}>
-            네이버 지역 뉴스 결과 (1시간 주기 자동 갱신)
+          <div style={{ marginTop: '1.5rem', fontSize: '0.65rem', color: '#94a3b8', textAlign: 'center', lineHeight: '1.5' }}>
+            네이버 지역 뉴스 결과 (1시간 주기 자동 갱신)<br />
+            본 뉴스는 네이버 검색 API를 통해 제공되며 각 언론사의 저작권을 따릅니다
           </div>
         </div>
 
