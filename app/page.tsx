@@ -231,7 +231,7 @@ export default async function Home() {
                 <div>
                    <h5 style={{ color: '#eee', marginBottom: '1.2rem' }}>참여 안내</h5>
                    <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: '0.6rem', fontSize: '0.85rem' }}>
-                      <li><Link href="/subscribe">정기후원 신청</Link></li><li>마을 리포터 지원</li><li>윤리규정</li>
+                      <li><Link href="/subscribe">구독 신청</Link></li><li>마을 리포터 지원</li><li>윤리규정</li>
                    </ul>
                 </div>
              </div>

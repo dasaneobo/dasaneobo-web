@@ -48,8 +48,8 @@ export default function Header() {
   return (
     <header className="app-header">
       {/* Top Banner CTA (Strategy #3) */}
-      <div style={{ background: '#1a1a1a', color: '#fff', fontSize: '0.75rem', padding: '0.4rem 0', textAlign: 'center', letterSpacing: '0.05em' }}>
-        지금 <strong>다산어보 정기구독자</strong>가 되어 지역의 변화를 함께 만드세요! <Link href="/subscribe" style={{ color: 'var(--primary)', marginLeft: '10px', fontWeight: 700 }}>구독 신청하기 →</Link>
+      <div style={{ background: '#1a1a1a', color: '#fff', fontSize: '0.65rem', padding: '0.4rem 0', textAlign: 'center', wordBreak: 'keep-all' }}>
+        지금 <strong>다산어보 정기구독자</strong>가 되어 지역의 변화를 함께 만드세요! <Link href="/subscribe" style={{ color: 'var(--primary)', marginLeft: '10px', fontWeight: 700, whiteSpace: 'nowrap' }}>구독 신청하기 →</Link>
       </div>
 
       <div className="container header-container" style={{
