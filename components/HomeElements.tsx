@@ -178,15 +178,18 @@ export function TransparencyBanner({ settings }: { settings?: any }) {
       <div style={{ position: 'relative', zIndex: 2 }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '1rem' }}>
           <ShieldCheck size={24} color="var(--primary)" />
-          <h4 style={{ margin: 0, fontSize: '1.2rem', fontWeight: 800 }}>유리알 보도 원칙</h4>
+          <h4 style={{ margin: 0, fontSize: '1.2rem', fontWeight: 800 }}>유리알 보도원칙</h4>
         </div>
-        <p style={{ fontSize: '0.9rem', lineHeight: '1.6', opacity: 0.9, marginBottom: '1.5rem' }}>
-          다산어보는 자본의 논리에 휘둘리지 않는 독립 언론입니다.<br />
-          모든 후원금과 운영비는 매월 투명하게 공개됩니다.
+        <p style={{ fontSize: '0.9rem', lineHeight: '1.6', opacity: 0.9, marginBottom: '1.5rem', whiteSpace: 'pre-line' }}>
+          강진·고흥·보성·장흥의 이야기,{"\n"}
+          우리가 직접 씁니다.{"\n\n"}
+          광고주도, 보조금도, 큰손도 없습니다.{"\n"}
+          오직 구독자 여러분의 힘으로 운영되는{"\n"}
+          독립 지역 언론입니다.
         </p>
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
           <div style={{ background: 'rgba(255,255,255,0.1)', padding: '1rem', borderRadius: '8px', textAlign: 'center' }}>
-            <div style={{ fontSize: '0.7rem', opacity: 0.7, marginBottom: '0.3rem' }}>누적 환원금</div>
+            <div style={{ fontSize: '0.7rem', opacity: 0.7, marginBottom: '0.3rem' }}>누적 후원금</div>
             <div style={{ fontSize: '1.1rem', fontWeight: 700 }}>₩{donation}</div>
           </div>
           <div style={{ background: 'rgba(255,255,255,0.1)', padding: '1rem', borderRadius: '8px', textAlign: 'center' }}>

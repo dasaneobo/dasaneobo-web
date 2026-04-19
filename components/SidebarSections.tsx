@@ -1,5 +1,6 @@
 'use client';
 
+import Link from 'next/link';
 import { Users, BookOpen, CreditCard, MessageCircle, Mic, Cpu } from 'lucide-react';
 
 export function CitizenParticipation() {
@@ -83,7 +84,9 @@ export function Subscriptions() {
           <li>지역별 행정 예산 실시간 알림</li>
           <li>광고 없는 뉴스레터 발송</li>
         </ul>
-        <button className="btn btn-primary" style={{ width: '100%' }}>구독 시작하기</button>
+        <Link href="/subscribe">
+          <button className="btn btn-primary" style={{ width: '100%' }}>구독 시작하기</button>
+        </Link>
       </div>
     </section>
   );
