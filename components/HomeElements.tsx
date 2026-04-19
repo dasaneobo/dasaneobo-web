@@ -105,14 +105,30 @@ import { supabase } from '@/lib/supabase';
 import { BarChart3, Users, HandCoins, TreePalm, ShieldCheck, PieChart, TrendingUp, Info, CloudSun, Thermometer, ShoppingBag, Tags } from 'lucide-react';
 
 export function InfographicDashboard({ settings }: { settings?: any }) {
+  const [agriPrices, setAgriPrices] = useState<any[]>([]);
+
+  useEffect(() => {
+    const fetchPrices = async () => {
+      const { data } = await supabase
+        .from('farm_prices')
+        .select('*')
+        .order('item_name', { ascending: true });
+      
+      if (data && data.length > 0) {
+        setAgriPrices(data);
+      } else {
+        // Fallback for demo if DB is empty
+        setAgriPrices([
+          { item_name: '쌀', price: '52400', diff: '1200', unit: '20kg' },
+          { item_name: '배추', price: '4500', diff: '-300', unit: '1포기' },
+        ]);
+      }
+    };
+    fetchPrices();
+  }, []);
+
   // Weather Simulation (Can be connected to API later)
   const weather = { temp: 22, status: '맑음', location: '강진군' };
-  
-  // Agri Prices (Example items)
-  const agriPrices = [
-    { name: '햇쌀(20kg)', price: '52,400', diff: '+1,200' },
-    { name: '대서마늘(1kg)', price: '6,800', diff: '-200' },
-  ];
 
   return (
     <section style={{ margin: '3rem 0', background: '#f9fafb', padding: '2.5rem', borderRadius: '12px', border: '1px solid #eee' }}>
@@ -122,7 +138,7 @@ export function InfographicDashboard({ settings }: { settings?: any }) {
           <p style={{ margin: '0.4rem 0 0', fontSize: '0.9rem', color: '#666' }}>다산어보가 데이터로 본 4개 권역 현황입니다.</p>
         </div>
         <div style={{ fontSize: '0.8rem', color: '#888', display: 'flex', alignItems: 'center', gap: '0.3rem' }}>
-          <Info size={14} /> 매시간 자동 업데이트
+          <Info size={14} /> 매일 오전 9시 갱신
         </div>
       </div>
 
@@ -141,19 +157,38 @@ export function InfographicDashboard({ settings }: { settings?: any }) {
 
         {/* Agri Price Card */}
         <div style={{ background: 'white', border: '1px solid #ddd', padding: '1.5rem', borderRadius: '12px' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '1rem', color: '#111' }}>
-             <ShoppingBag size={18} /> <span style={{ fontWeight: 800 }}>산지 가격 동향</span>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '1.2rem', color: '#111', justifyContent: 'space-between' }}>
+             <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+               <ShoppingBag size={18} /> <span style={{ fontWeight: 800 }}>오늘의 농산물 가격</span>
+             </div>
+             <span style={{ fontSize: '0.75rem', color: '#888' }}>광주 각화동 경락가 기준</span>
           </div>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.8rem' }}>
-            {agriPrices.map((p, i) => (
-              <div key={i} style={{ display: 'flex', justifyContent: 'space-between', borderBottom: i === 0 ? '1px solid #eee' : 'none', paddingBottom: i === 0 ? '0.5rem' : '0' }}>
-                 <span style={{ fontSize: '0.9rem', color: '#555' }}>{p.name}</span>
-                 <div>
-                   <span style={{ fontWeight: 700 }}>{p.price}원</span>
-                   <span style={{ fontSize: '0.75rem', marginLeft: '0.5rem', color: p.diff.startsWith('+') ? '#ef4444' : '#3b82f6' }}>{p.diff}</span>
-                 </div>
-              </div>
-            ))}
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+            {agriPrices.map((p, i) => {
+              const diffNum = parseInt(p.diff || '0');
+              const isUp = diffNum > 0;
+              const isDown = diffNum < 0;
+              return (
+                <div key={i} style={{ padding: '0.8rem', background: '#f8fafc', borderRadius: '8px', border: '1px solid #f1f5f9' }}>
+                  <div style={{ fontSize: '0.75rem', color: '#64748b', marginBottom: '0.3rem' }}>{p.item_name} ({p.unit})</div>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <span style={{ fontWeight: 800, fontSize: '1.05rem', color: '#1e293b' }}>
+                      {parseInt(p.price).toLocaleString()}원
+                    </span>
+                    <span style={{ 
+                      fontSize: '0.75rem', 
+                      fontWeight: 700,
+                      color: isUp ? '#ef4444' : isDown ? '#3482f6' : '#94a3b8'
+                    }}>
+                      {isUp && '▲'}{isDown && '▼'}{isUp || isDown ? Math.abs(diffNum).toLocaleString() : '-'}
+                    </span>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+          <div style={{ marginTop: '1rem', paddingTop: '0.8rem', borderTop: '1px solid #f1f5f9', fontSize: '0.7rem', color: '#94a3b8', textAlign: 'center' }}>
+            출처: 농산물유통정보(KAMIS) · 광주 각화동 도매 · 오전 9시 기준
           </div>
         </div>
       </div>
