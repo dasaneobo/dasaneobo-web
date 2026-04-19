@@ -225,13 +225,18 @@ export default async function Home() {
                 <div>
                    <h5 style={{ color: '#eee', marginBottom: '1.2rem' }}>주요 권역</h5>
                    <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: '0.6rem', fontSize: '0.85rem' }}>
-                      <li>강진군 소식</li><li>보성군 소식</li><li>장흥군 소식</li><li>고흥군 소식</li>
+                      <li><Link href="/gangjin" style={{color: 'inherit', textDecoration: 'none'}}>강진군 소식</Link></li>
+                      <li><Link href="/boseong" style={{color: 'inherit', textDecoration: 'none'}}>보성군 소식</Link></li>
+                      <li><Link href="/jangheung" style={{color: 'inherit', textDecoration: 'none'}}>장흥군 소식</Link></li>
+                      <li><Link href="/goheung" style={{color: 'inherit', textDecoration: 'none'}}>고흥군 소식</Link></li>
                    </ul>
                 </div>
                 <div>
                    <h5 style={{ color: '#eee', marginBottom: '1.2rem' }}>참여 안내</h5>
                    <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: '0.6rem', fontSize: '0.85rem' }}>
-                      <li><Link href="/subscribe">구독 신청</Link></li><li>마을 리포터 지원</li><li><Link href="/ethics" style={{color: 'inherit', textDecoration: 'none'}}>윤리규정</Link></li>
+                      <li><Link href="/subscribe" style={{color: 'inherit', textDecoration: 'none'}}>구독 신청</Link></li>
+                      <li><Link href="/admin/report" style={{color: 'inherit', textDecoration: 'none'}}>마을 리포터 지원</Link></li>
+                      <li><Link href="/ethics" style={{color: 'inherit', textDecoration: 'none'}}>윤리규정</Link></li>
                    </ul>
                 </div>
              </div>
