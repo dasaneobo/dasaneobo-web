@@ -17,6 +17,7 @@ export default function AdminPage() {
   const [siteSettings, setSiteSettings] = useState<any>({});
   const [ads, setAds] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+  const [statusMsg, setStatusMsg] = useState<{ text: string; type: 'success' | 'error' } | null>(null);
 
   const fetchArticles = async () => {
     // Pending
@@ -54,9 +55,10 @@ export default function AdminPage() {
 
   const updateAd = async (id: string, updates: any) => {
     const { error } = await supabase.from('ads').update(updates).eq('id', id);
-    if (error) alert('저장 실패: ' + error.message);
-    else {
-      alert('광고가 수정되었습니다.');
+    if (error) {
+      setStatusMsg({ text: '저장 실패: ' + error.message, type: 'error' });
+    } else {
+      setStatusMsg({ text: '설정이 저장되었습니다.', type: 'success' });
       await fetchArticles();
     }
   };
@@ -85,6 +87,14 @@ export default function AdminPage() {
     fetchAdminData();
   }, [router]);
 
+  // Auto-dismiss status message
+  useEffect(() => {
+    if (statusMsg) {
+      const timer = setTimeout(() => setStatusMsg(null), 3000);
+      return () => clearTimeout(timer);
+    }
+  }, [statusMsg]);
+
 
   const handleApprove = async (id: string) => {
     try {
@@ -94,8 +104,9 @@ export default function AdminPage() {
         .eq('id', id);
         
       if (error) {
-        alert('발행 실패: ' + error.message);
+        setStatusMsg({ text: '발행 실패: ' + error.message, type: 'error' });
       } else {
+        setStatusMsg({ text: '기사가 발행되었습니다.', type: 'success' });
         await fetchArticles();
       }
     } catch (err) { console.error(err); }
@@ -125,9 +136,10 @@ export default function AdminPage() {
 
   const updateSetting = async (id: string, value: string) => {
     const { error } = await supabase.from('site_settings').update({ value }).eq('id', id);
-    if (error) alert('저장 실패: ' + error.message);
-    else {
-      alert('저장되었습니다.');
+    if (error) {
+      setStatusMsg({ text: '저장 실패: ' + error.message, type: 'error' });
+    } else {
+      setStatusMsg({ text: '수정사항이 반영되었습니다.', type: 'success' });
       fetchArticles(); // Refresh
     }
   };
@@ -143,7 +155,7 @@ export default function AdminPage() {
         {/* Transparency Metrics */}
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '2rem' }}>
           <div style={{ background: '#f8f9fa', padding: '1.5rem', borderRadius: '8px' }}>
-            <label style={{ display: 'block', fontWeight: 700, marginBottom: '0.8rem' }}>누적 환원금 (유리알 보도 배너)</label>
+            <label style={{ display: 'block', fontWeight: 700, marginBottom: '0.8rem' }}>누적 독립언론 기금 (유리알 보도 배너)</label>
             <div style={{ display: 'flex', gap: '0.5rem' }}>
               <input 
                 type="text" 
@@ -157,7 +169,7 @@ export default function AdminPage() {
           </div>
 
           <div style={{ background: '#f8f9fa', padding: '1.5rem', borderRadius: '8px' }}>
-            <label style={{ display: 'block', fontWeight: 700, marginBottom: '0.8rem' }}>독자 주주 수 (유리알 보도 배너)</label>
+            <label style={{ display: 'block', fontWeight: 700, marginBottom: '0.8rem' }}>정기 구독자 수 (유리알 보도 배너)</label>
             <div style={{ display: 'flex', gap: '0.5rem' }}>
               <input 
                 type="text" 
@@ -234,7 +246,43 @@ export default function AdminPage() {
   if (loading) return <div style={{ padding: '5rem', textAlign: 'center' }}>로딩 중...</div>;
 
   return (
-    <main style={{ minHeight: '100vh', background: '#f5f7fa' }}>
+    <main style={{ minHeight: '100vh', background: '#f5f7fa', position: 'relative' }}>
+      {/* Toast Notification */}
+      {statusMsg && (
+        <div style={{
+          position: 'fixed',
+          bottom: '2rem',
+          left: '50%',
+          transform: 'translateX(-50%)',
+          background: statusMsg.type === 'success' ? '#10b981' : '#ef4444',
+          color: 'white',
+          padding: '1rem 2rem',
+          borderRadius: '99px',
+          boxShadow: '0 10px 25px rgba(0,0,0,0.2)',
+          zIndex: 1000,
+          fontWeight: 700,
+          display: 'flex',
+          alignItems: 'center',
+          gap: '0.5rem',
+          animation: 'slideUp 0.3s ease-out'
+        }}>
+          {statusMsg.type === 'success' ? <CheckCircle size={20} /> : <XCircle size={20} />}
+          {statusMsg.text}
+          <button 
+            onClick={() => setStatusMsg(null)}
+            style={{ background: 'none', border: 'none', color: 'white', cursor: 'pointer', marginLeft: '1rem', opacity: 0.7 }}
+          >
+            닫기
+          </button>
+        </div>
+      )}
+
+      <style jsx global>{`
+        @keyframes slideUp {
+          from { transform: translate(-50%, 100%); opacity: 0; }
+          to { transform: translate(-50%, 0); opacity: 1; }
+        }
+      `}</style>
       <Header />
       
       <div className="container" style={{ paddingTop: '2rem', paddingBottom: '5rem' }}>
