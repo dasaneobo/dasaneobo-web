@@ -40,7 +40,7 @@ export default async function Home() {
       {/* 1. Top Billboard Ad (Strategy #1) */}
       {billboardAd && (
         <div className="container" style={{ marginTop: '1.5rem' }}>
-          <Link href={billboardAd.link_url || '#'} style={{ textDecoration: 'none' }}>
+          <Link href={billboardAd.target_url || '#'} style={{ textDecoration: 'none' }} target={billboardAd.target_url?.startsWith('http') ? '_blank' : '_self'}>
             <div style={{ 
               width: '100%', 
               height: '110px', 
@@ -128,18 +128,20 @@ export default async function Home() {
 
              {/* Ad / Sponsorship Inquiry (Strategy #1-3) */}
              {sidebarAd && (
-               <div style={{ 
-                 marginTop: '1.5rem', 
-                 padding: '1.5rem', 
-                 border: '2px dashed var(--primary)', 
-                 borderRadius: '12px',
-                 textAlign: 'center',
-                 background: '#fff'
-               }}>
-                  <div style={{ fontSize: '0.7rem', color: 'var(--primary-dark)', fontWeight: 800, marginBottom: '0.4rem', border: '1px solid var(--primary)', display: 'inline-block', padding: '1px 6px', borderRadius: '4px' }}>PARTNERSHIP</div>
-                  <h5 style={{ margin: '0.5rem 0 1rem', fontSize: '1.1rem', fontWeight: 800 }}>{sidebarAd.title}</h5>
-                  <p style={{ fontSize: '0.8rem', color: '#666', lineHeight: '1.5', marginBottom: '1.2rem' }}>{sidebarAd.description}</p>
-                  <Link href="/reporter-recruit" style={{ textDecoration: 'none' }}>
+               <Link href={sidebarAd.target_url || '#'} style={{ textDecoration: 'none', color: 'inherit' }} target={sidebarAd.target_url?.startsWith('http') ? '_blank' : '_self'}>
+                 <div style={{ 
+                   marginTop: '1.5rem', 
+                   padding: '1.5rem', 
+                   border: '2px dashed var(--primary)', 
+                   borderRadius: '12px',
+                   textAlign: 'center',
+                   background: '#fff',
+                   transition: 'transform 0.2s',
+                   cursor: 'pointer'
+                 }} onMouseEnter={(e) => e.currentTarget.style.transform = 'translateY(-2px)'} onMouseLeave={(e) => e.currentTarget.style.transform = 'translateY(0)'}>
+                    <div style={{ fontSize: '0.7rem', color: 'var(--primary-dark)', fontWeight: 800, marginBottom: '0.4rem', border: '1px solid var(--primary)', display: 'inline-block', padding: '1px 6px', borderRadius: '4px' }}>PARTNERSHIP</div>
+                    <h5 style={{ margin: '0.5rem 0 1rem', fontSize: '1.1rem', fontWeight: 800 }}>{sidebarAd.title}</h5>
+                    <p style={{ fontSize: '0.8rem', color: '#666', lineHeight: '1.5', marginBottom: '1.2rem' }}>{sidebarAd.description}</p>
                     <button style={{ 
                       width: '100%', 
                       padding: '0.7rem', 
@@ -148,11 +150,11 @@ export default async function Home() {
                       border: '1px solid var(--primary-dark)', 
                       borderRadius: '4px', 
                       fontWeight: 'bold', 
-                      cursor: 'pointer',
+                      pointerEvents: 'none',
                       fontSize: '0.85rem'
-                    }}>마을리포터 신청</button>
-                  </Link>
-               </div>
+                    }}>자세히 보기</button>
+                 </div>
+               </Link>
              )}
           </aside>
         </div>

@@ -200,12 +200,11 @@ export default function AdminPage() {
                   </label>
                 ) : <span style={{fontSize:'0.8rem', color:'#ef4444'}}>데이터 없음 (SQL 실행 필요)</span>}
               </div>
-              {billboard && (
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '1rem' }}>
                   <input type="text" defaultValue={billboard.title} onBlur={(e) => updateAd(billboard.id, { title: e.target.value })} style={{ padding: '0.6rem', border: '1px solid #ddd', borderRadius: '4px' }} placeholder="광고 제목" />
                   <input type="text" defaultValue={billboard.description} onBlur={(e) => updateAd(billboard.id, { description: e.target.value })} style={{ padding: '0.6rem', border: '1px solid #ddd', borderRadius: '4px' }} placeholder="상세 설명 / 축제 기간 등" />
+                  <input type="text" defaultValue={billboard.target_url} onBlur={(e) => updateAd(billboard.id, { target_url: e.target.value })} style={{ padding: '0.6rem', border: '1px solid var(--primary)', borderRadius: '4px', background: '#f0fdf4' }} placeholder="랜딩 페이지 URL (http://...)" />
                 </div>
-              )}
             </div>
 
             {/* Sidebar Ad Section */}
@@ -218,21 +217,15 @@ export default function AdminPage() {
                   </label>
                 ) : <span style={{fontSize:'0.8rem', color:'#ef4444'}}>데이터 없음 (SQL 실행 필요)</span>}
               </div>
-              {sidebar && (
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '1rem' }}>
                   <input type="text" defaultValue={sidebar.title} onBlur={(e) => updateAd(sidebar.id, { title: e.target.value })} style={{ padding: '0.6rem', border: '1px solid #ddd', borderRadius: '4px' }} placeholder="광고 제목" />
                   <input type="text" defaultValue={sidebar.description} onBlur={(e) => updateAd(sidebar.id, { description: e.target.value })} style={{ padding: '0.6rem', border: '1px solid #ddd', borderRadius: '4px' }} placeholder="연락처 / URL 등" />
+                  <input type="text" defaultValue={sidebar.target_url} onBlur={(e) => updateAd(sidebar.id, { target_url: e.target.value })} style={{ padding: '0.6rem', border: '1px solid var(--primary)', borderRadius: '4px', background: '#f0fdf4' }} placeholder="랜딩 페이지 URL (http://...)" />
                 </div>
-              )}
             </div>
           </div>
         </div>
 
-        <div style={{ marginTop: '3rem', padding: '1rem', background: '#fffbeb', border: '1px solid #fef3c7', borderRadius: '8px', textAlign: 'center' }}>
-          <p style={{ margin: 0, fontSize: '0.9rem', color: '#92400e' }}>
-            ⚠️ <strong>저장 실패</strong>라고 나온다면? Supabase에서 <strong>RLS(Row Level Security)를 비활성화</strong>하거나 SQL을 다시 실행해 주세요.
-          </p>
-        </div>
       </div>
     );
   };
