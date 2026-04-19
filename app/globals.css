@@ -369,8 +369,9 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 @media (max-width: 768px) {
-  .app-header.unsticky-on-mobile {
+  .app-header {
     position: relative;
+    z-index: 10;
   }
 }
 

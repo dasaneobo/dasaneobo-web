@@ -4,14 +4,12 @@ import Link from 'next/link';
 import { Search, Menu, User, BookOpen, LogOut, LogIn, FileText, MessageCircle } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { supabase } from '@/lib/supabase';
-import { useRouter, usePathname } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 
 export default function Header() {
   const [userProfile, setUserProfile] = useState<any>(null);
   const [searchTerm, setSearchTerm] = useState('');
   const router = useRouter();
-  const pathname = usePathname();
-  const isHome = pathname === '/';
 
   const handleSearch = (e?: React.FormEvent) => {
     if (e) e.preventDefault();
@@ -48,7 +46,7 @@ export default function Header() {
   const categories = ['지역별', '강진', '보성', '장흥', '고흥', '리포터 수첩', '행정', '정치', '경제', '사회', '문화', '칼럼'];
 
   return (
-    <header className={`app-header ${!isHome ? 'unsticky-on-mobile' : ''}`}>
+    <header className="app-header">
       {/* Top Banner CTA (Strategy #3) */}
       <div style={{ background: '#1a1a1a', color: '#fff', fontSize: '0.75rem', padding: '0.4rem 0', textAlign: 'center', letterSpacing: '0.05em' }}>
         지금 <strong>다산어보 정기구독자</strong>가 되어 지역의 변화를 함께 만드세요! <Link href="/subscribe" style={{ color: 'var(--primary)', marginLeft: '10px', fontWeight: 700 }}>구독 신청하기 →</Link>
