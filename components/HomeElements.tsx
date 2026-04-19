@@ -279,7 +279,7 @@ export function TransparencyBanner({ settings }: { settings?: any }) {
             <div style={{ fontSize: '1.1rem', fontWeight: 700 }}>₩{donation}</div>
           </div>
           <div style={{ background: 'rgba(255,255,255,0.1)', padding: '1rem', borderRadius: '8px', textAlign: 'center' }}>
-            <div style={{ fontSize: '0.7rem', opacity: 0.7, marginBottom: '0.3rem' }}>정기 구독자 수</div>
+            <div style={{ fontSize: '0.7rem', opacity: 0.7, marginBottom: '0.3rem' }}>구독자 수</div>
             <div style={{ fontSize: '1.1rem', fontWeight: 700 }}>{subscribers}명</div>
           </div>
         </div>

@@ -94,14 +94,6 @@ export default function Header() {
           </div>
         </Link>
 
-        {/* Global style for logo size */}
-        <style jsx>{`
-          .header-logo { font-size: 2.4rem; }
-          @media (max-width: 768px) {
-            .header-logo { font-size: 1.8rem; }
-          }
-        `}</style>
-
         {/* Action Area (Strategy #3) */}
         <div className="header-actions" style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
           {userProfile ? (
@@ -134,38 +126,55 @@ export default function Header() {
             <Link href="/login" style={{ fontSize: '0.85rem', color: '#666', textDecoration: 'none', marginRight: '0.5rem' }}>로그인</Link>
           )}
           
-          <Link href="/admin/report" className="desktop-only">
-            <button style={{ 
+          <Link href="/admin/report" style={{ textDecoration: 'none' }}>
+            <button className="header-mobile-btn" style={{ 
               background: 'var(--primary-dark)', 
               color: 'white', 
               border: 'none', 
-              padding: '0.6rem 1.2rem', 
+              padding: '0.4rem 0.6rem', 
               borderRadius: '4px', 
-              fontSize: '0.85rem', 
+              fontSize: '0.75rem', 
               fontWeight: 'bold',
               cursor: 'pointer',
-              boxShadow: '0 4px 0 #047857' // Deep green shadow
+              boxShadow: '0 3px 0 #047857',
+              whiteSpace: 'nowrap'
             }}>
-              마을 제보·참여
+              마을제보
             </button>
           </Link>
-          <Link href="/subscribe" className="desktop-only">
-            <button style={{ 
+          <Link href="/subscribe" style={{ textDecoration: 'none' }}>
+            <button className="header-mobile-btn" style={{ 
               background: '#ef4444', // Red for CTA
               color: 'white', 
               border: 'none', 
-              padding: '0.6rem 1.2rem', 
+              padding: '0.4rem 0.6rem', 
               borderRadius: '4px', 
-              fontSize: '0.85rem', 
+              fontSize: '0.75rem', 
               fontWeight: 'bold',
               cursor: 'pointer',
-              boxShadow: '0 4px 0 #b91c1c'
+              boxShadow: '0 3px 0 #b91c1c',
+              whiteSpace: 'nowrap'
             }}>
-              정기구독 신청
+              구독 신청
             </button>
           </Link>
         </div>
       </div>
+      
+      <style jsx>{`
+        .header-logo { font-size: 2.4rem; }
+        @media (max-width: 768px) {
+          .header-logo { font-size: 1.5rem; }
+          .header-actions { gap: 0.5rem !important; }
+        }
+        @global {
+          button.header-mobile-btn {
+            width: auto !important;
+            min-height: auto !important;
+            min-width: auto !important;
+          }
+        }
+      `}</style>
       
       {/* Category Navigation Bar */}
       <div style={{ background: '#fff', borderTop: '1px solid #eee' }}>

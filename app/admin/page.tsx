@@ -169,7 +169,7 @@ export default function AdminPage() {
           </div>
 
           <div style={{ background: '#f8f9fa', padding: '1.5rem', borderRadius: '8px' }}>
-            <label style={{ display: 'block', fontWeight: 700, marginBottom: '0.8rem' }}>정기 구독자 수 (유리알 보도 배너)</label>
+            <label style={{ display: 'block', fontWeight: 700, marginBottom: '0.8rem' }}>구독자 수 (유리알 보도 배너)</label>
             <div style={{ display: 'flex', gap: '0.5rem' }}>
               <input 
                 type="text" 

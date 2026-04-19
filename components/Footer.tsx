@@ -38,7 +38,7 @@ export default function Footer() {
             <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: '0.8rem', fontSize: '0.9rem' }}>
               <li><Link href="/region" style={{ color: '#666', textDecoration: 'none' }}>지역별 뉴스</Link></li>
               <li><Link href="/reporter" style={{ color: '#666', textDecoration: 'none' }}>리포터 수첩</Link></li>
-              <li><Link href="/subscribe" style={{ color: '#666', textDecoration: 'none' }}>정기구독 신청</Link></li>
+              <li><Link href="/subscribe" style={{ color: '#666', textDecoration: 'none' }}>구독 신청</Link></li>
               <li><Link href="/admin/report" style={{ color: '#666', textDecoration: 'none' }}>마을 제보하기</Link></li>
             </ul>
           </div>
