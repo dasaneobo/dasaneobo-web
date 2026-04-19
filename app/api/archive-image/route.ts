@@ -15,12 +15,13 @@ const privateKey = process.env.GOOGLE_PRIVATE_KEY
   ? process.env.GOOGLE_PRIVATE_KEY.replace(/\\n/g, '\n').replace(/^"(.*)"$/, '$1')
   : undefined;
 
-const auth = new google.auth.JWT(
-  process.env.GOOGLE_CLIENT_EMAIL,
-  undefined,
-  privateKey,
-  ['https://www.googleapis.com/auth/drive.file']
-);
+const auth = new google.auth.GoogleAuth({
+  credentials: {
+    client_email: process.env.GOOGLE_CLIENT_EMAIL,
+    private_key: privateKey,
+  },
+  scopes: ['https://www.googleapis.com/auth/drive.file'],
+});
 const drive = google.drive({ version: 'v3', auth });
 
 export async function POST(req: Request) {
