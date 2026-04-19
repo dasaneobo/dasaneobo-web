@@ -174,10 +174,6 @@ export default async function ArticlePage({ params }: { params: Promise<{ id: st
               </div>
             </div>
 
-            <div style={{ background: '#eff6ff', padding: '1.5rem', borderRadius: '8px', border: '1px solid #dbeafe' }}>
-              <h4 style={{ fontSize: '1rem', color: '#1e40af', marginBottom: '0.5rem' }}>실시간 뉴스 브리핑</h4>
-              <p style={{ fontSize: '0.8rem', color: '#3b82f6', margin: 0 }}>지역의 실시간 속보를 문자 메시지로 받아보세요.</p>
-            </div>
           </aside>
         </div>
       </div>
