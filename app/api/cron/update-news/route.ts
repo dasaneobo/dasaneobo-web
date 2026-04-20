@@ -38,7 +38,7 @@ export async function GET(req: Request) {
             title: item.title.replace(/<\/?[^>]+(>|$)/g, ""), // Remove HTML tags
             source: item.originallink ? new URL(item.originallink).hostname.replace('www.', '') : '네이버뉴스',
             link: item.link,
-            pub_date: item.pubDate,
+            pub_date: new Date(item.pubDate).toISOString(), // RFC 2822 → ISO 8601
             updated_at: new Date().toISOString()
           });
         });
