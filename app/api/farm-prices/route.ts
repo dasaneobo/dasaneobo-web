@@ -27,60 +27,47 @@ export async function GET(req: Request) {
   const results: any[] = [];
 
   try {
-    // 최근 3일간의 데이터를 확인
-    for (let dayOffset = 0; dayOffset < 5; dayOffset++) { // 범위를 5일로 확대 (휴무일 대비)
+    for (let dayOffset = 0; dayOffset < 5; dayOffset++) {
       const targetDate = new Date();
       targetDate.setDate(targetDate.getDate() - dayOffset);
-      
-      // 날짜 형식을 YYYY-MM-DD에서 YYYYMMDD로 변경 (하이픈 제거)
       const year = targetDate.getFullYear();
       const month = String(targetDate.getMonth() + 1).padStart(2, '0');
       const day = String(targetDate.getDate()).padStart(2, '0');
-      const regDay = `${year}-${month}-${day}`; // 일단 기존 유지하되 아래서 변환 시도
       const regDayCompact = `${year}${month}${day}`;
       
       for (const target of TARGET_ITEMS) {
-        const clsCodes = ['02', '01'];
-        const dateFormats = [regDay, regDayCompact];
+        if (results.find(r => r.item_name === target.name)) continue;
+
+        const baseUrl = 'https://apis.data.go.kr/B552845/perDay/price';
+        // 특수 파라미터(대괄호) 인코딩 문제를 방지하기 위해 수동 URL 구성
+        const url = `${baseUrl}?serviceKey=${apiKey}&returnType=JSON&numOfRows=10&pageNo=1&cond[exmn_ymd::LTE]=${regDayCompact}&cond[exmn_ymd::GTE]=${regDayCompact}&cond[ctgry_cd::EQ]=${target.cat}&cond[item_cd::EQ]=${target.item}&cond[se_cd::EQ]=02`;
+
+        const res = await fetch(url);
+        const text = await res.text();
         
-        let foundForTarget = false;
-        for (const clsCode of clsCodes) {
-          if (foundForTarget) break;
-          for (const dFormat of dateFormats) {
-            // 사장님 스크린샷의 End Point 주소와 파라미터 규격(perDay)에 맞춤
-            const baseUrl = 'https://apis.data.go.kr/B552845/perDay/price';
-            const url = `${baseUrl}?serviceKey=${apiKey}&p_regday=${dFormat}&p_itemcategorycode=${target.cat}&p_itemcode=${target.item}&p_kindcode=01&p_productclscode=${clsCode}&p_convert_kg_yn=N&p_returntype=json`;
+        if (dayOffset === 0 && target.item === '111') {
+          (global as any).lastRawResponse = text.substring(0, 500);
+        }
 
-            const res = await fetch(url);
-            const text = await res.text();
-            
-            if (dayOffset === 0 && target.item === '111') {
-              (global as any).lastRawResponse = text.substring(0, 500);
-            }
-
-            if (!text.trim().startsWith('{')) continue;
-            const data = JSON.parse(text);
-            
-            const items = data.response?.body?.items?.item;
-            if (items && (Array.isArray(items) ? items.length > 0 : items)) {
-              const itemArray = Array.isArray(items) ? items : [items];
-              const avgData = itemArray.find((item: any) => item.countyname === '평균' || item.countyname === '서울') || itemArray[0];
-              
-              if (avgData && !results.find(r => r.item_name === target.name)) {
-                results.push({
-                  item_name: target.name,
-                  price: avgData.price?.replace(/,/g, '') || '0',
-                  diff: avgData.direction === '1' ? avgData.value : avgData.direction === '2' ? `-${avgData.value}` : '0',
-                  unit: target.unit,
-                  updated_at: new Date().toISOString()
-                });
-                foundForTarget = true;
-                break;
-              }
-            }
-          }
+        if (!text.trim().startsWith('{')) continue;
+        const data = JSON.parse(text);
+        
+        // 공공데이터포털은 보통 data.items 또는 data.response.body.items 구조
+        const items = data.items || data.response?.body?.items?.item;
+        if (items && Array.isArray(items) && items.length > 0) {
+          const itemData = items[0];
+          results.push({
+            item_name: target.name,
+            price: itemData.exmn_dd_prc?.replace(/,/g, '') || '0',
+            diff: '0',
+            unit: target.unit,
+            updated_at: new Date().toISOString()
+          });
         }
       }
+
+      if (results.length > 0) break;
+    }
 
       // 데이터를 하나라도 찾았다면 루프 중단 (최신일자 데이터 확보 완료)
       if (results.length > 0) break;
