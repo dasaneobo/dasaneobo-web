@@ -25,7 +25,6 @@ export async function GET(req: Request) {
   }
 
   const results: any[] = [];
-  const decodedKey = decodeURIComponent(apiKey);
 
   try {
     // 최근 3일간의 데이터를 확인 (오늘 데이터가 아직 안 올라왔을 경우 대비)
@@ -37,18 +36,12 @@ export async function GET(req: Request) {
       const categories = ['100', '200'];
       
       for (const cat of categories) {
+        // 공공데이터포털 인증키는 인코딩/디코딩 이슈가 많으므로 
+        // URLSearchParams를 쓰지 않고 직접 문자열로 결합하여 이중 인코딩 방지
         const baseUrl = 'http://apis.data.go.kr/B552895/openapi/service/priceSvc/getDailyPriceByCategoryList';
-        const params = new URLSearchParams({
-          serviceKey: decodedKey,
-          p_product_cls_code: '02',
-          p_item_category_code: cat,
-          p_country_code: '', // 전체 지역 조회
-          p_regday: regDay,
-          p_convert_kg_yn: 'N',
-          p_returntype: 'json'
-        });
+        const url = `${baseUrl}?serviceKey=${apiKey}&p_product_cls_code=02&p_item_category_code=${cat}&p_country_code=&p_regday=${regDay}&p_convert_kg_yn=N&p_returntype=json`;
 
-        const res = await fetch(`${baseUrl}?${params.toString()}`);
+        const res = await fetch(url);
         const text = await res.text();
         
         // 디버깅을 위해 첫 번째 시도의 응답 일부 보관
