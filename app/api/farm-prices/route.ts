@@ -68,7 +68,6 @@ export async function GET(req: Request) {
             updated_at: new Date().toISOString()
           });
         }
-        }
       }
 
       if (results.length > 0) break;
