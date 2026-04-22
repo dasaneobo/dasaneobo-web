@@ -140,12 +140,20 @@ export default function AdminPage() {
   };
 
   const updateSetting = async (id: string, value: string) => {
-    const { error } = await supabase.from('site_settings').upsert({ id, value }, { onConflict: 'id' });
-    if (error) {
-      setStatusMsg({ text: '저장 실패: ' + error.message, type: 'error' });
-    } else {
+    try {
+      const res = await fetch('/api/admin/settings', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id, value }),
+      });
+      const data = await res.json();
+      
+      if (!res.ok) throw new Error(data.error);
+      
       setStatusMsg({ text: '수정사항이 반영되었습니다.', type: 'success' });
       fetchArticles(); // Refresh
+    } catch (error: any) {
+      setStatusMsg({ text: '저장 실패: ' + error.message, type: 'error' });
     }
   };
 
