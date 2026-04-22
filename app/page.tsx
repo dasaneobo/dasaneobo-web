@@ -217,7 +217,7 @@ export default async function Home() {
              <div>
                 <h2 style={{ color: '#fff', fontSize: '2.2rem', fontFamily: 'serif', margin: '0 0 1.5rem' }}>다산어보</h2>
                 <p style={{ fontSize: '0.9rem', lineHeight: '1.8' }}>
-                  전남 4개 권역(고흥·보성·장흥·강진) 밀착 로컬 미디어<br />
+                  전남 4개 권역(고흥·보성·장흥·강진) 밀착 독립언론<br />
                   투명한 보도와 주민 참여로 지역의 미래를 씁니다.
                 </p>
              </div>
