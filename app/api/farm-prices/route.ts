@@ -51,11 +51,20 @@ export async function GET(req: Request) {
           const itemData = items[0];
           
           const rawPrice = parseFloat(itemData.exmn_dd_prc?.replace(/,/g, '') || '0');
-          const unitSize = parseFloat(itemData.unit_sz || '1');
+          let unitSize = parseFloat(itemData.unit_sz || '1');
+          let displayUnit = `1${itemData.unit || 'kg'}`;
           
-          // 1단위당 가격 계산 (예: 40kg 40만원 -> 1kg 1만원)
+          // 배추(211)의 경우, 보통 '10kg(3포기)' 등으로 오는데, 이를 '1포기' 단위로 환산 시도
+          if (target.item === '211' && itemData.unit?.includes('포기')) {
+            const headMatch = itemData.unit.match(/(\d+)포기/);
+            if (headMatch) {
+              unitSize = parseFloat(headMatch[1]);
+              displayUnit = '1포기';
+            }
+          }
+          
+          // 1단위당 가격 계산
           const normalizedPrice = unitSize > 0 ? Math.round(rawPrice / unitSize) : rawPrice;
-          const displayUnit = `1${itemData.unit || 'kg'}`;
           
           results.push({
             item_name: target.name,
