@@ -100,14 +100,13 @@ export default function ReportPage() {
       
       form.append('reportData', JSON.stringify(reportPayload));
 
-      const response = await fetch('/api/archive-image', {
+     const response = await fetch('/api/archive-image', {
         method: 'POST',
         body: form,
       });
 
-      if (!response.ok) throw new Error('업로드 중 오류가 발생했습니다.');
-
-      const responseData = await response.json();
+      // API 오류여도 계속 진행 (DB 저장 시도)
+      const responseData = response.ok ? await response.json() : { data: null };
       const highResUrl = responseData.data?.high_res_url || '';
       const lowResUrl = responseData.data?.low_res_url || '';
 
