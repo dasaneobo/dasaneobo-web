@@ -82,6 +82,25 @@ h1, h2, h3, h4, h5, h6 {
   border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
+/* Newspaper Ticker Animation */
+@keyframes np-ticker {
+  0% { -webkit-transform: translateX(0); transform: translateX(0); }
+  100% { -webkit-transform: translateX(-50%); transform: translateX(-50%); }
+}
+
+.np-ticker-track {
+  display: inline-flex;
+  white-space: nowrap;
+  -webkit-animation: np-ticker 40s linear infinite;
+  animation: np-ticker 40s linear infinite;
+  will-change: transform;
+}
+
+.np-ticker-track:hover {
+  -webkit-animation-play-state: paused;
+  animation-play-state: paused;
+}
+
 /* Button styles */
 .btn {
   display: inline-flex;

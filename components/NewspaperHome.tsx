@@ -33,11 +33,6 @@ export function BreakingTicker({ articles }: { articles: any[] }) {
           ))}
         </div>
       </div>
-      <style jsx global>{`
-        @keyframes np-ticker { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
-        .np-ticker-track { display: inline-flex; animation: np-ticker 60s linear infinite; white-space: nowrap; }
-        .np-ticker-track:hover { animation-play-state: paused; }
-      `}</style>
     </div>
   );
 }
