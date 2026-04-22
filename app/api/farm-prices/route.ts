@@ -50,21 +50,18 @@ export async function GET(req: Request) {
         if (items && Array.isArray(items) && items.length > 0) {
           const itemData = items[0];
           
-          // API에서 제공하는 상세 단위 정보 추출 (예: 20, kg -> 20kg)
-          let apiUnit = '';
-          if (itemData.unit_sz && itemData.unit) {
-            apiUnit = `${itemData.unit_sz}${itemData.unit}`;
-          } else if (itemData.unit) {
-            apiUnit = itemData.unit;
-          } else {
-            apiUnit = target.unit;
-          }
+          const rawPrice = parseFloat(itemData.exmn_dd_prc?.replace(/,/g, '') || '0');
+          const unitSize = parseFloat(itemData.unit_sz || '1');
+          
+          // 1단위당 가격 계산 (예: 40kg 40만원 -> 1kg 1만원)
+          const normalizedPrice = unitSize > 0 ? Math.round(rawPrice / unitSize) : rawPrice;
+          const displayUnit = `1${itemData.unit || 'kg'}`;
           
           results.push({
             item_name: target.name,
-            price: itemData.exmn_dd_prc?.replace(/,/g, '') || '0',
+            price: normalizedPrice.toString(),
             diff: '0',
-            unit: apiUnit,
+            unit: displayUnit,
             updated_at: new Date().toISOString()
           });
         }
@@ -79,12 +76,7 @@ export async function GET(req: Request) {
         .upsert(results, { onConflict: 'item_name' });
       
       if (error) throw error;
-      return NextResponse.json({ 
-        success: true, 
-        count: results.length, 
-        data: results,
-        debug_units: results.map(r => ({ name: r.item_name, unit: r.unit })) 
-      });
+      return NextResponse.json({ success: true, count: results.length, data: results });
     } else {
       return NextResponse.json({ success: true, count: 0, message: "최근 데이터가 없습니다." });
     }
