@@ -236,6 +236,17 @@ export default function AdminPage() {
     if (!error) await fetchArticles();
   };
 
+  const handleDeleteReport = async (id: string) => {
+    if (!confirm('제보를 삭제하시겠습니까?')) return;
+    const { error } = await supabase.from('village_reports').delete().eq('id', id);
+    if (error) {
+      setStatusMsg({ text: '제보 삭제 실패: ' + error.message, type: 'error' });
+    } else {
+      setStatusMsg({ text: '제보가 삭제되었습니다.', type: 'success' });
+      await fetchArticles();
+    }
+  };
+
   if (loading) return <div style={{ padding: '5rem', textAlign: 'center' }}>로딩 중...</div>;
 
   return (
@@ -404,6 +415,7 @@ export default function AdminPage() {
                     <div style={{ display: 'flex', gap: '0.5rem' }}>
                        <Link href={report.high_res_url || '#'} target="_blank"><button style={{ background: '#4285F4', color: 'white', border: 'none', padding: '5px 12px', borderRadius: '4px', fontSize: '0.75rem', cursor: 'pointer' }}>원본 드라이브</button></Link>
                        <button onClick={() => alert('기사 작성으로 연동될 예정입니다.')} style={{ background: '#333', color: 'white', border: 'none', padding: '5px 12px', borderRadius: '4px', fontSize: '0.75rem', cursor: 'pointer' }}>기사 변환</button>
+                       <button onClick={() => handleDeleteReport(report.id)} style={{ background: 'none', border: '1px solid #ef4444', color: '#ef4444', padding: '4px 12px', borderRadius: '4px', fontSize: '0.75rem', cursor: 'pointer' }}>제보 삭제</button>
                     </div>
                   </div>
                 </div>
