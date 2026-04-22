@@ -265,7 +265,7 @@ export function TransparencyBanner({ settings }: { settings?: any }) {
       <div style={{ position: 'relative', zIndex: 2 }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '1rem' }}>
           <ShieldCheck size={24} color="var(--primary)" />
-          <h4 style={{ margin: 0, fontSize: '1.2rem', fontWeight: 800 }}>유리알 보도원칙</h4>
+          <h4 style={{ margin: 0, fontSize: '1.2rem', fontWeight: 800 }}>다산어보 구독자 현황</h4>
         </div>
         <p style={{ fontSize: '0.9rem', lineHeight: '1.6', opacity: 0.9, marginBottom: '1.5rem', whiteSpace: 'pre-line', wordBreak: 'keep-all' }}>
           강진·고흥·보성·장흥의 이야기,{"\n"}

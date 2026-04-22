@@ -155,7 +155,7 @@ export default function AdminPage() {
         {/* Transparency Metrics */}
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '2rem' }}>
           <div style={{ background: '#f8f9fa', padding: '1.5rem', borderRadius: '8px' }}>
-            <label style={{ display: 'block', fontWeight: 700, marginBottom: '0.8rem' }}>정기 구독자 (유리알 보도 배너)</label>
+            <label style={{ display: 'block', fontWeight: 700, marginBottom: '0.8rem' }}>정기 구독자 (구독자 현황 배너)</label>
             <div style={{ display: 'flex', gap: '0.5rem' }}>
               <input 
                 type="text" 
@@ -169,7 +169,7 @@ export default function AdminPage() {
           </div>
 
           <div style={{ background: '#f8f9fa', padding: '1.5rem', borderRadius: '8px' }}>
-            <label style={{ display: 'block', fontWeight: 700, marginBottom: '0.8rem' }}>평생 구독자 (유리알 보도 배너)</label>
+            <label style={{ display: 'block', fontWeight: 700, marginBottom: '0.8rem' }}>평생 구독자 (구독자 현황 배너)</label>
             <div style={{ display: 'flex', gap: '0.5rem' }}>
               <input 
                 type="text" 
