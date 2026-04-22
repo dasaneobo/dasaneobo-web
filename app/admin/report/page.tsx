@@ -111,29 +111,6 @@ export default function ReportPage() {
 
       // 사진 업로드는 선택사항이며 현재 단계에서는 Supabase에 직접 저장만 수행합니다.
 
-      // 3. EmailJS 이메일 발송 (실패해도 무시)
-      try {
-        const serviceId = process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID;
-        const templateId = process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID_REPORT;
-        if (serviceId && templateId) {
-          await emailjs.send(serviceId, templateId, {
-            report_style: selectedStyle,
-            who: formData.who,
-            what: formData.what,
-            when: formData.when,
-            where: formData.where,
-            how: formData.how,
-            why: formData.why,
-            extra: formData.extra || '(없음)',
-            sender_name: formData.senderName,
-            sender_contact: formData.senderContact,
-            submitted_at: todayStr()
-          });
-        }
-      } catch (mailErr) {
-        console.error('이메일 발송 실패 (무시):', mailErr);
-      }
-
       // 4. 성공 처리
       setNotice({ msg: '✓ 제보가 성공적으로 접수되었습니다!', success: true });
       setFormData({
