@@ -46,12 +46,19 @@ export async function GET(req: Request) {
         
         if (!text.trim().startsWith('{')) continue;
         const data = JSON.parse(text);
-        
         const items = data.items || data.response?.body?.items?.item;
         if (items && Array.isArray(items) && items.length > 0) {
           const itemData = items[0];
-          // API에서 제공하는 단위 정보 조합 (예: 20kg, 1포기 등)
-          const apiUnit = `${itemData.unit_sz || ''}${itemData.unit || ''}` || target.unit;
+          
+          // API에서 제공하는 상세 단위 정보 추출 (예: 20, kg -> 20kg)
+          let apiUnit = '';
+          if (itemData.unit_sz && itemData.unit) {
+            apiUnit = `${itemData.unit_sz}${itemData.unit}`;
+          } else if (itemData.unit) {
+            apiUnit = itemData.unit;
+          } else {
+            apiUnit = target.unit;
+          }
           
           results.push({
             item_name: target.name,
@@ -60,6 +67,7 @@ export async function GET(req: Request) {
             unit: apiUnit,
             updated_at: new Date().toISOString()
           });
+        }
         }
       }
 
