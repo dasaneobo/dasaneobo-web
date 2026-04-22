@@ -110,13 +110,6 @@ function LeftSidebar({ articles }: { articles: any[] }) {
         <Link href="/subscribe" style={{ display: 'block', background: '#2E7D52', color: '#fff', padding: '0.5rem', borderRadius: '3px', fontSize: '0.8rem', fontWeight: 700, textDecoration: 'none' }}>구독 신청하기</Link>
       </div>
 
-      {/* 마을 리포터 모집 배너 */}
-      <div style={{ background: '#fff', border: '1px solid #ddd', borderRadius: '4px', padding: '1.2rem', textAlign: 'center' }}>
-        <div style={{ fontSize: '1.2rem', marginBottom: '0.5rem' }}>✍️</div>
-        <h4 style={{ margin: '0 0 0.5rem', fontSize: '0.9rem', fontWeight: 800, color: '#111' }}>마을 리포터 모집</h4>
-        <p style={{ fontSize: '0.75rem', color: '#666', lineHeight: 1.5, margin: '0 0 1rem', wordBreak: 'keep-all' }}>내가 사는 마을의 이야기를 직접 전해주세요. 다산어보와 함께할 리포터를 찾습니다.</p>
-        <Link href="/reporter-apply" style={{ display: 'block', border: '1.5px solid #2E7D52', color: '#2E7D52', padding: '0.45rem', borderRadius: '3px', fontSize: '0.8rem', fontWeight: 900, textDecoration: 'none' }}>지금 신청하기</Link>
-      </div>
     </aside>
   );
 }
@@ -273,6 +266,14 @@ function RightSidebar({ farmPrices, sidebarAd }: { farmPrices: any[]; sidebarAd:
           </div>
         </Link>
       )}
+
+      {/* 마을 리포터 모집 배너 */}
+      <div style={{ background: '#fff', border: '1px solid #ddd', borderRadius: '4px', padding: '1.2rem', textAlign: 'center', marginBottom: '1.5rem' }}>
+        <div style={{ fontSize: '1.2rem', marginBottom: '0.5rem' }}>✍️</div>
+        <h4 style={{ margin: '0 0 0.5rem', fontSize: '0.9rem', fontWeight: 800, color: '#111' }}>마을 리포터 모집</h4>
+        <p style={{ fontSize: '0.75rem', color: '#666', lineHeight: 1.5, margin: '0 0 1rem', wordBreak: 'keep-all' }}>내가 사는 마을의 이야기를 직접 전해주세요. 다산어보와 함께할 리포터를 찾습니다.</p>
+        <Link href="/reporter-apply" style={{ display: 'block', border: '1.5px solid #2E7D52', color: '#2E7D52', padding: '0.45rem', borderRadius: '3px', fontSize: '0.8rem', fontWeight: 900, textDecoration: 'none' }}>지금 신청하기</Link>
+      </div>
 
       {/* 기사 제보 */}
       <div style={{ background: '#2E7D52', color: '#fff', padding: '1.2rem', borderRadius: '4px', textAlign: 'center' }}>
