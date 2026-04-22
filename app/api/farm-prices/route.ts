@@ -35,51 +35,39 @@ export async function GET(req: Request) {
       
       const categories = ['100', '200'];
       
-      for (const cat of categories) {
-        // 공공데이터포털 인증키는 인코딩/디코딩 이슈가 많으므로 
-        // URLSearchParams를 쓰지 않고 직접 문자열로 결합하여 이중 인코딩 방지
-        const baseUrl = 'http://apis.data.go.kr/B552895/openapi/service/priceSvc/getDailyPriceByCategoryList';
-        const url = `${baseUrl}?serviceKey=${apiKey}&p_product_cls_code=02&p_item_category_code=${cat}&p_country_code=&p_regday=${regDay}&p_convert_kg_yn=N&p_returntype=json`;
+      for (const target of TARGET_ITEMS) {
+      // 사용자의 스크린샷에 표시된 엔드포인트(B552845) 적용
+      // 이중 인코딩 방지를 위해 수동으로 URL 구성
+      const baseUrl = 'https://apis.data.go.kr/B552845/perDay/price';
+      const url = `${baseUrl}?serviceKey=${apiKey}&p_cert_key=111&p_cert_id=222&p_startday=${regDay}&p_endday=${regDay}&p_itemcategorycode=${target.cat}&p_itemcode=${target.item}&p_kindcode=&p_productclscode=02&p_convert_kg_yn=N&p_returntype=json`;
 
-        const res = await fetch(url);
-        const text = await res.text();
+      const res = await fetch(url);
+      const text = await res.text();
+      
+      if (dayOffset === 0 && target.item === '111') {
+        (global as any).lastRawResponse = text.substring(0, 500);
+      }
+
+      if (!text.trim().startsWith('{')) continue;
+      const data = JSON.parse(text);
+      
+      const items = data.response?.body?.items?.item;
+      if (items) {
+        const itemArray = Array.isArray(items) ? items : [items];
+        // 평균 가격 데이터 찾기
+        const avgData = itemArray.find((item: any) => item.countyname === '평균' || item.countyname === '서울');
         
-        // 디버깅을 위해 첫 번째 시도의 응답 일부 보관
-        if (dayOffset === 0 && cat === '100') {
-          (global as any).lastRawResponse = text.substring(0, 500);
-        }
-
-        if (!text.trim().startsWith('{')) continue;
-
-        const data = JSON.parse(text);
-        
-        // 공공데이터포털 에러 체크 (예: SERVICE_KEY_IS_NOT_REGISTERED)
-        if (data.response?.header?.resultCode !== '00') {
-          (global as any).lastApiError = data.response?.header?.resultMsg;
-          continue;
-        }
-
-        const items = data.response?.body?.items?.item;
-        
-        if (items) {
-          const itemArray = Array.isArray(items) ? items : [items];
-          
-          itemArray.forEach((item: any) => {
-            const target = TARGET_ITEMS.find(t => t.cat === cat && t.item === item.item_code);
-            // 이미 추가된 품목이 아니고
-            if (target && !results.find(r => r.item_name === target.name)) {
-              // 군/구 상관없이 해당 품목의 '평균' 혹은 주요 지역 데이터 추출
-              results.push({
-                item_name: target.name,
-                price: item.dpr1?.replace(/,/g, '') || '0',
-                diff: item.dpr2?.replace(/,/g, '') || '0',
-                unit: target.unit,
-                updated_at: new Date().toISOString()
-              });
-            }
+        if (avgData) {
+          results.push({
+            item_name: target.name,
+            price: avgData.price?.replace(/,/g, '') || '0',
+            diff: avgData.direction === '1' ? avgData.value : avgData.direction === '2' ? `-${avgData.value}` : '0',
+            unit: target.unit,
+            updated_at: new Date().toISOString()
           });
         }
       }
+    }
 
       // 데이터를 하나라도 찾았다면 루프 중단 (최신일자 데이터 확보 완료)
       if (results.length > 0) break;
