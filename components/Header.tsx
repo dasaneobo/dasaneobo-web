@@ -126,13 +126,12 @@ export default function Header() {
         <div className="container np-logo-inner">
           <div className="np-logo-left">
             <Link href="/ad-apply">
-              <div style={{ position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'flex-start' }}>
+              <div style={{ position: 'relative', width: '460px', height: '100px', overflow: 'hidden', borderRadius: '4px', border: '1px solid #ddd' }}>
                 <Image 
-                  src="/ads/gold_fishery.png" 
+                  src="/ads/gold_fisher_v2.png" 
                   alt="황금어장 광고" 
-                  width={500} 
-                  height={140} 
-                  style={{ width: 'auto', height: '120px', objectFit: 'contain' }} 
+                  fill
+                  style={{ objectFit: 'cover' }} 
                   priority
                 />
               </div>
