@@ -32,8 +32,42 @@ export default function Header() {
     const dayOfWeek = days[now.getDay()];
     setCurrentDate(`${year}년 ${month}월 ${day}일 (${dayOfWeek}요일)`);
 
-    // Placeholder weather
-    setWeather({ temp: '18°C', desc: '맑음' });
+    const fetchWeather = async () => {
+      try {
+        const res = await fetch('https://wttr.in/Gangjin?format=j1');
+        const data = await res.json();
+        const current = data.current_condition[0];
+        const temp = current.temp_C;
+        const desc = current.weatherDesc[0].value;
+        
+        // 날씨 설명 한글 매핑
+        const descMap: { [key: string]: string } = {
+          'Sunny': '맑음',
+          'Clear': '맑음',
+          'Partly cloudy': '구름조금',
+          'Cloudy': '흐림',
+          'Overcast': '흐림',
+          'Mist': '안개',
+          'Patchy rain nearby': '곳에 따라 비',
+          'Patchy rain possible': '비 가능성',
+          'Light rain': '가랑비',
+          'Moderate rain': '비',
+          'Heavy rain': '강한 비',
+          'Thunderstorm': '뇌우',
+          'Snow': '눈',
+        };
+        
+        setWeather({ 
+          temp: `${temp}°C`, 
+          desc: descMap[desc] || desc 
+        });
+      } catch (err) {
+        console.error('Weather fetch error:', err);
+        setWeather({ temp: '18°C', desc: '맑음' }); // Fallback
+      }
+    };
+
+    fetchWeather();
 
     const fetchUser = async () => {
       const { data: { session } } = await supabase.auth.getSession();
@@ -84,7 +118,12 @@ export default function Header() {
             <span className="np-date">{currentDate}</span>
             {weather && (
               <span className="np-weather">
-                <span className="np-weather-icon">☀</span>
+                <span className="np-weather-icon">
+                  {weather.desc.includes('비') ? '🌧️' : 
+                   weather.desc.includes('흐림') ? '☁️' : 
+                   weather.desc.includes('눈') ? '❄️' : 
+                   weather.desc.includes('구름') ? '⛅' : '☀️'}
+                </span>
                 {weather.temp} {weather.desc}
               </span>
             )}
