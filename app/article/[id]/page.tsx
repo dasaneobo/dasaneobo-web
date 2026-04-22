@@ -5,6 +5,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { ChevronLeft, Clock, User, Share2 } from 'lucide-react';
 import DeleteArticleButton from '@/components/DeleteArticleButton';
+import ShareArticleButton from '@/components/ShareArticleButton';
 import Comments from '@/components/Comments';
 import MarkdownRenderer from '@/components/MarkdownRenderer';
 
@@ -160,21 +161,7 @@ export default async function ArticlePage({ params }: { params: Promise<{ id: st
                 
                 <div style={{ display: 'flex', gap: '0.6rem' }}>
                   <DeleteArticleButton articleId={article.id} />
-                  <button style={{ 
-                    background: 'none', 
-                    border: '1px solid #ddd', 
-                    padding: '0.4rem 1rem', 
-                    borderRadius: '20px',
-                    display: 'inline-flex',
-                    alignItems: 'center',
-                    gap: '0.4rem',
-                    cursor: 'pointer',
-                    color: '#555',
-                    fontSize: '0.8rem',
-                    transition: 'all 0.2s'
-                  }}>
-                    <Share2 size={12} /> 공유
-                  </button>
+                  <ShareArticleButton />
                 </div>
               </div>
             </header>
