@@ -87,12 +87,22 @@ export async function GET(req: Request) {
         .upsert(results, { onConflict: 'item_name' });
       
       if (error) throw error;
+      return NextResponse.json({ success: true, count: results.length, data: results });
+    } else {
+      // 데이터가 없을 때 디버깅을 위해 마지막 시도 결과의 힌트를 제공
+      return NextResponse.json({ 
+        success: true, 
+        count: 0, 
+        message: "데이터를 찾지 못했습니다. API 키 활성화 대기 중이거나 해당 날짜에 데이터가 없을 수 있습니다.",
+        tip: "공공데이터포털에서 '승인' 상태인지, 그리고 키를 입력한 지 1시간 이상 지났는지 확인해 주세요.",
+        debug: {
+          last_regday: results.length === 0 ? "3일치 모두 확인 실패" : "일부 확인"
+        }
+      });
     }
-
-    return NextResponse.json({ success: true, count: results.length, data: results });
 
   } catch (error: any) {
     console.error('Price Update Error:', error);
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    return NextResponse.json({ error: error.message, stack: error.stack }, { status: 500 });
   }
 }
