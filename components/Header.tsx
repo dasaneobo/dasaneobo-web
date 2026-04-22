@@ -1,14 +1,17 @@
 'use client';
 
 import Link from 'next/link';
-import { Search, Menu, User, BookOpen, LogOut, LogIn, FileText, MessageCircle } from 'lucide-react';
+import { Search, LogIn, UserPlus, BookOpen, FileText, LogOut } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { supabase } from '@/lib/supabase';
-import { useRouter } from 'next/navigation';
+import { useRouter, usePathname } from 'next/navigation';
 
 export default function Header() {
   const [userProfile, setUserProfile] = useState<any>(null);
   const [searchTerm, setSearchTerm] = useState('');
+  const pathname = usePathname();
+  const [currentDate, setCurrentDate] = useState('');
+  const [weather, setWeather] = useState<{ temp: string; desc: string } | null>(null);
   const router = useRouter();
 
   const handleSearch = (e?: React.FormEvent) => {
@@ -19,6 +22,18 @@ export default function Header() {
   };
 
   useEffect(() => {
+    // Set current date in Korean newspaper format
+    const now = new Date();
+    const year = now.getFullYear();
+    const month = now.getMonth() + 1;
+    const day = now.getDate();
+    const days = ['일', '월', '화', '수', '목', '금', '토'];
+    const dayOfWeek = days[now.getDay()];
+    setCurrentDate(`${year}년 ${month}월 ${day}일 (${dayOfWeek}요일)`);
+
+    // Placeholder weather
+    setWeather({ temp: '18°C', desc: '맑음' });
+
     const fetchUser = async () => {
       const { data: { session } } = await supabase.auth.getSession();
       if (session?.user) {
@@ -28,9 +43,9 @@ export default function Header() {
         setUserProfile(null);
       }
     };
-    
+
     fetchUser();
-    
+
     const { data: { subscription } } = supabase.auth.onAuthStateChange(() => {
       fetchUser();
     });
@@ -42,194 +57,357 @@ export default function Header() {
     await supabase.auth.signOut();
   };
 
-  // Reordered categories based on strategy #2
-  const categories = ['지역별', '강진', '보성', '장흥', '고흥', '리포터 수첩', '행정', '정치', '경제', '사회', '문화', '칼럼'];
+  const navCategories: { label: string; href: string; region?: boolean; accent?: boolean }[] = [
+    { label: '전체기사', href: '/region' },
+    { label: '강진', href: '/gangjin', region: true },
+    { label: '고흥', href: '/goheung', region: true },
+    { label: '보성', href: '/boseong', region: true },
+    { label: '장흥', href: '/jangheung', region: true },
+    { label: '행정', href: '/administration' },
+    { label: '정치', href: '/politics' },
+    { label: '경제', href: '/economy' },
+    { label: '사회', href: '/society' },
+    { label: '문화', href: '/culture' },
+    { label: '칼럼', href: '/column' },
+    { label: '기획연재', href: '/region' },
+    { label: '포토', href: '/region' },
+    { label: '기사제보', href: '/admin/report', accent: true },
+  ];
 
   return (
-    <header className="app-header">
-      {/* Top Banner CTA (Strategy #3) */}
-      <div style={{ background: '#1a1a1a', color: '#fff', fontSize: '0.65rem', padding: '0.4rem 0', textAlign: 'center', wordBreak: 'keep-all' }}>
-        지금 <strong>다산어보 정기구독자</strong>가 되어 지역의 변화를 함께 만드세요! <Link href="/subscribe" style={{ color: 'var(--primary)', marginLeft: '10px', fontWeight: 700, whiteSpace: 'nowrap' }}>구독 신청하기 →</Link>
+    <header className="np-header">
+      {/* === TOP BAR: Date + Weather + Auth === */}
+      <div className="np-topbar">
+        <div className="container np-topbar-inner">
+          <div className="np-topbar-left">
+            <span className="np-date">{currentDate}</span>
+            {weather && (
+              <span className="np-weather">
+                <span className="np-weather-icon">☀</span>
+                {weather.temp} {weather.desc}
+              </span>
+            )}
+          </div>
+          <div className="np-topbar-right">
+            {userProfile ? (
+              <>
+                <span className="np-user-name">{userProfile.name} 님</span>
+                {(userProfile.role === 'admin' || userProfile.role === 'editor') && (
+                  <Link href="/admin" className="np-topbar-link">
+                    <BookOpen size={12} /> 편집국
+                  </Link>
+                )}
+                {(userProfile.role === 'admin' || userProfile.role === 'editor' || userProfile.role === 'reporter') && (
+                  <Link href="/admin/new" className="np-topbar-link">
+                    <FileText size={12} /> 기사작성
+                  </Link>
+                )}
+                <button onClick={handleLogout} className="np-topbar-link np-topbar-btn">
+                  <LogOut size={12} /> 로그아웃
+                </button>
+              </>
+            ) : (
+              <>
+                <Link href="/login" className="np-topbar-link">
+                  <LogIn size={12} /> 로그인
+                </Link>
+                <Link href="/login" className="np-topbar-link">
+                  <UserPlus size={12} /> 회원가입
+                </Link>
+              </>
+            )}
+          </div>
+        </div>
       </div>
 
-      <div className="container header-container" style={{
-        padding: '0.8rem 0'
-      }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-          <Menu size={28} style={{ cursor: 'pointer', color: '#333' }} />
-          <div className="desktop-search" style={{
-            position: 'relative',
-            display: 'flex',
-            alignItems: 'center',
-            border: '1px solid #ddd',
-            padding: '0.3rem 0.6rem',
-            borderRadius: '4px',
-            background: '#f8f9fa'
-          }}>
-            <form onSubmit={handleSearch} style={{ display: 'flex', alignItems: 'center' }}>
-              <input 
-                type="text" 
-                placeholder="검색" 
+      {/* === LOGO SECTION === */}
+      <div className="np-logo-section">
+        <div className="container np-logo-inner">
+          <div className="np-logo-left">
+            <form onSubmit={handleSearch} className="np-search-form">
+              <input
+                type="text"
+                placeholder="검색어 입력"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                style={{ border: 'none', background: 'transparent', outline: 'none', width: '80px', fontSize: '0.8rem' }}
+                className="np-search-input"
               />
-              <button type="submit" style={{ background: 'none', border: 'none', padding: 0, cursor: 'pointer', display: 'flex', alignItems: 'center' }}>
-                <Search size={14} style={{ color: '#666' }} />
+              <button type="submit" className="np-search-btn">
+                <Search size={16} />
               </button>
             </form>
           </div>
-        </div>
 
-        <Link href="/" style={{ textDecoration: 'none' }}>
-          <div style={{ textAlign: 'center' }}>
-            <h1 className="header-logo" style={{ 
-              margin: 0, 
-              color: 'var(--primary-dark)',
-              fontFamily: '"Nanum Myeongjo", serif',
-              fontWeight: 900,
-              letterSpacing: '-1.5px'
-            }}>
-              다산어보
-            </h1>
-            <span className="desktop-only" style={{ fontSize: '0.65rem', color: '#666', letterSpacing: '3px', textTransform: 'uppercase' }}>Local Media Transparency</span>
-          </div>
-        </Link>
-
-        {/* Action Area (Strategy #3) */}
-        <div className="header-actions" style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-          {userProfile ? (
-            <div style={{ display: 'flex', alignItems: 'center', gap: '1.2rem', paddingRight: '1rem', borderRight: '1px solid #eee' }}>
-               <div style={{ textAlign: 'right' }}>
-                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', justifyContent: 'flex-end' }}>
-                   <div style={{ fontSize: '0.8rem', fontWeight: 700, color: '#333' }}>{userProfile.name} 님</div>
-                   <Link href="/profile" style={{ fontSize: '0.65rem', color: '#888', textDecoration: 'none', border: '1px solid #ddd', padding: '1px 5px', borderRadius: '4px' }}>정보수정</Link>
-                 </div>
-                 <div style={{ fontSize: '0.65rem', color: 'var(--primary-dark)', fontWeight: 600 }}>
-                   {userProfile.role === 'admin' ? '최고관리자' : userProfile.role === 'editor' ? '편집국 데스크' : userProfile.role === 'reporter' ? '지역 리포터' : '독자 회원'}
-                 </div>
-               </div>
-               
-               {/* Admin/Editor Links */}
-               {(userProfile.role === 'admin' || userProfile.role === 'editor') && (
-                 <Link href="/admin" style={{ textDecoration: 'none', color: '#059669', display: 'flex', alignItems: 'center', gap: '0.3rem', fontSize: '0.8rem', fontWeight: 700, background: '#e6fffa', padding: '0.4rem 0.8rem', borderRadius: '4px' }}>
-                   <BookOpen size={16} /> 편집국
-                 </Link>
-               )}
-               {(userProfile.role === 'admin' || userProfile.role === 'editor' || userProfile.role === 'reporter') && (
-                 <Link href="/admin/new" style={{ textDecoration: 'none', color: '#333', display: 'flex', alignItems: 'center', gap: '0.3rem', fontSize: '0.8rem', fontWeight: 700, background: '#f8f9fa', padding: '0.4rem 0.8rem', borderRadius: '4px', border: '1px solid #ddd' }}>
-                   <FileText size={16} /> 기사작성
-                 </Link>
-               )}
-               
-               <button onClick={handleLogout} style={{ border: 'none', background: 'none', cursor: 'pointer', color: '#888', fontSize: '0.75rem' }}>로그아웃</button>
-            </div>
-          ) : (
-            <Link href="/login" style={{ fontSize: '0.85rem', color: '#666', textDecoration: 'none', marginRight: '0.5rem' }}>로그인</Link>
-          )}
-          
-          <Link href="/admin/report" style={{ textDecoration: 'none' }}>
-            <button className="header-mobile-btn" style={{ 
-              background: 'var(--primary-dark)', 
-              color: 'white', 
-              border: 'none', 
-              padding: '0.4rem 0.6rem', 
-              borderRadius: '4px', 
-              fontSize: '0.75rem', 
-              fontWeight: 'bold',
-              cursor: 'pointer',
-              boxShadow: '0 3px 0 #047857',
-              whiteSpace: 'nowrap'
-            }}>
-              마을제보
-            </button>
+          <Link href="/" className="np-logo-link">
+            <h1 className="np-logo-title">다산어보</h1>
+            <div className="np-logo-sub">DASANEOBO · 전남 독립언론 · Local Media</div>
           </Link>
-          <Link href="/subscribe" style={{ textDecoration: 'none' }}>
-            <button className="header-mobile-btn" style={{ 
-              background: '#ef4444', // Red for CTA
-              color: 'white', 
-              border: 'none', 
-              padding: '0.4rem 0.6rem', 
-              borderRadius: '4px', 
-              fontSize: '0.75rem', 
-              fontWeight: 'bold',
-              cursor: 'pointer',
-              boxShadow: '0 3px 0 #b91c1c',
-              whiteSpace: 'nowrap'
-            }}>
+
+          <div className="np-logo-right">
+            <Link href="/subscribe" className="np-subscribe-btn">
               구독 신청
-            </button>
-          </Link>
+            </Link>
+            <Link href="/admin/report" className="np-report-btn">
+              기사 제보
+            </Link>
+          </div>
         </div>
       </div>
-      
-      <style jsx>{`
-        .header-logo { font-size: 2.4rem; }
-        @media (max-width: 768px) {
-          .header-logo { font-size: 1.5rem; }
-          .header-actions { gap: 0.5rem !important; }
-        }
-        @global {
-          button.header-mobile-btn {
-            width: auto !important;
-            min-height: auto !important;
-            min-width: auto !important;
-          }
-        }
-      `}</style>
-      
-      {/* Category Navigation Bar */}
-      <div style={{ background: '#fff', borderTop: '1px solid #eee' }}>
+
+      {/* === MAIN NAVIGATION === */}
+      <nav className="np-nav">
         <div className="container">
-          <ul style={{
-            display: 'flex',
-            listStyle: 'none',
-            justifyContent: 'flex-start',
-            margin: 0,
-            padding: '0',
-            fontSize: '0.95rem',
-            fontWeight: 700,
-            color: '#333',
-            whiteSpace: 'nowrap',
-            overflowX: 'auto',
-            WebkitOverflowScrolling: 'touch'
-          }}>
-            {categories.map((cat, idx) => {
-              const categoryLinks: { [key: string]: string } = {
-                '지역별': '/region',
-                '강진': '/gangjin',
-                '보성': '/boseong',
-                '장흥': '/jangheung',
-                '고흥': '/goheung',
-                '리포터 수첩': '/reporter',
-                '행정': '/administration',
-                '정치': '/politics',
-                '경제': '/economy',
-                '사회': '/society',
-                '문화': '/culture',
-                '칼럼': '/column'
-              };
+          <ul className="np-nav-list">
+            {navCategories.map((cat, idx) => {
+              const isActive = pathname === cat.href || (cat.href !== '/' && pathname.startsWith(cat.href) && cat.href !== '/region');
               return (
-                <Link key={idx} href={categoryLinks[cat] || '#'} style={{ textDecoration: 'none', color: 'inherit' }}>
-                  <li style={{ 
-                    padding: '1rem 1.2rem', 
-                    cursor: 'pointer',
-                    color: idx < 5 ? 'var(--primary-dark)' : '#333', // Highlight region menus
-                    borderBottom: '3px solid transparent',
-                    transition: 'all 0.2s'
-                  }} 
-                  onMouseEnter={(e) => e.currentTarget.style.borderBottom = '3px solid var(--primary)'}
-                  onMouseLeave={(e) => e.currentTarget.style.borderBottom = '3px solid transparent'}
+                <li key={idx} className={`np-nav-item${idx > 0 ? ' np-nav-divider' : ''}`}>
+                  <Link
+                    href={cat.href}
+                    className={[
+                      'np-nav-link',
+                      cat.region ? 'np-nav-region' : '',
+                      cat.accent ? 'np-nav-accent' : '',
+                      isActive ? 'np-nav-active' : '',
+                    ].filter(Boolean).join(' ')}
                   >
-                    {cat}
-                  </li>
-                </Link>
+                    {cat.label}
+                  </Link>
+                </li>
               );
             })}
           </ul>
         </div>
-      </div>
+      </nav>
+
+      <style jsx>{`
+        .np-header {
+          background: #fff;
+          border-bottom: 2px solid #2E7D52;
+        }
+
+        /* === TOP BAR === */
+        .np-topbar {
+          background: #2E7D52;
+          color: #fff;
+          font-size: 0.72rem;
+          padding: 0.35rem 0;
+        }
+        .np-topbar-inner {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+        }
+        .np-topbar-left {
+          display: flex;
+          align-items: center;
+          gap: 1.2rem;
+        }
+        .np-date { font-family: 'Noto Serif KR', 'Nanum Myeongjo', serif; }
+        .np-weather { display: flex; align-items: center; gap: 0.3rem; opacity: 0.9; }
+        .np-weather-icon { font-size: 0.9rem; }
+        .np-topbar-right {
+          display: flex;
+          align-items: center;
+          gap: 0.8rem;
+        }
+        .np-user-name { font-weight: 700; font-size: 0.72rem; }
+        .np-topbar-link {
+          display: flex;
+          align-items: center;
+          gap: 0.25rem;
+          color: rgba(255,255,255,0.85);
+          text-decoration: none;
+          font-size: 0.72rem;
+          transition: color 0.15s;
+          cursor: pointer;
+        }
+        .np-topbar-link:hover { color: #fff; }
+        .np-topbar-btn {
+          background: none;
+          border: none;
+          padding: 0;
+          font-family: inherit;
+          cursor: pointer;
+        }
+
+        /* === LOGO === */
+        .np-logo-section {
+          padding: 1.2rem 0;
+          border-bottom: 1px solid #ddd;
+        }
+        .np-logo-inner {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          gap: 1rem;
+        }
+        .np-logo-link {
+          text-decoration: none;
+          text-align: center;
+          flex-shrink: 0;
+        }
+        .np-logo-title {
+          font-family: 'Noto Serif KR', 'Nanum Myeongjo', 'KoPubWorldBatang', serif;
+          font-size: 3.2rem;
+          font-weight: 900;
+          color: #2E7D52;
+          letter-spacing: -2px;
+          line-height: 1;
+          margin: 0 0 0.3rem;
+        }
+        .np-logo-sub {
+          font-size: 0.6rem;
+          color: #888;
+          letter-spacing: 2px;
+          text-transform: uppercase;
+        }
+
+        /* Search */
+        .np-logo-left {
+          display: flex;
+          align-items: center;
+          min-width: 200px;
+        }
+        .np-search-form {
+          display: flex;
+          align-items: center;
+          border: 1px solid #ccc;
+          border-radius: 3px;
+          overflow: hidden;
+          background: #fafafa;
+        }
+        .np-search-input {
+          border: none;
+          background: transparent;
+          padding: 0.45rem 0.7rem;
+          font-size: 0.85rem;
+          outline: none;
+          width: 160px;
+          font-family: inherit;
+        }
+        .np-search-btn {
+          background: #2E7D52;
+          color: white;
+          border: none;
+          padding: 0.45rem 0.7rem;
+          cursor: pointer;
+          display: flex;
+          align-items: center;
+        }
+
+        /* Right area */
+        .np-logo-right {
+          display: flex;
+          flex-direction: column;
+          gap: 0.5rem;
+          min-width: 120px;
+          align-items: flex-end;
+        }
+        .np-subscribe-btn {
+          background: #2E7D52;
+          color: white;
+          border: none;
+          padding: 0.4rem 1rem;
+          border-radius: 3px;
+          font-size: 0.8rem;
+          font-weight: 700;
+          text-decoration: none;
+          cursor: pointer;
+          font-family: inherit;
+          text-align: center;
+          width: 100px;
+          display: block;
+        }
+        .np-report-btn {
+          background: white;
+          color: #2E7D52;
+          border: 1.5px solid #2E7D52;
+          padding: 0.35rem 1rem;
+          border-radius: 3px;
+          font-size: 0.8rem;
+          font-weight: 700;
+          text-decoration: none;
+          cursor: pointer;
+          font-family: inherit;
+          text-align: center;
+          width: 100px;
+          display: block;
+        }
+
+        /* === NAVIGATION === */
+        .np-nav {
+          background: #fff;
+          border-top: 3px solid #2E7D52;
+          border-bottom: 1px solid #ddd;
+        }
+        .np-nav-list {
+          display: flex;
+          list-style: none;
+          margin: 0;
+          padding: 0;
+          overflow-x: auto;
+          -webkit-overflow-scrolling: touch;
+          scrollbar-width: none;
+          justify-content: space-between;
+        }
+        .np-nav-list::-webkit-scrollbar { display: none; }
+        .np-nav-item { flex: 1; text-align: center; }
+        /* 구분선 */
+        .np-nav-divider {
+          border-left: 1px solid #e0e0e0;
+          margin-left: 0.3rem;
+          padding-left: 0.3rem;
+        }
+        .np-nav-link {
+          display: block;
+          padding: 0.78rem 0;
+          font-size: 0.85rem;
+          font-weight: 700;
+          color: #333;
+          text-decoration: none;
+          border-bottom: 3px solid transparent;
+          transition: color 0.15s, background 0.15s, border-color 0.15s;
+          font-family: 'Noto Serif KR', 'Nanum Myeongjo', serif;
+          white-space: nowrap;
+          cursor: pointer;
+          text-align: center;
+        }
+        .np-nav-link:hover {
+          color: #2E7D52;
+          border-bottom-color: #2E7D52;
+          background: #f5fdf9;
+        }
+        /* 현재 페이지 */
+        .np-nav-active {
+          color: #2E7D52 !important;
+          border-bottom-color: #2E7D52 !important;
+          background: #f0faf5;
+        }
+        /* 권역 메뉴 */
+        .np-nav-region { color: #2E7D52; font-weight: 800; }
+        /* 기사제보 강조 */
+        .np-nav-accent {
+          color: #c0392b !important;
+          font-weight: 800;
+        }
+        .np-nav-accent:hover {
+          background: #fff5f5 !important;
+          border-bottom-color: #c0392b !important;
+        }
+
+        /* === MOBILE === */
+        @media (max-width: 768px) {
+          .np-topbar { display: none; }
+          .np-logo-title { font-size: 2rem; }
+          .np-logo-inner { flex-direction: column; gap: 0.8rem; text-align: center; }
+          .np-logo-left { min-width: unset; justify-content: center; }
+          .np-search-input { width: 120px; }
+          .np-logo-right { flex-direction: row; min-width: unset; align-items: center; justify-content: center; }
+          .np-logo-right a { width: auto; }
+          .np-logo-section { padding: 0.8rem 0; }
+        }
+      `}</style>
     </header>
   );
 }
-
