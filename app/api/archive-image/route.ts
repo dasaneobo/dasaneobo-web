@@ -1,4 +1,27 @@
-// ... 기존 import 및 설정 ...
+import { NextResponse } from 'next/server';
+import { google } from 'googleapis';
+import { createClient } from '@supabase/supabase-js';
+import sharp from 'sharp';
+import { Readable } from 'stream';
+
+const supabaseAdmin = createClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL || '',
+  process.env.SUPABASE_SERVICE_ROLE_KEY || ''
+);
+
+const privateKey = process.env.GOOGLE_PRIVATE_KEY
+  ? process.env.GOOGLE_PRIVATE_KEY.replace(/\\n/g, '\n').replace(/^"(.*)"$/, '$1')
+  : undefined;
+
+const auth = new google.auth.GoogleAuth({
+  credentials: {
+    client_email: process.env.GOOGLE_CLIENT_EMAIL,
+    private_key: privateKey,
+  },
+  scopes: ['https://www.googleapis.com/auth/drive.file'],
+});
+
+const drive = google.drive({ version: 'v3', auth });
 
 export async function POST(req: Request) {
   try {
