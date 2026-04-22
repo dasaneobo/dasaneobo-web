@@ -155,28 +155,28 @@ export default function AdminPage() {
         {/* Transparency Metrics */}
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '2rem' }}>
           <div style={{ background: '#f8f9fa', padding: '1.5rem', borderRadius: '8px' }}>
-            <label style={{ display: 'block', fontWeight: 700, marginBottom: '0.8rem' }}>누적 독립언론 기금 (유리알 보도 배너)</label>
+            <label style={{ display: 'block', fontWeight: 700, marginBottom: '0.8rem' }}>정기 구독자 (유리알 보도 배너)</label>
             <div style={{ display: 'flex', gap: '0.5rem' }}>
               <input 
                 type="text" 
-                defaultValue={siteSettings.donation_amount || ''} 
-                onBlur={(e) => updateSetting('donation_amount', e.target.value)}
+                defaultValue={siteSettings.regular_subscribers || ''} 
+                onBlur={(e) => updateSetting('regular_subscribers', e.target.value)}
                 style={{ flex: 1, padding: '0.8rem', borderRadius: '4px', border: '1px solid #ddd' }}
-                placeholder="예: 12,450,000"
+                placeholder="예: 4,521"
               />
-              <span style={{ display: 'flex', alignItems: 'center', fontWeight: 700 }}>원</span>
+              <span style={{ display: 'flex', alignItems: 'center', fontWeight: 700 }}>명</span>
             </div>
           </div>
 
           <div style={{ background: '#f8f9fa', padding: '1.5rem', borderRadius: '8px' }}>
-            <label style={{ display: 'block', fontWeight: 700, marginBottom: '0.8rem' }}>구독자 수 (유리알 보도 배너)</label>
+            <label style={{ display: 'block', fontWeight: 700, marginBottom: '0.8rem' }}>평생 구독자 (유리알 보도 배너)</label>
             <div style={{ display: 'flex', gap: '0.5rem' }}>
               <input 
                 type="text" 
-                defaultValue={siteSettings.subscriber_count || ''} 
-                onBlur={(e) => updateSetting('subscriber_count', e.target.value)}
+                defaultValue={siteSettings.lifetime_subscribers || ''} 
+                onBlur={(e) => updateSetting('lifetime_subscribers', e.target.value)}
                 style={{ flex: 1, padding: '0.8rem', borderRadius: '4px', border: '1px solid #ddd' }}
-                placeholder="예: 4,521"
+                placeholder="예: 128"
               />
               <span style={{ display: 'flex', alignItems: 'center', fontWeight: 700 }}>명</span>
             </div>
