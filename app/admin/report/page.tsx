@@ -106,7 +106,7 @@ export default function ReportPage() {
         }])
         .select()
         .single();
-
+ 
       if (dbError) throw new Error('DB 저장 오류: ' + dbError.message);
 
       // 2. 사진이 있으면 별도 업로드 시도 (실패해도 무시)
