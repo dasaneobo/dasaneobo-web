@@ -140,7 +140,7 @@ export default function Header() {
 
           <Link href="/" className="np-logo-link">
             <h1 className="np-logo-title">다산어보</h1>
-            <div className="np-logo-sub">DASANEOBO · 전남 독립언론 · Local Media</div>
+            <div className="np-logo-sub" style={{ whiteSpace: 'nowrap' }}>DASANEOBO · 전남·광주 독립언론 · LOCAL MEDIA</div>
           </Link>
 
           <div className="np-logo-right">
