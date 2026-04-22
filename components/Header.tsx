@@ -6,6 +6,7 @@ import { Search, LogIn, UserPlus, BookOpen, FileText, LogOut } from 'lucide-reac
 import { useEffect, useState } from 'react';
 import { supabase } from '@/lib/supabase';
 import { useRouter, usePathname } from 'next/navigation';
+import { SITE_CONFIG } from '@/constants/siteConfig';
 
 export default function Header() {
   const [userProfile, setUserProfile] = useState<any>(null);
@@ -34,7 +35,7 @@ export default function Header() {
 
     const fetchWeather = async () => {
       try {
-        const res = await fetch('https://wttr.in/Gangjin?format=j1');
+        const res = await fetch(`https://wttr.in/${SITE_CONFIG.location.city}?format=j1`);
         const data = await res.json();
         const current = data.current_condition[0];
         const temp = current.temp_C;
@@ -92,22 +93,7 @@ export default function Header() {
     await supabase.auth.signOut();
   };
 
-  const navCategories: { label: string; href: string; region?: boolean; accent?: boolean }[] = [
-    { label: '전체기사', href: '/region' },
-    { label: '강진', href: '/gangjin', region: true },
-    { label: '고흥', href: '/goheung', region: true },
-    { label: '보성', href: '/boseong', region: true },
-    { label: '장흥', href: '/jangheung', region: true },
-    { label: '행정', href: '/administration' },
-    { label: '정치', href: '/politics' },
-    { label: '경제', href: '/economy' },
-    { label: '사회', href: '/society' },
-    { label: '문화', href: '/culture' },
-    { label: '칼럼', href: '/column' },
-    { label: '기획연재', href: '/region' },
-    { label: '포토', href: '/region' },
-    { label: '기사제보', href: '/admin/report', accent: true },
-  ];
+  const navCategories = SITE_CONFIG.categories;
 
   return (
     <header className="np-header">
@@ -178,8 +164,8 @@ export default function Header() {
           </div>
 
           <Link href="/" className="np-logo-link">
-            <h1 className="np-logo-title">다산어보</h1>
-            <div className="np-logo-sub" style={{ whiteSpace: 'nowrap' }}>DASANEOBO · 전남·광주 독립언론 · LOCAL MEDIA</div>
+            <h1 className="np-logo-title">{SITE_CONFIG.name}</h1>
+            <div className="np-logo-sub" style={{ whiteSpace: 'nowrap' }}>{SITE_CONFIG.englishName} · {SITE_CONFIG.slogan}</div>
           </Link>
 
           <div className="np-logo-right">
