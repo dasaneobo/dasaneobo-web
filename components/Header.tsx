@@ -93,7 +93,7 @@ export default function Header() {
     await supabase.auth.signOut();
   };
 
-  const navCategories = SITE_CONFIG.categories;
+  const navCategories: { label: string; href: string; region?: boolean; accent?: boolean }[] = SITE_CONFIG.categories;
 
   return (
     <header className="np-header">

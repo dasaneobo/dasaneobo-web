@@ -35,7 +35,10 @@ export const SITE_CONFIG = {
     { label: '사회', href: '/society' },
     { label: '문화', href: '/culture' },
     { label: '칼럼', href: '/column' },
-  ],
+    { label: '기획연재', href: '/region' },
+    { label: '포토', href: '/region' },
+    { label: '기사제보', href: '/admin/report', accent: true },
+  ] as { label: string; href: string; region?: boolean; accent?: boolean }[],
   
   // 연락처 및 하단 정보
   contact: {
