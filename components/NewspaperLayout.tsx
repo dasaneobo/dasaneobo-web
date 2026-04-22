@@ -46,7 +46,21 @@ export default function NewspaperLayout({ title, type, value }: NewspaperLayoutP
       }
 
       const { data } = await query;
-      if (data) setArticles(data);
+      if (data) {
+        const authorIds = [...new Set(data.map(a => a.author_id).filter(Boolean))];
+        if (authorIds.length > 0) {
+          const { data: profiles } = await supabase.from('profiles').select('id, name').in('id', authorIds);
+          const profileMap = (profiles || []).reduce((acc: any, p: any) => ({ ...acc, [p.id]: p.name }), {});
+          const enrichedData = data.map((a: any) => ({
+            ...a,
+            author_name: profileMap[a.author_id] || '관리자'
+          }));
+          setArticles(enrichedData as any);
+        } else {
+          const enrichedData = data.map((a: any) => ({ ...a, author_name: '관리자' }));
+          setArticles(enrichedData as any);
+        }
+      }
       setLoading(false);
     };
 
