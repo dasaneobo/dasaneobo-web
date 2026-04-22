@@ -131,20 +131,42 @@ export default async function Home() {
              </div>
 
              {/* Ad / Sponsorship Inquiry (Strategy #1-3) */}
-             {sidebarAd && (
-               <div style={{ 
-                 marginTop: '1.5rem', 
-                 padding: '1.5rem', 
-                 border: '2px dashed var(--primary)', 
-                 borderRadius: '12px',
-                 textAlign: 'center',
-                 background: '#fff'
-               }}>
-                  <div style={{ fontSize: '0.7rem', color: 'var(--primary-dark)', fontWeight: 800, marginBottom: '0.4rem', border: '1px solid var(--primary)', display: 'inline-block', padding: '1px 6px', borderRadius: '4px' }}>PARTNERSHIP</div>
-                  <h5 style={{ margin: '0.5rem 0 1rem', fontSize: '1.1rem', fontWeight: 800 }}>{sidebarAd.title}</h5>
-                  <p style={{ fontSize: '0.8rem', color: '#666', lineHeight: '1.5', margin: 0 }}>{sidebarAd.description}</p>
-               </div>
-             )}
+             {sidebarAd && (() => {
+               const sidebarContent = (
+                 <div style={{ 
+                   marginTop: '1.5rem', 
+                   padding: '1.5rem', 
+                   border: '2px dashed var(--primary)', 
+                   borderRadius: '12px',
+                   textAlign: 'center',
+                   background: '#fff',
+                   cursor: sidebarAd.link_url ? 'pointer' : 'default'
+                 }}>
+                    <div style={{ fontSize: '0.7rem', color: 'var(--primary-dark)', fontWeight: 800, marginBottom: '0.4rem', border: '1px solid var(--primary)', display: 'inline-block', padding: '1px 6px', borderRadius: '4px' }}>PARTNERSHIP</div>
+                    <h5 style={{ margin: '0.5rem 0 1rem', fontSize: '1.1rem', fontWeight: 800 }}>{sidebarAd.title}</h5>
+                    <p style={{ fontSize: '0.8rem', color: '#666', lineHeight: '1.5', marginBottom: '1.2rem' }}>{sidebarAd.description}</p>
+                    {sidebarAd.link_url && (
+                      <button style={{ 
+                        width: '100%', 
+                        padding: '0.7rem', 
+                        background: 'white', 
+                        color: 'var(--primary-dark)', 
+                        border: '1px solid var(--primary-dark)', 
+                        borderRadius: '4px', 
+                        fontWeight: 'bold', 
+                        pointerEvents: 'none',
+                        fontSize: '0.85rem'
+                      }}>자세히 보기</button>
+                    )}
+                 </div>
+               );
+
+               return sidebarAd.link_url ? (
+                 <Link href={sidebarAd.link_url} style={{ textDecoration: 'none', color: 'inherit' }} target={sidebarAd.link_url.startsWith('http') ? '_blank' : '_self'}>
+                   {sidebarContent}
+                 </Link>
+               ) : sidebarContent;
+             })()}
           </aside>
         </div>
 
