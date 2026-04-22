@@ -9,11 +9,12 @@ import { useRouter } from 'next/navigation';
 
 export default function AdminPage() {
   const router = useRouter();
-  const [activeTab, setActiveTab] = useState<'pending' | 'published' | 'reports' | 'settings'>('pending');
+  const [activeTab, setActiveTab] = useState<'pending' | 'published' | 'reports' | 'settings' | 'applications'>('pending');
   const [userProfile, setUserProfile] = useState<any>(null);
   const [pendingArticles, setPendingArticles] = useState<any[]>([]);
   const [publishedArticles, setPublishedArticles] = useState<any[]>([]);
   const [villageReports, setVillageReports] = useState<any[]>([]);
+  const [applications, setApplications] = useState<any[]>([]);
   const [siteSettings, setSiteSettings] = useState<any>({});
   const [ads, setAds] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
@@ -51,6 +52,10 @@ export default function AdminPage() {
     // Ads
     const { data: adsData } = await supabase.from('ads').select('*').order('created_at', { ascending: false });
     if (adsData) setAds(adsData);
+
+    // Applications
+    const { data: apps } = await supabase.from('reporter_applications').select('*').order('created_at', { ascending: false });
+    if (apps) setApplications(apps);
   };
 
   const updateAd = async (id: string, updates: any) => {
@@ -247,6 +252,17 @@ export default function AdminPage() {
     }
   };
 
+  const handleDeleteApplication = async (id: string) => {
+    if (!confirm('해당 신청 내역을 삭제하시겠습니까?')) return;
+    const { error } = await supabase.from('reporter_applications').delete().eq('id', id);
+    if (error) {
+      setStatusMsg({ text: '삭제 실패: ' + error.message, type: 'error' });
+    } else {
+      setStatusMsg({ text: '신청 내역이 삭제되었습니다.', type: 'success' });
+      await fetchArticles();
+    }
+  };
+
   if (loading) return <div style={{ padding: '5rem', textAlign: 'center' }}>로딩 중...</div>;
 
   return (
@@ -340,6 +356,12 @@ export default function AdminPage() {
           >
             사이트 설정
           </div>
+          <div 
+            style={{ padding: '1rem 0', cursor: 'pointer', fontWeight: 700, fontSize: '1rem', color: activeTab === 'applications' ? 'var(--primary-dark)' : '#999', borderBottom: activeTab === 'applications' ? '3px solid var(--primary-dark)' : '3px solid transparent' }}
+            onClick={() => setActiveTab('applications')}
+          >
+            리포터 신청 ({applications.length})
+          </div>
         </div>
 
         {/* Content Area */}
@@ -422,6 +444,35 @@ export default function AdminPage() {
               ))
             ) : (
               <p style={{ textAlign: 'center', padding: '5rem', color: '#999' }}>접수된 마을 제보가 없습니다.</p>
+            )
+          )}
+
+          {activeTab === 'applications' && (
+            applications.length > 0 ? (
+              applications.map(app => (
+                <div key={app.id} style={{ background: 'white', padding: '1.5rem', borderRadius: '12px', border: '1px solid #eee', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                    <h3 style={{ margin: 0, fontSize: '1.2rem', fontWeight: 800 }}>{app.name} <span style={{ fontSize: '0.9rem', color: '#666', fontWeight: 400 }}>({app.birthdate})</span></h3>
+                    <span style={{ fontSize: '0.85rem', color: '#999' }}>{new Date(app.created_at).toLocaleString()}</span>
+                  </div>
+                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.5rem', fontSize: '0.9rem', color: '#444' }}>
+                    <div><strong>연락처:</strong> {app.phone}</div>
+                    <div><strong>이메일:</strong> {app.email}</div>
+                    <div style={{ gridColumn: '1 / -1' }}><strong>주소:</strong> {app.address}</div>
+                  </div>
+                  {app.reason && (
+                    <div style={{ background: '#f8f9fa', padding: '1rem', borderRadius: '8px', fontSize: '0.9rem', color: '#333', lineHeight: '1.5', whiteSpace: 'pre-wrap' }}>
+                      <strong>신청 사유:</strong><br/>
+                      {app.reason}
+                    </div>
+                  )}
+                  <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '0.5rem' }}>
+                    <button onClick={() => handleDeleteApplication(app.id)} style={{ background: 'none', border: '1px solid #ef4444', color: '#ef4444', padding: '0.4rem 1rem', borderRadius: '6px', cursor: 'pointer', fontSize: '0.85rem', fontWeight: 'bold' }}>삭제</button>
+                  </div>
+                </div>
+              ))
+            ) : (
+              <p style={{ textAlign: 'center', padding: '5rem', color: '#999' }}>접수된 리포터 신청이 없습니다.</p>
             )
           )}
 

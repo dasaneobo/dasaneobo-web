@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { supabase } from '@/lib/supabase';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import { Send, CheckCircle, ChevronLeft } from 'lucide-react';
@@ -26,14 +27,21 @@ export default function ReporterApplyPage() {
     e.preventDefault();
     setLoading(true);
     
-    // Here we simulate the API call. Since we don't have a specific table for applications yet,
-    // we'll just show a success message after a short delay.
-    // In production, you would do: await supabase.from('reporter_applications').insert([formData])
+    const { error } = await supabase.from('reporter_applications').insert([{
+      name: formData.name,
+      birthdate: formData.birthdate,
+      phone: formData.phone,
+      email: formData.email,
+      address: formData.address,
+      reason: formData.reason
+    }]);
     
-    setTimeout(() => {
-      setLoading(false);
+    if (error) {
+      alert('신청 접수 중 오류가 발생했습니다: ' + error.message + '\n\n(관리자 안내: reporter_applications 테이블 생성이 필요할 수 있습니다.)');
+    } else {
       setSubmitted(true);
-    }, 1000);
+    }
+    setLoading(false);
   };
 
   return (
