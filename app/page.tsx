@@ -56,13 +56,19 @@ export default async function Home() {
               position: 'relative',
               transition: 'all 0.2s'
             }}>
-              <div style={{ position: 'absolute', top: '10px', left: '10px', fontSize: '0.6rem', color: '#94a3b8', border: '1px solid #e2e8f0', padding: '1px 4px', borderRadius: '2px', fontWeight: 700 }}>AD</div>
-              <div style={{ textAlign: 'center' }}>
-                  <div style={{ fontSize: '1.4rem', fontWeight: 800, color: '#1e293b', fontFamily: 'serif', marginBottom: '0.3rem' }}>
-                    {billboardAd.title}
+              {billboardAd.image_url ? (
+                <img src={billboardAd.image_url} alt={billboardAd.title || '광고'} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+              ) : (
+                <>
+                  <div style={{ position: 'absolute', top: '10px', left: '10px', fontSize: '0.6rem', color: '#94a3b8', border: '1px solid #e2e8f0', padding: '1px 4px', borderRadius: '2px', fontWeight: 700 }}>AD</div>
+                  <div style={{ textAlign: 'center' }}>
+                      <div style={{ fontSize: '1.4rem', fontWeight: 800, color: '#1e293b', fontFamily: 'serif', marginBottom: '0.3rem' }}>
+                        {billboardAd.title}
+                      </div>
+                      <div style={{ fontSize: '0.85rem', color: '#64748b' }}>{billboardAd.description}</div>
                   </div>
-                  <div style={{ fontSize: '0.85rem', color: '#64748b' }}>{billboardAd.description}</div>
-              </div>
+                </>
+              )}
             </div>
           </Link>
         </div>
