@@ -36,24 +36,21 @@ export default function AdApplyPage() {
     try {
       // 1. Upload photo if exists
       if (file) {
-        const fileExt = file.name.split('.').pop();
-        const fileName = `${Date.now()}_${Math.random().toString(36).substring(7)}.${fileExt}`;
+        const formDataUpload = new FormData();
+        formDataUpload.append('file', file);
         
-        // We'll use the 'images' bucket which should already exist
-        const { data: uploadData, error: uploadError } = await supabase.storage
-          .from('images')
-          .upload(`ads/${fileName}`, file);
-
-        if (uploadError) {
-          console.error("Upload error:", uploadError);
-          // Don't fail the whole submission if image fails, just alert
-          alert('이미지 업로드 중 오류가 발생했습니다. 신청서는 계속 제출됩니다.');
+        const uploadRes = await fetch('/api/upload-ad-image', {
+          method: 'POST',
+          body: formDataUpload,
+        });
+        
+        const uploadData = await uploadRes.json();
+        
+        if (!uploadRes.ok) {
+          console.error("Upload error:", uploadData.error);
+          alert('이미지 업로드 중 오류가 발생했습니다. 신청서는 계속 제출됩니다. (' + uploadData.error + ')');
         } else {
-          const { data: publicUrlData } = supabase.storage
-            .from('images')
-            .getPublicUrl(`ads/${fileName}`);
-            
-          photoUrl = publicUrlData.publicUrl;
+          photoUrl = uploadData.url;
         }
       }
 
