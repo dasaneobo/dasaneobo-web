@@ -41,36 +41,44 @@ export default async function Home() {
       {/* 1. Top Billboard Ad (Strategy #1) */}
       {billboardAd && (
         <div className="container" style={{ marginTop: '1.5rem' }}>
-          <Link href={billboardAd.link_url || '#'} style={{ textDecoration: 'none' }} target={billboardAd.link_url?.startsWith('http') ? '_blank' : '_self'}>
-            <div style={{ 
-              width: '100%', 
-              height: '110px', 
-              background: '#f8fafc', 
-              borderRadius: '8px', 
-              display: 'flex', 
-              alignItems: 'center', 
-              justifyContent: 'center',
-              border: '1px solid #e2e8f0',
-              overflow: 'hidden',
-              cursor: 'pointer',
-              position: 'relative',
-              transition: 'all 0.2s'
-            }}>
-              {billboardAd.image_url ? (
-                <img src={billboardAd.image_url} alt={billboardAd.title || '광고'} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-              ) : (
-                <>
-                  <div style={{ position: 'absolute', top: '10px', left: '10px', fontSize: '0.6rem', color: '#94a3b8', border: '1px solid #e2e8f0', padding: '1px 4px', borderRadius: '2px', fontWeight: 700 }}>AD</div>
-                  <div style={{ textAlign: 'center' }}>
-                      <div style={{ fontSize: '1.4rem', fontWeight: 800, color: '#1e293b', fontFamily: 'serif', marginBottom: '0.3rem' }}>
-                        {billboardAd.title}
-                      </div>
-                      <div style={{ fontSize: '0.85rem', color: '#64748b' }}>{billboardAd.description}</div>
-                  </div>
-                </>
-              )}
-            </div>
-          </Link>
+          {(() => {
+            const adContent = (
+              <div style={{ 
+                width: '100%', 
+                height: '110px', 
+                background: '#f8fafc', 
+                borderRadius: '8px', 
+                display: 'flex', 
+                alignItems: 'center', 
+                justifyContent: 'center',
+                border: '1px solid #e2e8f0',
+                overflow: 'hidden',
+                cursor: billboardAd.link_url ? 'pointer' : 'default',
+                position: 'relative',
+                transition: 'all 0.2s'
+              }}>
+                {billboardAd.image_url ? (
+                  <img src={billboardAd.image_url} alt={billboardAd.title || '광고'} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                ) : (
+                  <>
+                    <div style={{ position: 'absolute', top: '10px', left: '10px', fontSize: '0.6rem', color: '#94a3b8', border: '1px solid #e2e8f0', padding: '1px 4px', borderRadius: '2px', fontWeight: 700 }}>AD</div>
+                    <div style={{ textAlign: 'center' }}>
+                        <div style={{ fontSize: '1.4rem', fontWeight: 800, color: '#1e293b', fontFamily: 'serif', margin: '0 0 0.3rem' }}>
+                          {billboardAd.title}
+                        </div>
+                        <div style={{ fontSize: '0.85rem', color: '#64748b' }}>{billboardAd.description}</div>
+                    </div>
+                  </>
+                )}
+              </div>
+            );
+
+            return billboardAd.link_url ? (
+              <Link href={billboardAd.link_url} style={{ textDecoration: 'none' }} target={billboardAd.link_url.startsWith('http') ? '_blank' : '_self'}>
+                {adContent}
+              </Link>
+            ) : adContent;
+          })()}
         </div>
       )}
       
@@ -135,8 +143,8 @@ export default async function Home() {
              </div>
 
              {/* Ad / Sponsorship Inquiry (Strategy #1-3) */}
-             {sidebarAd && (
-               <Link href={sidebarAd.link_url || '#'} style={{ textDecoration: 'none', color: 'inherit' }} target={sidebarAd.link_url?.startsWith('http') ? '_blank' : '_self'}>
+             {sidebarAd && (() => {
+               const sidebarContent = (
                  <div style={{ 
                    marginTop: '1.5rem', 
                    padding: '1.5rem', 
@@ -144,25 +152,33 @@ export default async function Home() {
                    borderRadius: '12px',
                    textAlign: 'center',
                    background: '#fff',
-                   cursor: 'pointer'
+                   cursor: sidebarAd.link_url ? 'pointer' : 'default'
                  }}>
                     <div style={{ fontSize: '0.7rem', color: 'var(--primary-dark)', fontWeight: 800, marginBottom: '0.4rem', border: '1px solid var(--primary)', display: 'inline-block', padding: '1px 6px', borderRadius: '4px' }}>PARTNERSHIP</div>
                     <h5 style={{ margin: '0.5rem 0 1rem', fontSize: '1.1rem', fontWeight: 800 }}>{sidebarAd.title}</h5>
                     <p style={{ fontSize: '0.8rem', color: '#666', lineHeight: '1.5', marginBottom: '1.2rem' }}>{sidebarAd.description}</p>
-                    <button style={{ 
-                      width: '100%', 
-                      padding: '0.7rem', 
-                      background: 'white', 
-                      color: 'var(--primary-dark)', 
-                      border: '1px solid var(--primary-dark)', 
-                      borderRadius: '4px', 
-                      fontWeight: 'bold', 
-                      pointerEvents: 'none',
-                      fontSize: '0.85rem'
-                    }}>자세히 보기</button>
+                    {sidebarAd.link_url && (
+                      <button style={{ 
+                        width: '100%', 
+                        padding: '0.7rem', 
+                        background: 'white', 
+                        color: 'var(--primary-dark)', 
+                        border: '1px solid var(--primary-dark)', 
+                        borderRadius: '4px', 
+                        fontWeight: 'bold', 
+                        pointerEvents: 'none',
+                        fontSize: '0.85rem'
+                      }}>자세히 보기</button>
+                    )}
                  </div>
-               </Link>
-             )}
+               );
+
+               return sidebarAd.link_url ? (
+                 <Link href={sidebarAd.link_url} style={{ textDecoration: 'none', color: 'inherit' }} target={sidebarAd.link_url.startsWith('http') ? '_blank' : '_self'}>
+                   {sidebarContent}
+                 </Link>
+               ) : sidebarContent;
+             })()}
           </aside>
         </div>
 
