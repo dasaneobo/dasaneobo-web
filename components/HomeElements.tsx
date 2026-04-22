@@ -249,8 +249,8 @@ export function InfographicDashboard({ settings }: { settings?: any }) {
 }
 
 export function TransparencyBanner({ settings }: { settings?: any }) {
-  const donation = settings?.donation_amount || '12,450,000';
-  const subscribers = settings?.subscriber_count || '4,521';
+  const regularSubscribers = settings?.regular_subscribers || '0000';
+  const lifetimeSubscribers = settings?.lifetime_subscribers || '000';
 
   return (
     <div style={{ 
@@ -275,12 +275,12 @@ export function TransparencyBanner({ settings }: { settings?: any }) {
         </p>
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
           <div style={{ background: 'rgba(255,255,255,0.1)', padding: '1rem', borderRadius: '8px', textAlign: 'center' }}>
-            <div style={{ fontSize: '0.7rem', opacity: 0.7, marginBottom: '0.3rem' }}>누적 독립언론 기금</div>
-            <div style={{ fontSize: '1.1rem', fontWeight: 700 }}>₩{donation}</div>
+            <div style={{ fontSize: '0.7rem', opacity: 0.7, marginBottom: '0.3rem' }}>정기 구독자</div>
+            <div style={{ fontSize: '1.1rem', fontWeight: 700 }}>{regularSubscribers}명</div>
           </div>
           <div style={{ background: 'rgba(255,255,255,0.1)', padding: '1rem', borderRadius: '8px', textAlign: 'center' }}>
-            <div style={{ fontSize: '0.7rem', opacity: 0.7, marginBottom: '0.3rem' }}>구독자 수</div>
-            <div style={{ fontSize: '1.1rem', fontWeight: 700 }}>{subscribers}명</div>
+            <div style={{ fontSize: '0.7rem', opacity: 0.7, marginBottom: '0.3rem' }}>평생 구독자</div>
+            <div style={{ fontSize: '1.1rem', fontWeight: 700 }}>{lifetimeSubscribers}명</div>
           </div>
         </div>
       </div>
