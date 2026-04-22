@@ -140,7 +140,7 @@ export default function AdminPage() {
   };
 
   const updateSetting = async (id: string, value: string) => {
-    const { error } = await supabase.from('site_settings').update({ value }).eq('id', id);
+    const { error } = await supabase.from('site_settings').upsert({ id, value }, { onConflict: 'id' });
     if (error) {
       setStatusMsg({ text: '저장 실패: ' + error.message, type: 'error' });
     } else {
