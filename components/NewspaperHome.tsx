@@ -220,7 +220,7 @@ function RightSidebar({ farmPrices, sidebarAd }: { farmPrices: any[]; sidebarAd:
     <aside style={{ display: 'flex', flexDirection: 'column', gap: '1.8rem' }}>
       {/* 농산물 가격 */}
       <div>
-        <SectionHeader title="오늘의 농산물 가격" />
+        <SectionHeader title="오늘의 농산물 가격(소매)" />
         <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
           {prices.map((p: any, i: number) => {
             const diff = parseInt(p.diff || '0');
