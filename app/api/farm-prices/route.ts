@@ -39,28 +39,25 @@ export async function GET(req: Request) {
         if (results.find(r => r.item_name === target.name)) continue;
 
         const baseUrl = 'https://apis.data.go.kr/B552845/perDay/price';
-        // 특수 파라미터(대괄호) 인코딩 문제를 방지하기 위해 수동 URL 구성
         const url = `${baseUrl}?serviceKey=${apiKey}&returnType=JSON&numOfRows=10&pageNo=1&cond[exmn_ymd::LTE]=${regDayCompact}&cond[exmn_ymd::GTE]=${regDayCompact}&cond[ctgry_cd::EQ]=${target.cat}&cond[item_cd::EQ]=${target.item}&cond[se_cd::EQ]=02`;
 
         const res = await fetch(url);
         const text = await res.text();
         
-        if (dayOffset === 0 && target.item === '111') {
-          (global as any).lastRawResponse = text.substring(0, 500);
-        }
-
         if (!text.trim().startsWith('{')) continue;
         const data = JSON.parse(text);
         
-        // 공공데이터포털은 보통 data.items 또는 data.response.body.items 구조
         const items = data.items || data.response?.body?.items?.item;
         if (items && Array.isArray(items) && items.length > 0) {
           const itemData = items[0];
+          // API에서 제공하는 단위 정보 조합 (예: 20kg, 1포기 등)
+          const apiUnit = `${itemData.unit_sz || ''}${itemData.unit || ''}` || target.unit;
+          
           results.push({
             item_name: target.name,
             price: itemData.exmn_dd_prc?.replace(/,/g, '') || '0',
             diff: '0',
-            unit: target.unit,
+            unit: apiUnit,
             updated_at: new Date().toISOString()
           });
         }
@@ -77,22 +74,11 @@ export async function GET(req: Request) {
       if (error) throw error;
       return NextResponse.json({ success: true, count: results.length, data: results });
     } else {
-      // 데이터가 없을 때 디버깅을 위해 마지막 시도 결과의 힌트를 제공
-      return NextResponse.json({ 
-        success: true, 
-        count: 0, 
-        message: "데이터를 찾지 못했습니다. API 키 활성화 대기 중이거나 해당 날짜에 데이터가 없을 수 있습니다.",
-        tip: "공공데이터포털에서 '승인' 상태인지, 그리고 키를 입력한 지 1시간 이상 지났는지 확인해 주세요.",
-        debug: {
-          last_regday: results.length === 0 ? "3일치 모두 확인 실패" : "일부 확인",
-          api_error: (global as any).lastApiError || "없음 (JSON 구조 확인 필요)",
-          raw_response: (global as any).lastRawResponse || "응답 없음"
-        }
-      });
+      return NextResponse.json({ success: true, count: 0, message: "최근 데이터가 없습니다." });
     }
 
   } catch (error: any) {
     console.error('Price Update Error:', error);
-    return NextResponse.json({ error: error.message, stack: error.stack }, { status: 500 });
+    return NextResponse.json({ error: error.message }, { status: 500 });
   }
 }
