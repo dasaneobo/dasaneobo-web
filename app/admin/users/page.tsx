@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import Header from '@/components/Header';
 import { supabase } from '@/lib/supabase';
-import { Users, ShieldCheck, UserCog, ChevronLeft, Save, Search } from 'lucide-react';
+import { Users, ShieldCheck, UserCog, ChevronLeft, Save, Search, Trash2 } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 
@@ -56,6 +56,30 @@ export default function UserManagementPage() {
     } else {
       setUsers(users.map(u => u.id === userId ? { ...u, role: newRole } : u));
       // alert('등급이 성공적으로 변경되었습니다.'); // Too many alerts are annoying
+    }
+  };
+
+  const handleDeleteUser = async (userId: string, userName: string) => {
+    if (!confirm(`${userName} 회원을 정말 삭제하시겠습니까? 이 작업은 되돌릴 수 없습니다.`)) {
+      return;
+    }
+
+    try {
+      const res = await fetch('/api/admin/users', {
+        method: 'DELETE',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ userId }),
+      });
+
+      if (!res.ok) {
+        const data = await res.json();
+        throw new Error(data.error || '삭제 실패');
+      }
+
+      setUsers(users.filter(u => u.id !== userId));
+      alert('회원이 성공적으로 삭제되었습니다.');
+    } catch (err: any) {
+      alert('회원 삭제 중 오류가 발생했습니다: ' + err.message);
     }
   };
 
@@ -115,6 +139,7 @@ export default function UserManagementPage() {
                 <th style={{ padding: '1.2rem', fontWeight: 700, fontSize: '0.9rem' }}>현재 등급</th>
                 <th style={{ padding: '1.2rem', fontWeight: 700, fontSize: '0.9rem' }}>권한 설정</th>
                 <th style={{ padding: '1.2rem', fontWeight: 700, fontSize: '0.9rem' }}>상태</th>
+                <th style={{ padding: '1.2rem', fontWeight: 700, fontSize: '0.9rem' }}>관리</th>
               </tr>
             </thead>
             <tbody>
@@ -163,6 +188,25 @@ export default function UserManagementPage() {
                     ) : (
                       <span style={{ color: '#999', fontSize: '0.85rem' }}>대기</span>
                     )}
+                  </td>
+                  <td style={{ padding: '1.2rem' }}>
+                    <button 
+                      onClick={() => handleDeleteUser(user.id, user.name)}
+                      style={{
+                        background: '#fee2e2',
+                        color: '#dc2626',
+                        border: 'none',
+                        padding: '6px 12px',
+                        borderRadius: '6px',
+                        cursor: 'pointer',
+                        fontSize: '0.85rem',
+                        display: 'inline-flex',
+                        alignItems: 'center',
+                        gap: '4px'
+                      }}
+                    >
+                      <Trash2 size={14} /> 삭제
+                    </button>
                   </td>
                 </tr>
               ))}
