@@ -19,6 +19,7 @@ function EditArticleForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const articleId = searchParams.get('id');
+  const reportId = searchParams.get('reportId');
   
   const [loading, setLoading] = useState(false);
   const [isEditMode, setIsEditMode] = useState(false);
@@ -67,6 +68,20 @@ function EditArticleForm() {
             region: article.region,
             author_id: article.author_id
           });
+        }
+      } else if (reportId) {
+        const { data: report } = await supabase.from('village_reports').select('*').eq('id', reportId).single();
+        if (report) {
+          const generatedContent = `**누가:** ${report.who}  \n**무엇을:** ${report.what}  \n**어디서:** ${report.where}  \n**언제:** ${report.when}  \n**어떻게:** ${report.how}  \n**왜:** ${report.why}  \n\n**추가 내용:** ${report.extra || ''}  \n\n*(제보자: ${report.sender_name} 리포터 / 제보 스타일: ${report.style})*`;
+          setFormData(prev => ({ 
+            ...prev, 
+            author_id: session.user.id,
+            title: `[제보 바탕] ${report.what}`,
+            content: generatedContent,
+            image_url: report.high_res_url || report.low_res_url || ''
+          }));
+        } else {
+          setFormData(prev => ({ ...prev, author_id: session.user.id }));
         }
       } else {
         // Default author is the current user
