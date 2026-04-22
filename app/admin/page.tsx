@@ -15,6 +15,7 @@ export default function AdminPage() {
   const [publishedArticles, setPublishedArticles] = useState<any[]>([]);
   const [villageReports, setVillageReports] = useState<any[]>([]);
   const [applications, setApplications] = useState<any[]>([]);
+  const [adApplications, setAdApplications] = useState<any[]>([]);
   const [siteSettings, setSiteSettings] = useState<any>({});
   const [ads, setAds] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
@@ -56,6 +57,10 @@ export default function AdminPage() {
     // Applications
     const { data: apps } = await supabase.from('reporter_applications').select('*').order('created_at', { ascending: false });
     if (apps) setApplications(apps);
+
+    // Ad Applications
+    const { data: adApps } = await supabase.from('ad_applications').select('*').order('created_at', { ascending: false });
+    if (adApps) setAdApplications(adApps);
   };
 
   const updateAd = async (id: string, updates: any) => {
@@ -271,6 +276,17 @@ export default function AdminPage() {
     }
   };
 
+  const handleDeleteAdApplication = async (id: string) => {
+    if (!confirm('해당 광고 신청 내역을 삭제하시겠습니까?')) return;
+    const { error } = await supabase.from('ad_applications').delete().eq('id', id);
+    if (error) {
+      setStatusMsg({ text: '삭제 실패: ' + error.message, type: 'error' });
+    } else {
+      setStatusMsg({ text: '광고 신청 내역이 삭제되었습니다.', type: 'success' });
+      await fetchArticles();
+    }
+  };
+
   if (loading) return <div style={{ padding: '5rem', textAlign: 'center' }}>로딩 중...</div>;
 
   return (
@@ -369,6 +385,12 @@ export default function AdminPage() {
             onClick={() => setActiveTab('applications')}
           >
             리포터 신청 ({applications.length})
+          </div>
+          <div 
+            style={{ padding: '1rem 0', cursor: 'pointer', fontWeight: 700, fontSize: '1rem', color: activeTab === 'adApplications' as any ? 'var(--primary-dark)' : '#999', borderBottom: activeTab === 'adApplications' as any ? '3px solid var(--primary-dark)' : '3px solid transparent' }}
+            onClick={() => setActiveTab('adApplications' as any)}
+          >
+            광고 신청 ({adApplications.length})
           </div>
         </div>
 
@@ -481,6 +503,39 @@ export default function AdminPage() {
               ))
             ) : (
               <p style={{ textAlign: 'center', padding: '5rem', color: '#999' }}>접수된 리포터 신청이 없습니다.</p>
+            )
+          )}
+
+          {activeTab === 'adApplications' as any && (
+            adApplications.length > 0 ? (
+              adApplications.map(app => (
+                <div key={app.id} style={{ background: 'white', padding: '1.5rem', borderRadius: '12px', border: '1px solid #eee', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                    <h3 style={{ margin: 0, fontSize: '1.2rem', fontWeight: 800 }}>{app.name}</h3>
+                    <span style={{ fontSize: '0.85rem', color: '#999' }}>{new Date(app.created_at).toLocaleString()}</span>
+                  </div>
+                  <div style={{ fontSize: '0.9rem', color: '#444' }}>
+                    <strong>연락처:</strong> {app.phone}
+                  </div>
+                  <div style={{ background: '#f8f9fa', padding: '1rem', borderRadius: '8px', fontSize: '0.9rem', color: '#333', lineHeight: '1.5', whiteSpace: 'pre-wrap' }}>
+                    <strong>광고 문구:</strong><br/>
+                    {app.content}
+                  </div>
+                  {app.photo_url && (
+                    <div style={{ marginTop: '0.5rem' }}>
+                      <strong>첨부사진:</strong><br/>
+                      <a href={app.photo_url} target="_blank" rel="noopener noreferrer">
+                        <img src={app.photo_url} alt="첨부 사진" style={{ maxWidth: '300px', maxHeight: '200px', borderRadius: '8px', marginTop: '0.5rem', border: '1px solid #ddd' }} />
+                      </a>
+                    </div>
+                  )}
+                  <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '0.5rem' }}>
+                    <button onClick={() => handleDeleteAdApplication(app.id)} style={{ background: 'none', border: '1px solid #ef4444', color: '#ef4444', padding: '0.4rem 1rem', borderRadius: '6px', cursor: 'pointer', fontSize: '0.85rem', fontWeight: 'bold' }}>삭제</button>
+                  </div>
+                </div>
+              ))
+            ) : (
+              <p style={{ textAlign: 'center', padding: '5rem', color: '#999' }}>접수된 광고 신청이 없습니다.</p>
             )
           )}
 
