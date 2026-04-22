@@ -24,7 +24,12 @@ export default function Comments({ articleId }: { articleId: string }) {
   useEffect(() => {
     const fetchUserAndComments = async () => {
       const { data: { session } } = await supabase.auth.getSession();
-      setCurrentUser(session?.user || null);
+      if (session?.user) {
+        const { data: profile } = await supabase.from('profiles').select('role').eq('id', session.user.id).single();
+        setCurrentUser({ ...session.user, role: profile?.role });
+      } else {
+        setCurrentUser(null);
+      }
 
       const { data, error } = await supabase
         .from('comments')
@@ -158,8 +163,8 @@ export default function Comments({ articleId }: { articleId: string }) {
                   <span style={{ fontWeight: 800, fontSize: '0.95rem', marginRight: '0.6rem' }}>{comment.profiles?.name || '익명'}</span>
                   <span style={{ fontSize: '0.8rem', color: '#aaa' }}>{new Date(comment.created_at).toLocaleString('ko-KR')}</span>
                 </div>
-                {currentUser?.id === comment.user_id && (
-                  <button onClick={() => handleDelete(comment.id)} style={{ background: 'none', border: 'none', color: '#ff6b6b', cursor: 'pointer' }}>
+                {(currentUser?.id === comment.user_id || currentUser?.role === 'admin' || currentUser?.role === 'editor') && (
+                  <button onClick={() => handleDelete(comment.id)} style={{ background: 'none', border: 'none', color: '#ff6b6b', cursor: 'pointer' }} title="댓글 삭제">
                     <Trash2 size={16} />
                   </button>
                 )}
