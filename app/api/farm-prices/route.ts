@@ -29,19 +29,41 @@ export async function GET(req: Request) {
 
   try {
     const categories = ['100', '200'];
+    // 공공데이터포털 인증키는 이미 인코딩되어 있는 경우가 많으므로 중복 인코딩 방지를 위해 디코딩 후 사용
+    const decodedKey = decodeURIComponent(apiKey);
     
     for (const cat of categories) {
-      const url = `https://apis.data.go.kr/B552895/openapi/service/priceSvc/getDailyPriceByCategoryList?serviceKey=${apiKey}&p_cert_key=111&p_cert_id=222&p_returntype=json&p_product_cls_code=02&p_item_category_code=${cat}&p_country_code=2100&p_regday=${today}&p_convert_kg_yn=N`;
+      // 공공데이터포털 최신 오퍼레이션 주소
+      const baseUrl = 'http://apis.data.go.kr/B552895/openapi/service/priceSvc/getDailyPriceByCategoryList';
+      const params = new URLSearchParams({
+        serviceKey: decodedKey, // 인증키
+        p_product_cls_code: '02', // 소매 가격
+        p_item_category_code: cat,
+        p_country_code: '2100', // 서울 (전국 기준)
+        p_regday: today,
+        p_convert_kg_yn: 'N',
+        p_returntype: 'json'
+      });
+
+      const res = await fetch(`${baseUrl}?${params.toString()}`);
+      const text = await res.text(); // 먼저 텍스트로 받아서 확인
+
+      if (!text.trim().startsWith('{')) {
+        console.error(`API Response Error (${cat}):`, text);
+        continue; // JSON이 아니면 스킵
+      }
+
+      const data = JSON.parse(text);
       
-      const res = await fetch(url);
-      const data = await res.json();
-      
-      if (data.data && data.data.item) {
-        const items = Array.isArray(data.data.item) ? data.data.item : [data.data.item];
+      if (data.response?.body?.items?.item) {
+        const items = Array.isArray(data.response.body.items.item) 
+          ? data.response.body.items.item 
+          : [data.response.body.items.item];
         
         items.forEach((item: any) => {
           const target = TARGET_ITEMS.find(t => t.cat === cat && t.item === item.item_code);
-          if (target && (item.county_name?.includes('광주') || item.market_name?.includes('각화'))) {
+          // '전국평균' 혹은 '서울' 데이터 우선 추출
+          if (target && (item.county_name === '평균' || item.county_name === '서울')) {
             results.push({
               item_name: target.name,
               price: item.dpr1?.replace(/,/g, '') || '0',
