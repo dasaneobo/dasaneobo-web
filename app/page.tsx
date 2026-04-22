@@ -120,9 +120,9 @@ export default async function Home() {
           <aside>
              <div style={{ background: '#fff7ed', padding: '1.8rem', borderRadius: '12px', border: '1px solid #ffedd5', marginBottom: '1.5rem' }}>
                 <h4 style={{ margin: '0 0 0.8rem', fontSize: '1.2rem', fontWeight: 800, color: '#c2410c' }}>마을의 목소리가 되어주세요</h4>
-                <p style={{ margin: '0 0 1.5rem', fontSize: '0.9rem', color: '#9a3412', lineHeight: '1.5' }}>누구나 리포터가 될 수 있습니다. 현장의 소식을 다산어보에 직접 제보하세요.</p>
-                <Link href="/admin/report">
-                  <button style={{ width: '100%', padding: '0.8rem', background: '#ea580c', color: 'white', border: 'none', borderRadius: '6px', fontWeight: 'bold', cursor: 'pointer' }}>리포터 제보하기</button>
+                <p style={{ margin: '0 0 1.5rem', fontSize: '0.9rem', color: '#9a3412', lineHeight: '1.5' }}>누구나 리포터가 될 수 있습니다. 현장의 소식을 다산어보에 전할 리포터를 모집합니다.</p>
+                <Link href="/reporter-apply">
+                  <button style={{ width: '100%', padding: '0.8rem', background: '#ea580c', color: 'white', border: 'none', borderRadius: '6px', fontWeight: 'bold', cursor: 'pointer' }}>리포터 신청하기</button>
                 </Link>
              </div>
              <TransparencyBanner settings={settings} />
