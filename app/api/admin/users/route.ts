@@ -14,15 +14,20 @@ export async function DELETE(request: Request) {
       return NextResponse.json({ error: 'User ID is required' }, { status: 400 });
     }
 
-    // 1. Delete from Supabase Auth
+    // 1. Delete from Profiles first (to avoid foreign key constraint errors)
+    const { error: profileError } = await supabaseAdmin.from('profiles').delete().eq('id', userId);
+    
+    if (profileError) {
+      console.error('Error deleting profile:', profileError);
+      // We continue anyway, in case the profile is already gone or to attempt auth deletion
+    }
+
+    // 2. Delete from Supabase Auth
     const { error: authError } = await supabaseAdmin.auth.admin.deleteUser(userId);
 
     if (authError) {
       return NextResponse.json({ error: authError.message }, { status: 500 });
     }
-
-    // 2. Delete from Profiles (in case there's no cascade delete)
-    await supabaseAdmin.from('profiles').delete().eq('id', userId);
 
     return NextResponse.json({ success: true });
   } catch (err: any) {
