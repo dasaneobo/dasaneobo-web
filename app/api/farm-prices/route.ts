@@ -27,47 +27,59 @@ export async function GET(req: Request) {
   const results: any[] = [];
 
   try {
-    // 최근 3일간의 데이터를 확인 (오늘 데이터가 아직 안 올라왔을 경우 대비)
-    for (let dayOffset = 0; dayOffset < 3; dayOffset++) {
+    // 최근 3일간의 데이터를 확인
+    for (let dayOffset = 0; dayOffset < 5; dayOffset++) { // 범위를 5일로 확대 (휴무일 대비)
       const targetDate = new Date();
       targetDate.setDate(targetDate.getDate() - dayOffset);
-      const regDay = targetDate.toISOString().split('T')[0];
       
-      const categories = ['100', '200'];
+      // 날짜 형식을 YYYY-MM-DD에서 YYYYMMDD로 변경 (하이픈 제거)
+      const year = targetDate.getFullYear();
+      const month = String(targetDate.getMonth() + 1).padStart(2, '0');
+      const day = String(targetDate.getDate()).padStart(2, '0');
+      const regDay = `${year}-${month}-${day}`; // 일단 기존 유지하되 아래서 변환 시도
+      const regDayCompact = `${year}${month}${day}`;
       
       for (const target of TARGET_ITEMS) {
-      // 사용자의 스크린샷에 표시된 엔드포인트(B552845) 적용
-      // 이중 인코딩 방지를 위해 수동으로 URL 구성
-      const baseUrl = 'https://apis.data.go.kr/B552845/perDay/price';
-      const url = `${baseUrl}?serviceKey=${apiKey}&p_cert_key=111&p_cert_id=222&p_startday=${regDay}&p_endday=${regDay}&p_itemcategorycode=${target.cat}&p_itemcode=${target.item}&p_kindcode=&p_productclscode=02&p_convert_kg_yn=N&p_returntype=json`;
-
-      const res = await fetch(url);
-      const text = await res.text();
-      
-      if (dayOffset === 0 && target.item === '111') {
-        (global as any).lastRawResponse = text.substring(0, 500);
-      }
-
-      if (!text.trim().startsWith('{')) continue;
-      const data = JSON.parse(text);
-      
-      const items = data.response?.body?.items?.item;
-      if (items) {
-        const itemArray = Array.isArray(items) ? items : [items];
-        // 평균 가격 데이터 찾기
-        const avgData = itemArray.find((item: any) => item.countyname === '평균' || item.countyname === '서울');
+        // 소매(02)와 도매(01) 가격을 모두 시도
+        const clsCodes = ['02', '01'];
+        const dateFormats = [regDay, regDayCompact];
         
-        if (avgData) {
-          results.push({
-            item_name: target.name,
-            price: avgData.price?.replace(/,/g, '') || '0',
-            diff: avgData.direction === '1' ? avgData.value : avgData.direction === '2' ? `-${avgData.value}` : '0',
-            unit: target.unit,
-            updated_at: new Date().toISOString()
-          });
+        let foundForTarget = false;
+        for (const clsCode of clsCodes) {
+          if (foundForTarget) break;
+          for (const dFormat of dateFormats) {
+            const baseUrl = 'https://apis.data.go.kr/B552845/perDay/price';
+            const url = `${baseUrl}?serviceKey=${apiKey}&p_cert_key=111&p_cert_id=222&p_startday=${dFormat}&p_endday=${dFormat}&p_itemcategorycode=${target.cat}&p_itemcode=${target.item}&p_kindcode=&p_productclscode=${clsCode}&p_convert_kg_yn=N&p_returntype=json`;
+
+            const res = await fetch(url);
+            const text = await res.text();
+            
+            if (dayOffset === 0 && target.item === '111') {
+              (global as any).lastRawResponse = text.substring(0, 500);
+            }
+
+            if (!text.trim().startsWith('{')) continue;
+            const data = JSON.parse(text);
+            
+            const items = data.response?.body?.items?.item;
+            if (items && Array.isArray(items) && items.length > 0) {
+              const avgData = items.find((item: any) => item.countyname === '평균' || item.countyname === '서울') || items[0];
+              
+              if (avgData && !results.find(r => r.item_name === target.name)) {
+                results.push({
+                  item_name: target.name,
+                  price: avgData.price?.replace(/,/g, '') || '0',
+                  diff: avgData.direction === '1' ? avgData.value : avgData.direction === '2' ? `-${avgData.value}` : '0',
+                  unit: target.unit,
+                  updated_at: new Date().toISOString()
+                });
+                foundForTarget = true;
+                break;
+              }
+            }
+          }
         }
       }
-    }
 
       // 데이터를 하나라도 찾았다면 루프 중단 (최신일자 데이터 확보 완료)
       if (results.length > 0) break;
