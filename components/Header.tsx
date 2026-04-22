@@ -124,7 +124,20 @@ export default function Header() {
       <div className="np-logo-section">
         <div className="container np-logo-inner">
           <div className="np-logo-left">
-            <form onSubmit={handleSearch} className="np-search-form">
+            <Link href="/ad-apply">
+              <div style={{ position: 'relative', width: '380px', height: '60px', overflow: 'hidden', borderRadius: '4px', border: '1px solid #eee' }}>
+                <Image src="/ads/gold_fishery.png" alt="황금어장 광고" fill style={{ objectFit: 'cover' }} />
+              </div>
+            </Link>
+          </div>
+
+          <Link href="/" className="np-logo-link">
+            <h1 className="np-logo-title">다산어보</h1>
+            <div className="np-logo-sub">DASANEOBO · 전남 독립언론 · Local Media</div>
+          </Link>
+
+          <div className="np-logo-right">
+            <form onSubmit={handleSearch} className="np-search-form" style={{ marginRight: '1rem' }}>
               <input
                 type="text"
                 placeholder="검색어 입력"
@@ -136,20 +149,14 @@ export default function Header() {
                 <Search size={16} />
               </button>
             </form>
-          </div>
-
-          <Link href="/" className="np-logo-link">
-            <h1 className="np-logo-title">다산어보</h1>
-            <div className="np-logo-sub">DASANEOBO · 전남 독립언론 · Local Media</div>
-          </Link>
-
-          <div className="np-logo-right">
-            <Link href="/subscribe" className="np-subscribe-btn">
-              구독 신청
-            </Link>
-            <Link href="/admin/report" className="np-report-btn">
-              기사 제보
-            </Link>
+            <div className="np-logo-btns">
+              <Link href="/subscribe" className="np-subscribe-btn">
+                구독 신청
+              </Link>
+              <Link href="/admin/report" className="np-report-btn">
+                기사 제보
+              </Link>
+            </div>
           </div>
         </div>
       </div>
@@ -267,7 +274,11 @@ export default function Header() {
         .np-logo-left {
           display: flex;
           align-items: center;
-          min-width: 200px;
+          min-width: 380px;
+        }
+        @media (max-width: 1024px) {
+          .np-logo-left, .np-logo-right { min-width: auto; }
+          .np-logo-left { display: none; } /* Hide ad on smaller tablets to keep logo centered */
         }
         .np-search-form {
           display: flex;
@@ -299,10 +310,15 @@ export default function Header() {
         /* Right area */
         .np-logo-right {
           display: flex;
-          flex-direction: column;
+          align-items: center;
           gap: 0.5rem;
-          min-width: 120px;
-          align-items: flex-end;
+          min-width: 380px;
+          justify-content: flex-end;
+        }
+        .np-logo-btns {
+          display: flex;
+          flex-direction: column;
+          gap: 0.4rem;
         }
         .np-subscribe-btn {
           background: #2E7D52;
