@@ -79,7 +79,12 @@ export async function GET(req: Request) {
         .upsert(results, { onConflict: 'item_name' });
       
       if (error) throw error;
-      return NextResponse.json({ success: true, count: results.length, data: results });
+      return NextResponse.json({ 
+        success: true, 
+        count: results.length, 
+        data: results,
+        debug_units: results.map(r => ({ name: r.item_name, unit: r.unit })) 
+      });
     } else {
       return NextResponse.json({ success: true, count: 0, message: "최근 데이터가 없습니다." });
     }
