@@ -126,13 +126,14 @@ export default function Header() {
         <div className="container np-logo-inner">
           <div className="np-logo-left">
             <Link href="/ad-apply">
-              <div style={{ position: 'relative', display: 'flex', alignItems: 'center' }}>
+              <div style={{ position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'flex-start' }}>
                 <Image 
                   src="/ads/gold_fishery.png" 
                   alt="황금어장 광고" 
-                  width={420} 
-                  height={100} 
-                  style={{ width: 'auto', height: '100px', objectFit: 'contain' }} 
+                  width={500} 
+                  height={140} 
+                  style={{ width: 'auto', height: '120px', objectFit: 'contain' }} 
+                  priority
                 />
               </div>
             </Link>
@@ -281,7 +282,7 @@ export default function Header() {
         .np-logo-left {
           display: flex;
           align-items: center;
-          min-width: 380px;
+          min-width: 500px;
         }
         @media (max-width: 1024px) {
           .np-logo-left, .np-logo-right { min-width: auto; }
@@ -319,7 +320,7 @@ export default function Header() {
           display: flex;
           align-items: center;
           gap: 0.5rem;
-          min-width: 380px;
+          min-width: 500px;
           justify-content: flex-end;
         }
         .np-logo-btns {
