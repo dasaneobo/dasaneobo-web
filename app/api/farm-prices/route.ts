@@ -40,7 +40,6 @@ export async function GET(req: Request) {
       const regDayCompact = `${year}${month}${day}`;
       
       for (const target of TARGET_ITEMS) {
-        // 소매(02)와 도매(01) 가격을 모두 시도
         const clsCodes = ['02', '01'];
         const dateFormats = [regDay, regDayCompact];
         
@@ -48,8 +47,9 @@ export async function GET(req: Request) {
         for (const clsCode of clsCodes) {
           if (foundForTarget) break;
           for (const dFormat of dateFormats) {
+            // 사장님 스크린샷의 End Point 주소와 파라미터 규격(perDay)에 맞춤
             const baseUrl = 'https://apis.data.go.kr/B552845/perDay/price';
-            const url = `${baseUrl}?serviceKey=${apiKey}&p_cert_key=111&p_cert_id=222&p_startday=${dFormat}&p_endday=${dFormat}&p_itemcategorycode=${target.cat}&p_itemcode=${target.item}&p_kindcode=&p_productclscode=${clsCode}&p_convert_kg_yn=N&p_returntype=json`;
+            const url = `${baseUrl}?serviceKey=${apiKey}&p_regday=${dFormat}&p_itemcategorycode=${target.cat}&p_itemcode=${target.item}&p_kindcode=01&p_productclscode=${clsCode}&p_convert_kg_yn=N&p_returntype=json`;
 
             const res = await fetch(url);
             const text = await res.text();
@@ -62,8 +62,9 @@ export async function GET(req: Request) {
             const data = JSON.parse(text);
             
             const items = data.response?.body?.items?.item;
-            if (items && Array.isArray(items) && items.length > 0) {
-              const avgData = items.find((item: any) => item.countyname === '평균' || item.countyname === '서울') || items[0];
+            if (items && (Array.isArray(items) ? items.length > 0 : items)) {
+              const itemArray = Array.isArray(items) ? items : [items];
+              const avgData = itemArray.find((item: any) => item.countyname === '평균' || item.countyname === '서울') || itemArray[0];
               
               if (avgData && !results.find(r => r.item_name === target.name)) {
                 results.push({
