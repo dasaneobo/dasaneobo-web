@@ -50,10 +50,22 @@ export async function GET(req: Request) {
 
         const res = await fetch(`${baseUrl}?${params.toString()}`);
         const text = await res.text();
+        
+        // 디버깅을 위해 첫 번째 시도의 응답 일부 보관
+        if (dayOffset === 0 && cat === '100') {
+          (global as any).lastRawResponse = text.substring(0, 500);
+        }
 
         if (!text.trim().startsWith('{')) continue;
 
         const data = JSON.parse(text);
+        
+        // 공공데이터포털 에러 체크 (예: SERVICE_KEY_IS_NOT_REGISTERED)
+        if (data.response?.header?.resultCode !== '00') {
+          (global as any).lastApiError = data.response?.header?.resultMsg;
+          continue;
+        }
+
         const items = data.response?.body?.items?.item;
         
         if (items) {
@@ -61,17 +73,16 @@ export async function GET(req: Request) {
           
           itemArray.forEach((item: any) => {
             const target = TARGET_ITEMS.find(t => t.cat === cat && t.item === item.item_code);
-            // 이미 추가된 품목이 아니고, 전국평균 혹은 서울 데이터인 경우
+            // 이미 추가된 품목이 아니고
             if (target && !results.find(r => r.item_name === target.name)) {
-              if (item.county_name === '평균' || item.county_name?.includes('서울') || item.county_name?.includes('광주')) {
-                results.push({
-                  item_name: target.name,
-                  price: item.dpr1?.replace(/,/g, '') || '0',
-                  diff: item.dpr2?.replace(/,/g, '') || '0',
-                  unit: target.unit,
-                  updated_at: new Date().toISOString()
-                });
-              }
+              // 군/구 상관없이 해당 품목의 '평균' 혹은 주요 지역 데이터 추출
+              results.push({
+                item_name: target.name,
+                price: item.dpr1?.replace(/,/g, '') || '0',
+                diff: item.dpr2?.replace(/,/g, '') || '0',
+                unit: target.unit,
+                updated_at: new Date().toISOString()
+              });
             }
           });
         }
@@ -96,7 +107,9 @@ export async function GET(req: Request) {
         message: "데이터를 찾지 못했습니다. API 키 활성화 대기 중이거나 해당 날짜에 데이터가 없을 수 있습니다.",
         tip: "공공데이터포털에서 '승인' 상태인지, 그리고 키를 입력한 지 1시간 이상 지났는지 확인해 주세요.",
         debug: {
-          last_regday: results.length === 0 ? "3일치 모두 확인 실패" : "일부 확인"
+          last_regday: results.length === 0 ? "3일치 모두 확인 실패" : "일부 확인",
+          api_error: (global as any).lastApiError || "없음 (JSON 구조 확인 필요)",
+          raw_response: (global as any).lastRawResponse || "응답 없음"
         }
       });
     }
