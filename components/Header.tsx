@@ -66,7 +66,7 @@ export default function Header() {
             borderRadius: '4px',
             background: '#f8f9fa'
           }}>
-            <form onSubmit={handleSearch}>
+            <form onSubmit={handleSearch} style={{ display: 'flex', alignItems: 'center' }}>
               <input 
                 type="text" 
                 placeholder="검색" 
@@ -74,8 +74,10 @@ export default function Header() {
                 onChange={(e) => setSearchTerm(e.target.value)}
                 style={{ border: 'none', background: 'transparent', outline: 'none', width: '80px', fontSize: '0.8rem' }}
               />
+              <button type="submit" style={{ background: 'none', border: 'none', padding: 0, cursor: 'pointer', display: 'flex', alignItems: 'center' }}>
+                <Search size={14} style={{ color: '#666' }} />
+              </button>
             </form>
-            <Search size={14} style={{ color: '#666' }} />
           </div>
         </div>
 
