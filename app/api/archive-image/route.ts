@@ -6,7 +6,6 @@ export async function POST(req: Request) {
     const file = formData.get('file') as File | null;
     const reportDataStr = formData.get('reportData') as string;
     const reportData = JSON.parse(reportDataStr);
-
     // 파일이 없을 경우 바로 DB에 저장
     if (!file) {
       const { data: dbData, error: dbError } = await supabaseAdmin

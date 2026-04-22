@@ -109,17 +109,7 @@ export default function ReportPage() {
  
       if (dbError) throw new Error('DB 저장 오류: ' + dbError.message);
 
-      // 2. 사진이 있으면 별도 업로드 시도 (실패해도 무시)
-      if (file && file.size > 0) {
-        try {
-          const form = new FormData();
-          form.append('file', file);
-          form.append('reportData', JSON.stringify({ id: dbData.id }));
-          await fetch('/api/archive-image', { method: 'POST', body: form });
-        } catch (uploadErr) {
-          console.error('사진 업로드 실패 (무시):', uploadErr);
-        }
-      }
+      // 사진 업로드는 선택사항이며 현재 단계에서는 Supabase에 직접 저장만 수행합니다.
 
       // 3. EmailJS 이메일 발송 (실패해도 무시)
       try {
