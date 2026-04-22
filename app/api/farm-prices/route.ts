@@ -69,10 +69,6 @@ export async function GET(req: Request) {
       if (results.length > 0) break;
     }
 
-      // 데이터를 하나라도 찾았다면 루프 중단 (최신일자 데이터 확보 완료)
-      if (results.length > 0) break;
-    }
-
     if (results.length > 0) {
       const { error } = await supabaseAdmin
         .from('farm_prices')
