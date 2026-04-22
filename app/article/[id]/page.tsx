@@ -61,7 +61,8 @@ export default async function ArticlePage({ params }: { params: Promise<{ id: st
     month: 'long',
     day: 'numeric',
     hour: '2-digit',
-    minute: '2-digit'
+    minute: '2-digit',
+    timeZone: 'Asia/Seoul'
   });
 
   // Role display mapping
