@@ -14,7 +14,6 @@ export default function ReportPage() {
   const [userProfile, setUserProfile] = useState<any>(null);
   const [notice, setNotice] = useState<{ msg: string; success: boolean } | null>(null);
 
-  // Form State
   const [selectedStyle, setSelectedStyle] = useState('중립 보도');
   const [file, setFile] = useState<File | null>(null);
   const [preview, setPreview] = useState<string | null>(null);
@@ -23,12 +22,9 @@ export default function ReportPage() {
     senderName: '', senderContact: ''
   });
 
-  // EmailJS Setup
   useEffect(() => {
     const pubKey = process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY;
-    if (pubKey) {
-      emailjs.init({ publicKey: pubKey });
-    }
+    if (pubKey) emailjs.init({ publicKey: pubKey });
   }, []);
 
   useEffect(() => {
@@ -39,7 +35,11 @@ export default function ReportPage() {
         router.push('/login');
         return;
       }
-      const { data: profile } = await supabase.from('profiles').select('*').eq('id', session.user.id).single();
+      const { data: profile } = await supabase
+        .from('profiles')
+        .select('*')
+        .eq('id', session.user.id)
+        .single();
       if (!profile || (profile.role !== 'reporter' && profile.role !== 'editor' && profile.role !== 'admin')) {
         alert('이 메뉴를 볼 권한이 없습니다. (취재기자 등급 이상 필요)');
         router.push('/');
@@ -71,6 +71,12 @@ export default function ReportPage() {
     }
   };
 
+  const todayStr = () => {
+    const d = new Date();
+    const days = ['일','월','화','수','목','금','토'];
+    return `${d.getFullYear()}년 ${d.getMonth()+1}월 ${d.getDate()}일 (${days[d.getDay()]})`;
+  };
+
   const sendReport = async () => {
     const { who, what, when } = formData;
     if (!who || !what || !when) {
@@ -82,40 +88,44 @@ export default function ReportPage() {
     setNotice(null);
 
     try {
-      const form = new FormData();
-      if (file) form.append('file', file);
-      
-      const reportPayload = {
-        style: selectedStyle,
-        who: formData.who,
-        what: formData.what,
-        when: formData.when,
-        where: formData.where,
-        how: formData.how,
-        why: formData.why,
-        extra: formData.extra,
-        sender_name: formData.senderName,
-        sender_contact: formData.senderContact,
-      };
-      
-      form.append('reportData', JSON.stringify(reportPayload));
+      // 1. Supabase에 직접 저장
+      const { data: dbData, error: dbError } = await supabase
+        .from('village_reports')
+        .insert([{
+          style: selectedStyle,
+          who: formData.who,
+          what: formData.what,
+          when: formData.when,
+          where: formData.where,
+          how: formData.how,
+          why: formData.why,
+          extra: formData.extra,
+          sender_name: formData.senderName,
+          sender_contact: formData.senderContact,
+          status: 'new'
+        }])
+        .select()
+        .single();
 
-     const response = await fetch('/api/archive-image', {
-        method: 'POST',
-        body: form,
-      });
+      if (dbError) throw new Error('DB 저장 오류: ' + dbError.message);
 
-      // API 오류여도 계속 진행 (DB 저장 시도)
-      const responseData = response.ok ? await response.json() : { data: null };
-      const highResUrl = responseData.data?.high_res_url || '';
-      const lowResUrl = responseData.data?.low_res_url || '';
-
-      // 2. EmailJS 데스크 알림 전송 (신규 추가)
-      const serviceId = process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID;
-      const templateId = process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID_REPORT;
-      
-      if (serviceId && templateId) {
+      // 2. 사진이 있으면 별도 업로드 시도 (실패해도 무시)
+      if (file && file.size > 0) {
         try {
+          const form = new FormData();
+          form.append('file', file);
+          form.append('reportData', JSON.stringify({ id: dbData.id }));
+          await fetch('/api/archive-image', { method: 'POST', body: form });
+        } catch (uploadErr) {
+          console.error('사진 업로드 실패 (무시):', uploadErr);
+        }
+      }
+
+      // 3. EmailJS 이메일 발송 (실패해도 무시)
+      try {
+        const serviceId = process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID;
+        const templateId = process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID_REPORT;
+        if (serviceId && templateId) {
           await emailjs.send(serviceId, templateId, {
             report_style: selectedStyle,
             who: formData.who,
@@ -127,18 +137,15 @@ export default function ReportPage() {
             extra: formData.extra || '(없음)',
             sender_name: formData.senderName,
             sender_contact: formData.senderContact,
-            high_res_url: highResUrl,
-            low_res_url: lowResUrl,
             submitted_at: todayStr()
           });
-        } catch (mailErr) {
-          console.error('Email Notification Error:', mailErr);
-          // 알림 전송 실패해도 DB 저장은 완료되었으므로 알림만 로깅
         }
+      } catch (mailErr) {
+        console.error('이메일 발송 실패 (무시):', mailErr);
       }
 
-      setNotice({ msg: '✓ 제보가 DB에 저장되었으며, 사진이 구글 드라이브와 데스크로 전송되었습니다.', success: true });
-      
+      // 4. 성공 처리
+      setNotice({ msg: '✓ 제보가 성공적으로 접수되었습니다!', success: true });
       setFormData({
         who: '', what: '', when: '', where: '', how: '', why: '', extra: '',
         senderName: userProfile?.name || '',
@@ -147,6 +154,7 @@ export default function ReportPage() {
       setFile(null);
       setPreview(null);
       setSelectedStyle('중립 보도');
+
     } catch (err: any) {
       setNotice({ msg: '전송 실패: ' + err.message, success: false });
     } finally {
@@ -154,18 +162,11 @@ export default function ReportPage() {
     }
   };
 
-  const todayStr = () => {
-    const d = new Date();
-    const days = ['일','월','화','수','목','금','토'];
-    return `${d.getFullYear()}년 ${d.getMonth()+1}월 ${d.getDate()}일 (${days[d.getDay()]})`;
-  };
-
   if (loading) return <div style={{ padding: '5rem', textAlign: 'center' }}>권한 확인 중...</div>;
 
   return (
     <main className="report-body">
       <Header />
-      
       <div className="report-masthead">
         <div className="report-masthead-name">다산어보</div>
         <div className="report-masthead-sub">마을 소식 제보 시스템 (기자 전용)</div>
@@ -173,7 +174,6 @@ export default function ReportPage() {
       </div>
 
       <div className="report-container">
-        {/* Style Selector */}
         <div className="report-section-head"><span>기사 스타일</span></div>
         <div className="report-style-grid">
           {[
@@ -182,7 +182,7 @@ export default function ReportPage() {
             { id: '공식 공지문', desc: '행정·단체 발표 형식' },
             { id: '짧은 단신', desc: '핵심만 2~3문장' }
           ].map(style => (
-            <button 
+            <button
               key={style.id}
               className={`report-style-btn ${selectedStyle === style.id ? 'active' : ''}`}
               onClick={() => setSelectedStyle(style.id)}
@@ -193,7 +193,6 @@ export default function ReportPage() {
           ))}
         </div>
 
-        {/* 5W1H */}
         <div className="report-section-head"><span>육하원칙</span></div>
         <div className="report-fields-grid">
           <div className="report-field">
@@ -222,34 +221,28 @@ export default function ReportPage() {
           </div>
           <div className="report-field full">
             <label className="report-label">추가로 하고 싶은 말 <span style={{fontSize:'10px', color:'var(--ink3)', fontWeight:300}}>(선택)</span></label>
-            <textarea id="extra" className="report-textarea" value={formData.extra} onChange={handleInputChange} placeholder="분위기, 주민 반응, 기억나는 말 한마디, 사진 링크 등 자유롭게 적어주세요"></textarea>
+            <textarea id="extra" className="report-textarea" value={formData.extra} onChange={handleInputChange} placeholder="분위기, 주민 반응, 기억나는 말 한마디 등"></textarea>
           </div>
         </div>
 
-        {/* Image Attachment */}
         <div className="report-section-head"><span>현장 사진 첨부</span></div>
         <div className="report-field full" style={{ marginBottom: '1rem' }}>
-          <label className="report-label">사진 선택 (고화질 원본은 구글 드라이브에 자동 보관됩니다)</label>
-          <input 
-            type="file" 
-            accept="image/*" 
-            onChange={handleFileChange} 
+          <label className="report-label">사진 선택 (선택사항)</label>
+          <input
+            type="file"
+            accept="image/*"
+            onChange={handleFileChange}
             className="report-input"
             style={{ padding: '0.5rem' }}
           />
           {preview && (
             <div style={{ marginTop: '1rem', textAlign: 'center' }}>
-              <img 
-                src={preview} 
-                alt="Preview" 
-                style={{ maxWidth: '100%', maxHeight: '300px', borderRadius: '4px', border: '1px solid var(--report-rule)' }} 
-              />
+              <img src={preview} alt="Preview" style={{ maxWidth: '100%', maxHeight: '300px', borderRadius: '4px', border: '1px solid var(--report-rule)' }} />
               <p style={{ fontSize: '10px', color: 'var(--ink3)', marginTop: '0.5rem' }}>첨부된 이미지 미리보기</p>
             </div>
           )}
         </div>
 
-        {/* Sender Info */}
         <div className="report-section-head"><span>제보자 정보</span></div>
         <div className="report-sender-grid">
           <div className="report-field">
@@ -262,10 +255,9 @@ export default function ReportPage() {
           </div>
         </div>
 
-        {/* Submit */}
         <div className="report-submit-wrap">
-          <button 
-            className={`report-submit-btn ${submitting ? 'loading' : ''}`} 
+          <button
+            className={`report-submit-btn ${submitting ? 'loading' : ''}`}
             onClick={sendReport}
             disabled={submitting}
           >
