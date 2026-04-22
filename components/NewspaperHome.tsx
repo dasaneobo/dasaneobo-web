@@ -208,11 +208,11 @@ function RegionalNews({ articles }: { articles: any[] }) {
    ========================================= */
 function RightSidebar({ farmPrices, sidebarAd }: { farmPrices: any[]; sidebarAd: any }) {
   const defaultPrices = [
-    { item_name: '쌀', price: '52400', diff: '1200', unit: '20kg' },
-    { item_name: '배추', price: '4500', diff: '-300', unit: '1포기' },
-    { item_name: '마늘', price: '12500', diff: '0', unit: '1kg' },
-    { item_name: '고구마', price: '8900', diff: '400', unit: '1kg' },
-    { item_name: '양파', price: '3200', diff: '-100', unit: '1kg' },
+    { item_name: '쌀', price: '59000', diff: '0', unit: '20kg' },
+    { item_name: '배추', price: '12200', diff: '0', unit: '1포기' },
+    { item_name: '마늘', price: '154000', diff: '0', unit: '20kg' },
+    { item_name: '고구마', price: '494000', diff: '0', unit: '100kg' },
+    { item_name: '양파', price: '12600', diff: '0', unit: '15kg' },
   ];
   const prices = farmPrices.length > 0 ? farmPrices.slice(0, 6) : defaultPrices;
 
@@ -237,7 +237,7 @@ function RightSidebar({ farmPrices, sidebarAd }: { farmPrices: any[]; sidebarAd:
             );
           })}
         </div>
-        <p style={{ fontSize: '0.65rem', color: '#bbb', marginTop: '0.5rem' }}>출처: KAMIS · 광주 각화동 경락가 기준</p>
+        <p style={{ fontSize: '0.65rem', color: '#bbb', marginTop: '0.5rem' }}>출처: 한국농수산식품유통공사(KAMIS)</p>
       </div>
 
       {/* 광고 배너 */}
