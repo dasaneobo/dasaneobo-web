@@ -595,7 +595,7 @@ export default function SubscribePage() {
           <h1>다산어보와 함께해 주세요</h1>
           <p>지역의 진심을 담은 뉴스를 만드는 일,<br />여러분의 구독이 독립 지역 언론을 지킵니다.</p>
           <div className="hero-paper-note">
-            종이신문 월 2회 발송 · 온라인 기사 전체 열람
+            종이신문 월 1회 이상 발송 · 온라인 기사 전체 열람
           </div>
         </div>
 
@@ -616,9 +616,7 @@ export default function SubscribePage() {
               </div>
               <hr className="plan-divider" />
               <ul className="plan-features">
-                <li>종이신문 월 2회 배송</li>
-                <li>온라인 기사 전체 열람</li>
-                <li>뉴스레터 구독</li>
+                <li>종이신문 월 1회 이상 발송 · 온라인 기사 전체 열람</li>
                 <li>언제든 해지 가능</li>
               </ul>
               <div className="select-indicator">{currentPlan === '월간 구독' ? '이 플랜 선택 ✓' : '이 플랜 선택'}</div>
@@ -638,10 +636,7 @@ export default function SubscribePage() {
               </div>
               <hr className="plan-divider" />
               <ul className="plan-features">
-                <li>종이신문 월 2회 배송</li>
-                <li>온라인 기사 전체 열람</li>
-                <li>뉴스레터 구독</li>
-                <li>연말 특별호 증정</li>
+                <li>종이신문 월 1회 이상 발송 · 온라인 기사 전체 열람</li>
                 <li>감사 독자 지면 게재</li>
               </ul>
               <div className="select-indicator">{currentPlan === '연간 구독' ? '이 플랜 선택 ✓' : '이 플랜 선택'}</div>
@@ -661,10 +656,7 @@ export default function SubscribePage() {
               </div>
               <hr className="plan-divider" />
               <ul className="plan-features">
-                <li>종이신문 월 2회 배송</li>
-                <li>온라인 기사 전체 열람</li>
-                <li>뉴스레터 구독</li>
-                <li>연말 특별호 증정</li>
+                <li>종이신문 월 1회 이상 발송 · 온라인 기사 전체 열람</li>
                 <li className="highlight">창간 후원인 명단 지면 영구 게재</li>
                 <li className="highlight">명예 독자증 실물 발급</li>
                 <li className="highlight">지역 특산물 선물박스 (5만원 상당)</li>
@@ -676,7 +668,7 @@ export default function SubscribePage() {
           </div>
 
           <p className="compare-note">
-            모든 플랜에 종이신문 월 2회 우편 배송이 포함됩니다<br />
+            모든 플랜에 종이신문 월 1회 이상 우편 배송이 포함됩니다<br />
             평생 구독자는 다산어보를 처음부터 함께 만든 창간 후원인으로 영구 기록됩니다
           </p>
         </div>
