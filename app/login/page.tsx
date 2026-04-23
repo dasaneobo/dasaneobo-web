@@ -11,6 +11,7 @@ export default function LoginPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [name, setName] = useState('');
+  const [recommender, setRecommender] = useState('');
   const [loading, setLoading] = useState(false);
   const router = useRouter();
 
@@ -53,6 +54,7 @@ export default function LoginPage() {
             id: data.user.id,
             email: email,
             name: name,
+            recommender: recommender, // 추천인 저장
             role: 'normal' // 최초 가입 시 무조건 일반 회원
           }]);
         }
@@ -90,6 +92,17 @@ export default function LoginPage() {
                   onChange={(e) => setName(e.target.value)}
                   placeholder="예: 홍길동 기자"
                   required={!isLogin}
+                  style={{ width: '100%', padding: '0.8rem', borderRadius: '8px', border: '1px solid #ddd', outline: 'none' }}
+                />
+              </div>
+
+              <div>
+                <label style={{ display: 'block', fontSize: '0.9rem', marginBottom: '0.4rem', fontWeight: 600 }}>추천인 이름 (선택)</label>
+                <input 
+                  type="text" 
+                  value={recommender}
+                  onChange={(e) => setRecommender(e.target.value)}
+                  placeholder="추천해주신 분의 이름을 적어주세요"
                   style={{ width: '100%', padding: '0.8rem', borderRadius: '8px', border: '1px solid #ddd', outline: 'none' }}
                 />
               </div>

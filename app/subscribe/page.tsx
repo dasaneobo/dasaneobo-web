@@ -23,6 +23,7 @@ export default function SubscribePage() {
     subEmail: '',
     subAddr: '',
     subNote: '',
+    subRecommender: '',
     agreeCheck: false,
   });
 
@@ -47,7 +48,7 @@ export default function SubscribePage() {
   };
 
   const sendSubscription = async () => {
-    const { subName, subPhone, subEmail, subAddr, subNote, agreeCheck } = formData;
+    const { subName, subPhone, subEmail, subAddr, subNote, subRecommender, agreeCheck } = formData;
 
     if (!subName || !subPhone || !subEmail || !subAddr) {
       setNotice({ msg: '이름, 연락처, 이메일, 배송 주소는 필수 항목입니다.', type: 'error' });
@@ -84,6 +85,7 @@ export default function SubscribePage() {
           email: subEmail,
           address: subAddr,
           note: subNote || '(없음)',
+          recommender: subRecommender || '(없음)',
           submitted_at: submittedAt
         });
       } else {
@@ -97,6 +99,7 @@ export default function SubscribePage() {
           email: subEmail,
           address: subAddr,
           note: subNote || '(없음)',
+          recommender: subRecommender || '(없음)',
           submitted_at: submittedAt
         });
       }
@@ -121,6 +124,7 @@ export default function SubscribePage() {
         subEmail: '',
         subAddr: '',
         subNote: '',
+        subRecommender: '',
         agreeCheck: false,
       });
     } catch (err: any) {
@@ -711,6 +715,11 @@ export default function SubscribePage() {
           <div className="field">
             <label>요청 사항 <span style={{fontSize:'11px', color:'#bbb', fontWeight:300}}>(선택)</span></label>
             <textarea id="subNote" placeholder="배송 관련 메모, 특이사항 등" value={formData.subNote} onChange={handleInputChange}></textarea>
+          </div>
+
+          <div className="field">
+            <label>추천인 이름 <span style={{fontSize:'11px', color:'#bbb', fontWeight:300}}>(선택)</span></label>
+            <input type="text" id="subRecommender" placeholder="추천해주신 분의 이름을 적어주세요" value={formData.subRecommender} onChange={handleInputChange} />
           </div>
 
           <div className="payment-box">

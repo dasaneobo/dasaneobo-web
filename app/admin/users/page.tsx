@@ -136,6 +136,7 @@ export default function UserManagementPage() {
             <thead style={{ background: '#f9fafb', borderBottom: '2px solid #eee' }}>
               <tr>
                 <th style={{ padding: '1.2rem', fontWeight: 700, fontSize: '0.9rem' }}>이름 / 이메일</th>
+                <th style={{ padding: '1.2rem', fontWeight: 700, fontSize: '0.9rem' }}>추천인</th>
                 <th style={{ padding: '1.2rem', fontWeight: 700, fontSize: '0.9rem' }}>현재 등급</th>
                 <th style={{ padding: '1.2rem', fontWeight: 700, fontSize: '0.9rem' }}>권한 설정</th>
                 <th style={{ padding: '1.2rem', fontWeight: 700, fontSize: '0.9rem' }}>상태</th>
@@ -148,6 +149,9 @@ export default function UserManagementPage() {
                   <td style={{ padding: '1.2rem' }}>
                     <div style={{ fontWeight: 700 }}>{user.name}</div>
                     <div style={{ fontSize: '0.8rem', color: '#888' }}>{user.email}</div>
+                  </td>
+                  <td style={{ padding: '1.2rem', fontSize: '0.9rem', color: '#666' }}>
+                    {user.recommender || '-'}
                   </td>
                   <td style={{ padding: '1.2rem' }}>
                     <span style={{ 

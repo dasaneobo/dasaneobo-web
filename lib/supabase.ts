@@ -23,3 +23,11 @@ export type Draft = {
   raw_content: string;
   status: 'pending' | 'reviewed' | 'converted';
 };
+export type Profile = {
+  id: string;
+  email: string;
+  name: string;
+  role: 'admin' | 'editor' | 'reporter' | 'normal';
+  recommender?: string;
+  created_at?: string;
+};
