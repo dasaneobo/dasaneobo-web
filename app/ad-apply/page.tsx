@@ -12,6 +12,7 @@ export default function AdApplyPage() {
     name: '',
     phone: '',
     content: '',
+    recommender: '',
   });
   const [file, setFile] = useState<File | null>(null);
   const [loading, setLoading] = useState(false);
@@ -59,6 +60,7 @@ export default function AdApplyPage() {
         name: formData.name,
         phone: formData.phone,
         content: formData.content,
+        recommender: formData.recommender,
         photo_url: photoUrl
       }]);
       
@@ -170,6 +172,19 @@ export default function AdApplyPage() {
                   style={{ width: '100%', padding: '0.8rem 1rem', borderRadius: '8px', border: '1px solid #ddd', fontSize: '0.9rem', background: '#fcfcfc' }}
                 />
                 <p style={{ fontSize: '0.8rem', color: '#888', marginTop: '0.4rem' }}>광고 배너에 사용될 이미지나 명함, 전단지 등을 첨부해주세요. (10MB 이하)</p>
+              </div>
+
+              {/* Recommender */}
+              <div>
+                <label style={{ display: 'block', fontWeight: 700, marginBottom: '0.5rem', color: '#333' }}>추천인 이름 <span style={{color: '#999', fontWeight: 400}}>(선택사항)</span></label>
+                <input 
+                  type="text" 
+                  name="recommender"
+                  value={formData.recommender}
+                  onChange={handleChange}
+                  placeholder="추천해주신 분의 이름을 적어주세요"
+                  style={{ width: '100%', padding: '0.8rem 1rem', borderRadius: '8px', border: '1px solid #ddd', fontSize: '1rem', background: '#fcfcfc' }}
+                />
               </div>
               
               <div style={{ background: '#f8fafc', padding: '1.5rem', borderRadius: '8px', border: '1px solid #e2e8f0', marginTop: '1rem' }}>

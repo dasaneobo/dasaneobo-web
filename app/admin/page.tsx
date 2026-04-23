@@ -546,7 +546,7 @@ export default function AdminPage() {
                     <span style={{ fontSize: '0.85rem', color: '#999' }}>{new Date(app.created_at).toLocaleString()}</span>
                   </div>
                   <div style={{ fontSize: '0.9rem', color: '#444' }}>
-                    <strong>연락처:</strong> {app.phone}
+                    <strong>연락처:</strong> {app.phone} {app.recommender && <span style={{ marginLeft: '1rem', color: 'var(--primary-dark)', fontWeight: 700 }}>[추천인: {app.recommender}]</span>}
                   </div>
                   <div style={{ background: '#f8f9fa', padding: '1rem', borderRadius: '8px', fontSize: '0.9rem', color: '#333', lineHeight: '1.5', whiteSpace: 'pre-wrap' }}>
                     <strong>광고 문구:</strong><br/>

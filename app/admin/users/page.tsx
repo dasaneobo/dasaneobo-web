@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import Header from '@/components/Header';
 import { supabase } from '@/lib/supabase';
-import { Users, ShieldCheck, UserCog, ChevronLeft, Save, Search, Trash2 } from 'lucide-react';
+import { Users, ShieldCheck, UserCog, ChevronLeft, Save, Search, Trash2, Download } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 
@@ -83,6 +83,36 @@ export default function UserManagementPage() {
     }
   };
 
+  const downloadCSV = () => {
+    // CSV Header
+    let csvContent = "\uFEFF"; // UTF-8 BOM for Excel
+    csvContent += "이름,이메일,등급,추천인,가입일\n";
+
+    // CSV Rows
+    filteredUsers.forEach(user => {
+      const roleName = user.role === 'admin' ? '관리자' : user.role === 'editor' ? '데스크' : user.role === 'reporter' ? '리포터' : '일반회원';
+      const row = [
+        user.name || '',
+        user.email || '',
+        roleName,
+        user.recommender || '',
+        user.created_at ? new Date(user.created_at).toLocaleDateString() : ''
+      ].map(field => `"${field.toString().replace(/"/g, '""')}"`).join(",");
+      csvContent += row + "\n";
+    });
+
+    // Download Logic
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.setAttribute("href", url);
+    link.setAttribute("download", `다산어보_회원명단_${new Date().toLocaleDateString()}.csv`);
+    link.style.visibility = 'hidden';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
   const filteredUsers = users.filter(u => 
     u.name?.toLowerCase().includes(searchTerm.toLowerCase()) || 
     u.email?.toLowerCase().includes(searchTerm.toLowerCase())
@@ -111,22 +141,43 @@ export default function UserManagementPage() {
               </div>
             </div>
 
-            <div style={{ position: 'relative', width: '300px' }}>
-              <Search size={18} style={{ position: 'absolute', left: '12px', top: '12px', color: '#aaa' }} />
-              <input 
-                type="text" 
-                placeholder="이름 또는 이메일 검색..." 
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
+            <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
+              <button 
+                onClick={downloadCSV}
                 style={{
-                  width: '100%',
-                  padding: '10px 10px 10px 40px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '0.5rem',
+                  padding: '10px 16px',
+                  background: '#222',
+                  color: 'white',
+                  border: 'none',
                   borderRadius: '10px',
-                  border: '1px solid #ddd',
-                  outline: 'none',
-                  fontSize: '0.9rem'
+                  cursor: 'pointer',
+                  fontSize: '0.9rem',
+                  fontWeight: 'bold'
                 }}
-              />
+              >
+                <Download size={18} /> 명단 다운로드 (CSV)
+              </button>
+              
+              <div style={{ position: 'relative', width: '300px' }}>
+                <Search size={18} style={{ position: 'absolute', left: '12px', top: '12px', color: '#aaa' }} />
+                <input 
+                  type="text" 
+                  placeholder="이름 또는 이메일 검색..." 
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  style={{
+                    width: '100%',
+                    padding: '10px 10px 10px 40px',
+                    borderRadius: '10px',
+                    border: '1px solid #ddd',
+                    outline: 'none',
+                    fontSize: '0.9rem'
+                  }}
+                />
+              </div>
             </div>
           </div>
         </div>

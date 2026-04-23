@@ -24,6 +24,7 @@ export default function SubscribePage() {
     subAddr: '',
     subNote: '',
     subRecommender: '',
+    subUnits: 1,
     agreeCheck: false,
   });
 
@@ -48,7 +49,7 @@ export default function SubscribePage() {
   };
 
   const sendSubscription = async () => {
-    const { subName, subPhone, subEmail, subAddr, subNote, subRecommender, agreeCheck } = formData;
+    const { subName, subPhone, subEmail, subAddr, subNote, subRecommender, subUnits, agreeCheck } = formData;
 
     if (!subName || !subPhone || !subEmail || !subAddr) {
       setNotice({ msg: '이름, 연락처, 이메일, 배송 주소는 필수 항목입니다.', type: 'error' });
@@ -75,11 +76,15 @@ export default function SubscribePage() {
       String(now.getHours()).padStart(2, '0') + ':' +
       String(now.getMinutes()).padStart(2, '0');
 
+    const basePrice = parseInt(currentAmount.replace(/[^0-9]/g, '')) || 0;
+    const totalPrice = (basePrice * subUnits).toLocaleString() + '원';
+
     try {
       if (EMAILJS_PUBLIC_KEY !== 'YOUR_EMAILJS_PUBLIC_KEY') {
         await emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, {
           plan: currentPlan,
-          amount: currentAmount,
+          units: subUnits + '구좌',
+          amount: totalPrice,
           name: subName,
           phone: subPhone,
           email: subEmail,
@@ -93,7 +98,8 @@ export default function SubscribePage() {
         // For now, let's just try to send it; EmailJS will likely throw an error.
         await emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, {
           plan: currentPlan,
-          amount: currentAmount,
+          units: subUnits + '구좌',
+          amount: totalPrice,
           name: subName,
           phone: subPhone,
           email: subEmail,
@@ -125,6 +131,7 @@ export default function SubscribePage() {
         subAddr: '',
         subNote: '',
         subRecommender: '',
+        subUnits: 1,
         agreeCheck: false,
       });
     } catch (err: any) {
@@ -437,7 +444,33 @@ export default function SubscribePage() {
             font-family: var(--font-noto-serif-kr), serif;
             color: var(--green-d);
           }
-          .gold-pill .spp-value { color: var(--gold); }
+          .selected-plan-pill.gold-pill .spp-value { color: var(--gold); }
+
+          .unit-selector {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 20px;
+          }
+          .unit-btn {
+            flex: 1;
+            padding: 10px;
+            border: 1px solid var(--rule);
+            border-radius: 6px;
+            background: var(--white);
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.2s;
+          }
+          .unit-btn.selected {
+            background: var(--green-d);
+            color: white;
+            border-color: var(--green-d);
+            font-weight: 600;
+          }
+          .gold-pill + .unit-selector .unit-btn.selected {
+            background: var(--gold);
+            border-color: var(--gold);
+          }
 
           .field { margin-bottom: 14px; }
           .field label {
@@ -688,7 +721,26 @@ export default function SubscribePage() {
 
           <div className={`selected-plan-pill ${isLifetime ? 'gold-pill' : ''}`}>
             <span className="spp-label">선택하신 플랜</span>
-            <span className="spp-value">{currentPlan} — {currentAmount}</span>
+            <span className="spp-value">
+              {currentPlan} — {(parseInt(currentAmount.replace(/[^0-9]/g, '')) * formData.subUnits).toLocaleString()}원
+              {formData.subUnits > 1 && ` (${formData.subUnits}구좌)`}
+            </span>
+          </div>
+
+          <div className="field">
+            <label>구독 구좌 선택 <span style={{fontSize:'11px', color:'#bbb', fontWeight:300}}>(단위당 금액 적용)</span></label>
+            <div className="unit-selector">
+              {[1, 2, 3, 4, 5].map((u) => (
+                <button 
+                  key={u} 
+                  type="button"
+                  className={`unit-btn ${formData.subUnits === u ? 'selected' : ''}`}
+                  onClick={() => setFormData(prev => ({ ...prev, subUnits: u }))}
+                >
+                  {u}구좌
+                </button>
+              ))}
+            </div>
           </div>
 
           <div className="field-row">
