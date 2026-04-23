@@ -117,7 +117,9 @@ export default function Header() {
           <div className="np-topbar-right">
             {userProfile ? (
               <>
-                <span className="np-user-name">{userProfile.name} 님</span>
+                <Link href="/profile" className="np-user-name" style={{ color: '#fff', textDecoration: 'none' }}>
+                  {userProfile.name} 님
+                </Link>
                 {(userProfile.role === 'admin' || userProfile.role === 'editor') && (
                   <Link href="/admin" className="np-topbar-link">
                     <BookOpen size={12} /> 편집국
@@ -450,7 +452,10 @@ export default function Header() {
 
         /* === MOBILE === */
         @media (max-width: 768px) {
-          .np-topbar { display: none; }
+          .np-topbar { display: block; padding: 0.2rem 0; }
+          .np-topbar-left { display: none; }
+          .np-topbar-inner { justify-content: center; }
+          .np-topbar-right { gap: 0.6rem; width: 100%; justify-content: center; }
           .np-logo-title { font-size: 1.6rem; margin-bottom: 0.1rem; }
           .np-logo-inner { flex-direction: column; gap: 0.1rem !important; text-align: center; display: flex !important; }
           .np-logo-link { order: 1; margin-bottom: 0.1rem; }
