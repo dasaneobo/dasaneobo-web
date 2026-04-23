@@ -367,6 +367,20 @@ export function NewspaperMain({ articles, farmPrices, sidebarAd, settings }: { a
       {/* 3-column layout */}
       <div className="np-three-col">
         <LeftSidebar articles={articles} />
+        
+        <div className="mobile-gold-ad">
+          <Link href="/ad-apply">
+            <div style={{ position: 'relative', width: '100%', aspectRatio: '460/100', overflow: 'hidden', borderRadius: '4px', border: '1px solid #ddd' }}>
+              <Image 
+                src="/ads/gold_fisher_v2.png" 
+                alt="황금어장 광고" 
+                fill
+                style={{ objectFit: 'cover' }} 
+              />
+            </div>
+          </Link>
+        </div>
+
         <CenterMain articles={articles} />
         <RightSidebar farmPrices={farmPrices} sidebarAd={sidebarAd} />
       </div>
@@ -391,6 +405,14 @@ export function NewspaperMain({ articles, farmPrices, sidebarAd, settings }: { a
         }
         @media (max-width: 480px) {
           .np-three-col { grid-template-columns: 1fr; }
+        }
+        .mobile-gold-ad {
+          display: none;
+        }
+        @media (max-width: 768px) {
+          .mobile-gold-ad {
+            display: block;
+          }
         }
         .np-main-container {
           padding-top: 1.5rem;

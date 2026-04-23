@@ -455,8 +455,8 @@ export default function Header() {
           .np-logo-inner { flex-direction: column; gap: 0.1rem !important; text-align: center; display: flex !important; }
           .np-logo-link { order: 1; margin-bottom: 0.1rem; }
           .np-logo-right { order: 2; flex-direction: row; min-width: unset !important; align-items: center; justify-content: center; gap: 0.3rem; margin-bottom: 0.2rem; }
-          .np-logo-left { order: 3; min-width: unset !important; justify-content: center; width: 100% !important; display: flex !important; margin-top: 0.1rem; }
-          .np-header-ad-container { height: 60px !important; width: 100% !important; background: #f9f9f9; }
+          .np-logo-left { display: none !important; }
+          .np-header-ad-container { display: none; }
           .np-search-input { width: 100px; padding: 0.2rem 0.4rem; font-size: 0.72rem; }
           .np-search-btn { padding: 0.2rem 0.4rem; }
           .np-logo-btns { flex-direction: row; gap: 0.2rem; }
