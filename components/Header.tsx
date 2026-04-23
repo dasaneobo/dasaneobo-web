@@ -151,7 +151,7 @@ export default function Header() {
         <div className="container np-logo-inner">
           <div className="np-logo-left">
             <Link href="/ad-apply">
-              <div className="np-header-ad-container" style={{ position: 'relative', height: '100px', overflow: 'hidden', borderRadius: '4px', border: '1px solid #ddd' }}>
+              <div className="np-header-ad-container" style={{ position: 'relative', width: '100%', height: '100px', overflow: 'hidden', borderRadius: '4px', border: '1px solid #ddd' }}>
                 <Image 
                   src="/ads/gold_fisher_v2.png" 
                   alt="황금어장 광고" 
@@ -451,14 +451,18 @@ export default function Header() {
         /* === MOBILE === */
         @media (max-width: 768px) {
           .np-topbar { display: none; }
-          .np-logo-title { font-size: 2rem; }
-          .np-logo-inner { flex-direction: column; gap: 0.8rem; text-align: center; display: flex; }
-          .np-logo-link { order: 1; }
-          .np-logo-right { order: 2; flex-direction: row; min-width: unset; align-items: center; justify-content: center; }
-          .np-logo-left { order: 3; min-width: unset; justify-content: center; width: 100%; display: flex; }
-          .np-search-input { width: 120px; }
+          .np-logo-title { font-size: 1.8rem; }
+          .np-logo-inner { flex-direction: column; gap: 0.3rem; text-align: center; display: flex; }
+          .np-logo-link { order: 1; margin-bottom: 0.2rem; }
+          .np-logo-right { order: 2; flex-direction: row; min-width: unset; align-items: center; justify-content: center; gap: 0.5rem; }
+          .np-logo-left { order: 3; min-width: unset; justify-content: center; width: 100%; display: flex; margin-top: 0.3rem; }
+          .np-header-ad-container { height: 70px !important; }
+          .np-search-input { width: 110px; padding: 0.3rem 0.5rem; font-size: 0.75rem; }
+          .np-search-btn { padding: 0.3rem 0.5rem; }
+          .np-logo-btns { flex-direction: row; gap: 0.3rem; }
+          .np-subscribe-btn, .np-report-btn { width: 75px; padding: 0.3rem 0; font-size: 0.72rem; }
           .np-logo-right a { width: auto; }
-          .np-logo-section { padding: 0.8rem 0; }
+          .np-logo-section { padding: 0.4rem 0; }
         }
       `}</style>
     </header>
