@@ -17,11 +17,7 @@ const MDEditor = dynamic(
   { ssr: false }
 );
 
-// We need a helper to get the commands
-const commands = dynamic(
-  () => import("@uiw/react-md-editor").then((mod) => mod.commands),
-  { ssr: false }
-);
+
 
 function EditArticleForm() {
   const router = useRouter();
