@@ -18,7 +18,7 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
   
   if (!article) return { title: '기사를 찾을 수 없습니다 | 다산어보' };
   
-  const contentSnippet = article.content ? article.content.substring(0, 150).replace(/<[^>]+>/g, '') + '...' : '다산어보 지역 뉴스';
+  const contentSnippet = article.content ? article.content.substring(0, 150).replace(/<[^>]*>/g, '').replace(/[#*`~]/g, '') + '...' : '다산어보 지역 뉴스';
 
   return {
     title: `${article.title} | 다산어보`,
@@ -101,7 +101,7 @@ export default async function ArticlePage({ params }: { params: Promise<{ id: st
         url: 'https://www.dasaneobo.kr/og-image.png'
       }
     },
-    articleBody: article.content ? article.content.substring(0, 500) : ''
+    articleBody: article.content ? article.content.replace(/<[^>]*>/g, '').replace(/[#*`~]/g, '').substring(0, 500) : ''
   };
 
   return (

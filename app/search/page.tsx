@@ -82,7 +82,7 @@ function SearchResultsContent() {
                   </div>
                   <h3 style={{ fontSize: '1.4rem', fontWeight: 800, margin: '0 0 1rem', lineHeight: '1.4' }}>{article.title}</h3>
                   <p style={{ color: '#666', fontSize: '1rem', lineHeight: '1.6', margin: 0, display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
-                    {article.content.replace(/<[^>]*>?/gm, '').substring(0, 200)}
+                    {article.content.replace(/<[^>]*>/g, '').replace(/[#*`~]/g, '').substring(0, 200)}
                   </p>
                 </div>
               </div>

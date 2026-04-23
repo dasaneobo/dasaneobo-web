@@ -113,7 +113,7 @@ export default function NewspaperLayout({ title, type, value }: NewspaperLayoutP
             <h3 style={{ fontSize: '2.2rem', fontWeight: 900, marginBottom: '1rem', lineHeight: 1.2, letterSpacing: '-1px' }}>{featured.title}</h3>
             {featured.subtitle && <h4 style={{ fontSize: '1.2rem', color: '#555', marginBottom: '1rem', fontWeight: 700 }}>{featured.subtitle}</h4>}
             <p style={{ color: '#444', fontSize: '1.05rem', lineHeight: 1.6, marginBottom: '1.5rem', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
-              {featured.content.replace(/<[^>]*>/g, '').substring(0, 300)}...
+              {featured.content.replace(/<[^>]*>/g, '').replace(/[#*`~]/g, '').substring(0, 300)}...
             </p>
             <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', color: '#777', fontSize: '0.9rem', fontWeight: 600 }}>
               <span style={{ display: 'flex', alignItems: 'center', gap: '0.3rem' }}><UserIcon size={16} /> {featured.author_name} 기자</span>

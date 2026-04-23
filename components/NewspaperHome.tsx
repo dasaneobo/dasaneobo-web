@@ -140,7 +140,7 @@ function CenterMain({ articles }: { articles: any[] }) {
             <span style={{ fontSize: '0.72rem', color: '#2E7D52', fontWeight: 700 }}>{topStory.category}</span>
             <h2 style={{ margin: '0.4rem 0 0.6rem', fontSize: '1.6rem', fontWeight: 900, fontFamily: 'Noto Serif KR, serif', lineHeight: 1.3, letterSpacing: '-0.5px', wordBreak: 'keep-all', color: '#111' }}>{topStory.title}</h2>
             <p style={{ margin: 0, fontSize: '0.88rem', color: '#555', lineHeight: 1.6, display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
-              {topStory.content?.replace(/<[^>]*>/g, '').substring(0, 160)}...
+              {topStory.content?.replace(/<[^>]*>/g, '').replace(/[#*`~]/g, '').substring(0, 160)}...
             </p>
             <div style={{ marginTop: '0.5rem' }}><ArticleDate dateStr={topStory.created_at} /></div>
           </Link>
