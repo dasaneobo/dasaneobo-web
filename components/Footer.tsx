@@ -98,7 +98,7 @@ export default function Footer() {
             <Link href="/privacy" className="np-highlight">개인정보처리방침</Link>
             <Link href="/youth">청소년보호정책</Link>
             <Link href="/copyright">저작권보호정책</Link>
-            <span>이메일무단수집거부</span>
+            <Link href="/no-email-collect">이메일무단수집거부</Link>
           </div>
           <div className="np-footer-copyright">
             Copyright © 2026 다산어보(Dasan-Eobo). All rights reserved.
