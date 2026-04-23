@@ -41,9 +41,8 @@ export default async function EthicsPage() {
             <MarkdownRenderer content={fileContent} />
           </div>
           
-          <div className="ethics-footer-stamp">
-            <div className="stamp-circle">인장</div>
-            <span>다산어보 언론협동조합 의장</span>
+          <div className="ethics-footer-stamp" style={{ justifyContent: 'center', marginTop: '4rem', fontWeight: 'bold', fontSize: '1.2rem' }}>
+            <span>다산어보 언론협동조합 이사장</span>
           </div>
         </div>
       </div>
