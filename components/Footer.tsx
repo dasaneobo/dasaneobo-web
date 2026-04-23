@@ -18,11 +18,6 @@ export default function Footer() {
                 투명한 보도와 주민 참여로<br />
                 지역의 미래를 씁니다.
               </p>
-              <div className="np-footer-sns">
-                <span>FACEBOOK</span>
-                <span>INSTAGRAM</span>
-                <span>YOUTUBE</span>
-              </div>
             </div>
 
             {/* 권역 뉴스 */}
