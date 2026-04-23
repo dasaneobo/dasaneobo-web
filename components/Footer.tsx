@@ -63,7 +63,7 @@ export default function Footer() {
                 <li>📍 전라남도 강진군 강진읍</li>
                 <li>📞 061-000-0000</li>
                 <li>📠 061-000-0001</li>
-                <li>✉ contact@dasaneobo.kr</li>
+                <li>✉ dinoskorea@gmail.com</li>
               </ul>
             </div>
           </div>
@@ -81,7 +81,7 @@ export default function Footer() {
             </p>
             <p>
               전라남도 강진군 강진읍 오감길 · 대표전화: 061-000-0000 · 팩스: 061-000-0001 · 
-              이메일: contact@dasaneobo.kr
+              이메일: dinoskorea@gmail.com
             </p>
             <p style={{ marginTop: '0.5rem', fontSize: '0.72rem', opacity: 0.7 }}>
               다산어보 모든 콘텐츠(영상, 기사, 사진)는 저작권법의 보호를 받는 바, 무단 전재와 복사, 배포 등을 금합니다.

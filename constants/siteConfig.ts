@@ -42,7 +42,7 @@ export const SITE_CONFIG = {
   
   // 연락처 및 하단 정보
   contact: {
-    email: "contact@dasaneobo.kr",
+    email: "dinoskorea@gmail.com",
     address: "전라남도 강진군 강진읍",
     registrationNumber: "123-45-67890",
   }
