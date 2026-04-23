@@ -11,7 +11,15 @@ import "@uiw/react-md-editor/markdown-editor.css";
 import "@uiw/react-markdown-preview/markdown.css";
 
 const MDEditor = dynamic(
-  () => import("@uiw/react-md-editor"),
+  () => import("@uiw/react-md-editor").then((mod) => {
+    return mod.default;
+  }),
+  { ssr: false }
+);
+
+// We need a helper to get the commands
+const commands = dynamic(
+  () => import("@uiw/react-md-editor").then((mod) => mod.commands),
   { ssr: false }
 );
 
@@ -34,6 +42,7 @@ function EditArticleForm() {
     author_id: ''
   });
   const [authors, setAuthors] = useState<any[]>([]);
+  const [bodyUploading, setBodyUploading] = useState(false);
 
   useEffect(() => {
     const checkAuth = async () => {
@@ -107,45 +116,67 @@ function EditArticleForm() {
     setUploading(true);
 
     try {
-      const maxWidth = 1200; 
-      const reader = new FileReader();
-      const compressedFile = await new Promise<Blob>((resolve, reject) => {
-        reader.onload = (event) => {
-          const img = new Image();
-          img.onload = () => {
-            const canvas = document.createElement('canvas');
-            let width = img.width;
-            let height = img.height;
-            if (width > maxWidth) {
-              height = Math.round((height * maxWidth) / width);
-              width = maxWidth;
-            }
-            canvas.width = width;
-            canvas.height = height;
-            const ctx = canvas.getContext('2d');
-            ctx?.drawImage(img, 0, 0, width, height);
-            canvas.toBlob((blob) => {
-              if (blob) resolve(blob);
-              else reject(new Error('Canvas conversion failed'));
-            }, 'image/jpeg', 0.8);
-          };
-          img.src = event.target?.result as string;
-        };
-        reader.readAsDataURL(file);
-      });
-
-      const fileName = `${Date.now()}_img.jpg`;
-      const filePath = `articles/${fileName}`;
-      const { error: uploadError } = await supabase.storage.from('article-images').upload(filePath, compressedFile);
-      if (uploadError) throw uploadError;
-
-      const { data: { publicUrl } } = supabase.storage.from('article-images').getPublicUrl(filePath);
+      const publicUrl = await uploadToSupabase(file);
       setFormData({ ...formData, image_url: publicUrl });
       alert('이미지가 업로드되었습니다!');
     } catch (error: any) {
       alert('업로드 실패: ' + error.message);
     } finally {
       setUploading(false);
+    }
+  };
+
+  const uploadToSupabase = async (file: File) => {
+    const maxWidth = 1200; 
+    const reader = new FileReader();
+    const compressedFile = await new Promise<Blob>((resolve, reject) => {
+      reader.onload = (event) => {
+        const img = new Image();
+        img.onload = () => {
+          const canvas = document.createElement('canvas');
+          let width = img.width;
+          let height = img.height;
+          if (width > maxWidth) {
+            height = Math.round((height * maxWidth) / width);
+            width = maxWidth;
+          }
+          canvas.width = width;
+          canvas.height = height;
+          const ctx = canvas.getContext('2d');
+          ctx?.drawImage(img, 0, 0, width, height);
+          canvas.toBlob((blob) => {
+            if (blob) resolve(blob);
+            else reject(new Error('Canvas conversion failed'));
+          }, 'image/jpeg', 0.8);
+        };
+        img.src = event.target?.result as string;
+      };
+      reader.readAsDataURL(file);
+    });
+
+    const fileName = `${Date.now()}_${Math.random().toString(36).substring(7)}.jpg`;
+    const filePath = `articles/${fileName}`;
+    const { error: uploadError } = await supabase.storage.from('article-images').upload(filePath, compressedFile);
+    if (uploadError) throw uploadError;
+
+    const { data: { publicUrl } } = supabase.storage.from('article-images').getPublicUrl(filePath);
+    return publicUrl;
+  };
+
+  const handleBodyImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setBodyUploading(true);
+
+    try {
+      const publicUrl = await uploadToSupabase(file);
+      const imageMarkdown = `\n\n![이미지](${publicUrl})\n\n`;
+      setFormData(prev => ({ ...prev, content: prev.content + imageMarkdown }));
+    } catch (error: any) {
+      alert('본문 이미지 업로드 실패: ' + error.message);
+    } finally {
+      setBodyUploading(false);
+      e.target.value = ''; // Reset for next time
     }
   };
 
@@ -214,12 +245,32 @@ function EditArticleForm() {
             style={{ width: '100%', padding: '1rem 0', fontSize: '2.2rem', fontWeight: 800, border: 'none', borderBottom: '2px solid #eee', outline: 'none', fontFamily: '"Nanum Myeongjo", serif' }}
           />
           <div data-color-mode="light">
+            <input 
+              type="file" accept="image/*" id="body-image-upload" 
+              style={{ display: 'none' }} 
+              onChange={handleBodyImageUpload} 
+            />
             <MDEditor
               value={formData.content}
               onChange={(val) => setFormData({ ...formData, content: val || '' })}
               preview="edit"
               height={600}
               style={{ border: 'none' }}
+              extraCommands={[
+                {
+                  name: 'upload-image',
+                  keyCommand: 'upload-image',
+                  buttonProps: { 'aria-label': '이미지 업로드', title: '본문에 이미지 업로드 및 삽입' },
+                  icon: (
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '4px', color: 'var(--primary-dark)', fontWeight: 'bold', fontSize: '12px' }}>
+                      <ImageIcon size={14} /> {bodyUploading ? '업로드중...' : '사진추가'}
+                    </div>
+                  ),
+                  execute: () => {
+                    document.getElementById('body-image-upload')?.click();
+                  },
+                },
+              ]}
             />
           </div>
         </div>
