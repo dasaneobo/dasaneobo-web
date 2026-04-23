@@ -97,7 +97,7 @@ export default function Footer() {
             <Link href="/terms">이용약관</Link>
             <Link href="/privacy" className="np-highlight">개인정보처리방침</Link>
             <Link href="/youth">청소년보호정책</Link>
-            <span>저작권보호정책</span>
+            <Link href="/copyright">저작권보호정책</Link>
             <span>이메일무단수집거부</span>
           </div>
           <div className="np-footer-copyright">
