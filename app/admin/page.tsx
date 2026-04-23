@@ -321,7 +321,7 @@ export default function AdminPage() {
   if (loading) return <div style={{ padding: '5rem', textAlign: 'center' }}>로딩 중...</div>;
 
   return (
-    <main style={{ minHeight: '100vh', background: '#f5f7fa', position: 'relative' }}>
+    <main style={{ minHeight: '100vh', background: '#f5f7fa', position: 'relative', overflowY: 'auto', display: 'block' }}>
       {/* Toast Notification */}
       {statusMsg && (
         <div style={{
