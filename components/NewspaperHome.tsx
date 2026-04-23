@@ -98,9 +98,6 @@ function LeftSidebar({ articles }: { articles: any[] }) {
 
   return (
     <aside style={{ display: 'flex', flexDirection: 'column', gap: '1.8rem' }}>
-      {/* 창립총회 공고 */}
-      <NoticeFounding />
-
       {/* 많이 본 뉴스 */}
       <div>
         <SectionHeader title="많이 본 뉴스" />
@@ -422,13 +419,13 @@ export function NewspaperMain({ articles, farmPrices, sidebarAd, settings }: { a
       <style jsx global>{`
         .np-three-col {
           display: grid;
-          grid-template-columns: 240px 1fr 200px;
+          grid-template-columns: 200px 1fr 200px;
           gap: 2rem;
           border-top: 3px double #2E7D52;
           padding-top: 1.5rem;
         }
         @media (max-width: 1024px) {
-          .np-three-col { grid-template-columns: 220px 1fr 180px; gap: 1.2rem; }
+          .np-three-col { grid-template-columns: 180px 1fr 180px; gap: 1.2rem; }
         }
         @media (max-width: 768px) {
           .np-three-col { grid-template-columns: 1fr; gap: 1rem; }
