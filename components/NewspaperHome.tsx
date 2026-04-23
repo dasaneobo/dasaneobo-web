@@ -70,59 +70,21 @@ function NoticeFounding() {
   return (
     <div style={{ 
       background: '#fff', 
-      border: '2px solid #2E7D52', 
-      padding: '1.2rem', 
+      border: '1.5px solid #2E7D52', 
+      padding: '0.4rem', 
       borderRadius: '2px', 
       boxShadow: '0 4px 12px rgba(46, 125, 82, 0.08)',
       marginBottom: '1rem',
-      position: 'relative'
     }}>
-      <div style={{ textAlign: 'center', marginBottom: '1rem' }}>
-        <h4 style={{ margin: 0, fontSize: '0.85rem', fontWeight: 900, color: '#2E7D52', letterSpacing: '0.1rem', borderBottom: '1px solid #2E7D52', display: 'inline-block', paddingBottom: '0.2rem' }}>
-          창 립 총 회 공 고
-        </h4>
+      <div style={{ position: 'relative', width: '100%', aspectRatio: '1/1.4', overflow: 'hidden' }}>
+        <Image 
+          src="/images/notice_founding.png" 
+          alt="창립총회 공고문" 
+          fill 
+          style={{ objectFit: 'contain' }}
+          unoptimized
+        />
       </div>
-      
-      <p style={{ fontSize: '0.75rem', lineHeight: 1.5, color: '#333', margin: '0 0 1rem', wordBreak: 'keep-all', textAlign: 'justify' }}>
-        협동조합기본법 제15조에 의거하여 **다산어보 언론협동조합**의 창립총회를 개최하오니 설립동의자 여러분의 참석을 부탁드립니다.
-      </p>
-
-      <div style={{ background: '#f8fdfa', padding: '0.8rem', borderRadius: '4px', border: '1px solid #e2f0e8', marginBottom: '1rem' }}>
-        <table style={{ width: '100%', fontSize: '0.72rem', borderCollapse: 'collapse' }}>
-          <tbody>
-            <tr>
-              <td style={{ fontWeight: 800, color: '#2E7D52', width: '25%', padding: '2px 0' }}>일시</td>
-              <td style={{ color: '#444' }}>2026. 04. 30 (목) 16:00</td>
-            </tr>
-            <tr>
-              <td style={{ fontWeight: 800, color: '#2E7D52', padding: '2px 0' }}>장소</td>
-              <td style={{ color: '#444' }}>강진군 (추후 통지)</td>
-            </tr>
-            <tr>
-              <td style={{ fontWeight: 800, color: '#2E7D52', padding: '2px 0' }}>대상</td>
-              <td style={{ color: '#444' }}>설립동의자 전원</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-
-      <div style={{ fontSize: '0.68rem', color: '#666', borderTop: '1px dashed #ccc', paddingTop: '0.8rem', textAlign: 'center' }}>
-        <div style={{ marginBottom: '0.3rem' }}>2026년 4월 23일</div>
-        <div style={{ fontWeight: 900, color: '#2E7D52' }}>다산어보 언론협동조합</div>
-        <div style={{ fontSize: '0.6rem' }}>설립준비위원회</div>
-      </div>
-      
-      <Link href="/notice/founding" style={{ 
-        display: 'block', 
-        marginTop: '0.8rem', 
-        textAlign: 'center', 
-        fontSize: '0.7rem', 
-        color: '#2E7D52', 
-        textDecoration: 'underline', 
-        fontWeight: 600 
-      }}>
-        상세 안건 보기
-      </Link>
     </div>
   );
 }
