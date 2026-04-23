@@ -151,7 +151,7 @@ export default function Header() {
         <div className="container np-logo-inner">
           <div className="np-logo-left">
             <Link href="/ad-apply">
-              <div style={{ position: 'relative', width: '460px', height: '100px', overflow: 'hidden', borderRadius: '4px', border: '1px solid #ddd' }}>
+              <div className="np-header-ad-container" style={{ position: 'relative', height: '100px', overflow: 'hidden', borderRadius: '4px', border: '1px solid #ddd' }}>
                 <Image 
                   src="/ads/gold_fisher_v2.png" 
                   alt="황금어장 광고" 
@@ -304,13 +304,17 @@ export default function Header() {
 
         /* Search */
         .np-logo-left {
-          display: flex;
-          align-items: center;
-          min-width: 500px;
+          display: block;
+          width: 460px;
+        }
+        .np-header-ad-container {
+          width: 100%;
+        }
+        @media (max-width: 1100px) {
+          .np-logo-left { width: 300px; }
         }
         @media (max-width: 1024px) {
-          .np-logo-left, .np-logo-right { min-width: auto; }
-          .np-logo-left { display: none; } /* Hide ad on smaller tablets to keep logo centered */
+          .np-logo-left { width: 100%; max-width: 460px; }
         }
         .np-search-form {
           display: flex;
@@ -448,10 +452,11 @@ export default function Header() {
         @media (max-width: 768px) {
           .np-topbar { display: none; }
           .np-logo-title { font-size: 2rem; }
-          .np-logo-inner { flex-direction: column; gap: 0.8rem; text-align: center; }
-          .np-logo-left { min-width: unset; justify-content: center; }
+          .np-logo-inner { flex-direction: column; gap: 0.8rem; text-align: center; display: flex; }
+          .np-logo-link { order: 1; }
+          .np-logo-right { order: 2; flex-direction: row; min-width: unset; align-items: center; justify-content: center; }
+          .np-logo-left { order: 3; min-width: unset; justify-content: center; width: 100%; display: flex; }
           .np-search-input { width: 120px; }
-          .np-logo-right { flex-direction: row; min-width: unset; align-items: center; justify-content: center; }
           .np-logo-right a { width: auto; }
           .np-logo-section { padding: 0.8rem 0; }
         }
