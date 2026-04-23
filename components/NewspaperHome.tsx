@@ -71,7 +71,7 @@ function NoticeFounding() {
     <div style={{ 
       background: '#fff', 
       border: '1.5px solid #2E7D52', 
-      padding: '0.4rem', 
+      padding: '2px', 
       borderRadius: '2px', 
       boxShadow: '0 4px 12px rgba(46, 125, 82, 0.08)',
       marginBottom: '1rem',
@@ -422,13 +422,13 @@ export function NewspaperMain({ articles, farmPrices, sidebarAd, settings }: { a
       <style jsx global>{`
         .np-three-col {
           display: grid;
-          grid-template-columns: 200px 1fr 200px;
+          grid-template-columns: 240px 1fr 200px;
           gap: 2rem;
           border-top: 3px double #2E7D52;
           padding-top: 1.5rem;
         }
         @media (max-width: 1024px) {
-          .np-three-col { grid-template-columns: 180px 1fr 180px; gap: 1.2rem; }
+          .np-three-col { grid-template-columns: 220px 1fr 180px; gap: 1.2rem; }
         }
         @media (max-width: 768px) {
           .np-three-col { grid-template-columns: 1fr; gap: 1rem; }
