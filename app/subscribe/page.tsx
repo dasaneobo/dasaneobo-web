@@ -810,8 +810,8 @@ export default function SubscribePage() {
 
         <div className="footer-sub">
           다산어보 언론협동조합 · 전라남도 강진군<br />
-          발행인: 홍길동 · 편집인: 이순신 · 등록번호: 전남 다00000<br />
-          문의: dasaneobo@gmail.com
+          발행인: 강상우 · 편집인: 이득규 · 등록번호: 전남 다00000<br />
+          문의: dinoskorea@gmail.com
         </div>
       </div>
     </main>
