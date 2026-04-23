@@ -387,17 +387,17 @@ export default function SubscribePage() {
           .perk-item {
             display: flex;
             align-items: flex-start;
-            gap: 8px;
+            gap: 12px;
             font-size: 13px;
             color: var(--ink2);
             line-height: 1.6;
           }
-          .perk-dot {
-            width: 6px; height: 6px;
-            background: var(--gold);
-            border-radius: 50%;
+          .perk-icon {
+            font-size: 20px;
             flex-shrink: 0;
-            margin-top: 6px;
+            line-height: 1;
+            margin-top: 2px;
+            filter: drop-shadow(0 2px 4px rgba(154,124,58,0.2));
           }
 
           /* form */
@@ -667,8 +667,9 @@ export default function SubscribePage() {
                 <li>연말 특별호 증정</li>
                 <li className="highlight">창간 후원인 명단 지면 영구 게재</li>
                 <li className="highlight">명예 독자증 실물 발급</li>
-                <li className="highlight">취재 현장 연 1회 동행 초청</li>
-                <li className="highlight">편집장 직통 소통 채널</li>
+                <li className="highlight">지역 특산물 선물박스 (5만원 상당)</li>
+                <li className="highlight">배너 또는 지면 광고 무료 게재</li>
+                <li className="highlight">다산어보의 날 초청 및 편집진 만남</li>
               </ul>
               <div className="select-indicator">{currentPlan === '평생 구독' ? '이 플랜 선택 ✓' : '이 플랜 선택'}</div>
             </div>
@@ -688,28 +689,24 @@ export default function SubscribePage() {
             </div>
             <div className="perks-grid">
               <div className="perk-item">
-                <div className="perk-dot"></div>
+                <div className="perk-icon">📜</div>
                 <div><strong style={{color:'var(--ink)'}}>창간 후원인 명단 영구 게재</strong><br />신문 지면에 이름이 영원히 남습니다</div>
               </div>
               <div className="perk-item">
-                <div className="perk-dot"></div>
+                <div className="perk-icon">🪪</div>
                 <div><strong style={{color:'var(--ink)'}}>명예 독자증 실물 발급</strong><br />다산어보 공식 명예 독자증을 우편 발송합니다</div>
               </div>
               <div className="perk-item">
-                <div className="perk-dot"></div>
-                <div><strong style={{color:'var(--ink)'}}>취재 현장 연 1회 동행 초청</strong><br />기자와 함께 현장을 직접 경험할 수 있습니다</div>
+                <div className="perk-icon">🎁</div>
+                <div><strong style={{color:'var(--ink)'}}>지역 특산물 선물박스</strong><br />강진·고흥·보성·장흥 특산물 5만원 상당을 직접 큐레이션해서 보내드립니다</div>
               </div>
               <div className="perk-item">
-                <div className="perk-dot"></div>
-                <div><strong style={{color:'var(--ink)'}}>편집장 직통 소통 채널</strong><br />제보·의견을 편집장에게 직접 전달할 수 있습니다</div>
+                <div className="perk-icon">📢</div>
+                <div><strong style={{color:'var(--ink)'}}>광고 무료 게재</strong><br />인터넷 신문 배너 광고 1개월 또는 종이신문 하단 광고 1회 중 선택 가능합니다</div>
               </div>
               <div className="perk-item">
-                <div className="perk-dot"></div>
-                <div><strong style={{color:'var(--ink)'}}>연간 아카이브 묶음본 증정</strong><br />매년 연말 그해 전체 기사를 엮은 묶음본을 드립니다</div>
-              </div>
-              <div className="perk-item">
-                <div className="perk-dot"></div>
-                <div><strong style={{color:'var(--ink)'}}>신문 우선 발송</strong><br />일반 독자보다 하루 먼저 종이신문을 받아보십니다</div>
+                <div className="perk-icon">🥂</div>
+                <div><strong style={{color:'var(--ink)'}}>다산어보의 날 초청</strong><br />연 1회 후원인과 함께하는 특별한 날, 편집진과 직접 만납니다</div>
               </div>
             </div>
           </div>
