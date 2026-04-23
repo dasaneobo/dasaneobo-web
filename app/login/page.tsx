@@ -84,28 +84,30 @@ export default function LoginPage() {
 
           <form onSubmit={handleAuth} style={{ display: 'flex', flexDirection: 'column', gap: '1.2rem' }}>
             {!isLogin && (
-              <div>
-                <label style={{ display: 'block', fontSize: '0.9rem', marginBottom: '0.4rem', fontWeight: 600 }}>이름 (필명)</label>
-                <input 
-                  type="text" 
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
-                  placeholder="예: 홍길동 기자"
-                  required={!isLogin}
-                  style={{ width: '100%', padding: '0.8rem', borderRadius: '8px', border: '1px solid #ddd', outline: 'none' }}
-                />
-              </div>
+              <>
+                <div>
+                  <label style={{ display: 'block', fontSize: '0.9rem', marginBottom: '0.4rem', fontWeight: 600 }}>이름 (필명)</label>
+                  <input 
+                    type="text" 
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                    placeholder="예: 홍길동 기자"
+                    required={!isLogin}
+                    style={{ width: '100%', padding: '0.8rem', borderRadius: '8px', border: '1px solid #ddd', outline: 'none' }}
+                  />
+                </div>
 
-              <div>
-                <label style={{ display: 'block', fontSize: '0.9rem', marginBottom: '0.4rem', fontWeight: 600 }}>추천인 이름 (선택)</label>
-                <input 
-                  type="text" 
-                  value={recommender}
-                  onChange={(e) => setRecommender(e.target.value)}
-                  placeholder="추천해주신 분의 이름을 적어주세요"
-                  style={{ width: '100%', padding: '0.8rem', borderRadius: '8px', border: '1px solid #ddd', outline: 'none' }}
-                />
-              </div>
+                <div>
+                  <label style={{ display: 'block', fontSize: '0.9rem', marginBottom: '0.4rem', fontWeight: 600 }}>추천인 이름 (선택)</label>
+                  <input 
+                    type="text" 
+                    value={recommender}
+                    onChange={(e) => setRecommender(e.target.value)}
+                    placeholder="추천해주신 분의 이름을 적어주세요"
+                    style={{ width: '100%', padding: '0.8rem', borderRadius: '8px', border: '1px solid #ddd', outline: 'none' }}
+                  />
+                </div>
+              </>
             )}
 
             <div>
