@@ -321,7 +321,7 @@ export default function AdminPage() {
   if (loading) return <div style={{ padding: '5rem', textAlign: 'center' }}>로딩 중...</div>;
 
   return (
-    <main style={{ minHeight: '100vh', background: '#f5f7fa', position: 'relative', overflowY: 'auto', display: 'block' }}>
+    <main style={{ minHeight: '100.1vh', background: '#f5f7fa', position: 'relative', overflowY: 'scroll', display: 'block' }}>
       {/* Toast Notification */}
       {statusMsg && (
         <div style={{
@@ -356,6 +356,12 @@ export default function AdminPage() {
         @keyframes slideUp {
           from { transform: translate(-50%, 100%); opacity: 0; }
           to { transform: translate(-50%, 0); opacity: 1; }
+        }
+        /* 강제 스크롤 허용 및 막대 상시 노출 */
+        html, body {
+          overflow-y: scroll !important;
+          height: auto !important;
+          min-height: 100% !important;
         }
       `}</style>
       <Header />
