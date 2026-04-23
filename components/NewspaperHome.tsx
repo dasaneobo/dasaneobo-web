@@ -363,7 +363,7 @@ function BottomSections({ articles }: { articles: any[] }) {
    ========================================= */
 export function NewspaperMain({ articles, farmPrices, sidebarAd, settings }: { articles: any[]; farmPrices: any[]; sidebarAd: any; settings: any }) {
   return (
-    <div className="container" style={{ paddingTop: '1.5rem', paddingBottom: '2rem' }}>
+    <div className="container np-main-container">
       {/* 3-column layout */}
       <div className="np-three-col">
         <LeftSidebar articles={articles} />
@@ -387,10 +387,19 @@ export function NewspaperMain({ articles, farmPrices, sidebarAd, settings }: { a
           .np-three-col { grid-template-columns: 180px 1fr 180px; gap: 1.2rem; }
         }
         @media (max-width: 768px) {
-          .np-three-col { grid-template-columns: 1fr; }
+          .np-three-col { grid-template-columns: 1fr; gap: 1rem; }
         }
         @media (max-width: 480px) {
           .np-three-col { grid-template-columns: 1fr; }
+        }
+        .np-main-container {
+          padding-top: 1.5rem;
+          padding-bottom: 2rem;
+        }
+        @media (max-width: 768px) {
+          .np-main-container {
+            padding-top: 0.5rem !important;
+          }
         }
       `}</style>
     </div>

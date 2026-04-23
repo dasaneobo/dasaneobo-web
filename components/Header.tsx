@@ -451,18 +451,20 @@ export default function Header() {
         /* === MOBILE === */
         @media (max-width: 768px) {
           .np-topbar { display: none; }
-          .np-logo-title { font-size: 1.8rem; }
-          .np-logo-inner { flex-direction: column; gap: 0.3rem; text-align: center; display: flex; }
-          .np-logo-link { order: 1; margin-bottom: 0.2rem; }
-          .np-logo-right { order: 2; flex-direction: row; min-width: unset; align-items: center; justify-content: center; gap: 0.5rem; }
-          .np-logo-left { order: 3; min-width: unset; justify-content: center; width: 100%; display: flex; margin-top: 0.3rem; }
-          .np-header-ad-container { height: 70px !important; }
-          .np-search-input { width: 110px; padding: 0.3rem 0.5rem; font-size: 0.75rem; }
-          .np-search-btn { padding: 0.3rem 0.5rem; }
-          .np-logo-btns { flex-direction: row; gap: 0.3rem; }
-          .np-subscribe-btn, .np-report-btn { width: 75px; padding: 0.3rem 0; font-size: 0.72rem; }
+          .np-logo-title { font-size: 1.6rem; margin-bottom: 0.1rem; }
+          .np-logo-inner { flex-direction: column; gap: 0.1rem !important; text-align: center; display: flex !important; }
+          .np-logo-link { order: 1; margin-bottom: 0.1rem; }
+          .np-logo-right { order: 2; flex-direction: row; min-width: unset !important; align-items: center; justify-content: center; gap: 0.3rem; margin-bottom: 0.2rem; }
+          .np-logo-left { order: 3; min-width: unset !important; justify-content: center; width: 100% !important; display: flex !important; margin-top: 0.1rem; }
+          .np-header-ad-container { height: 60px !important; width: 100% !important; background: #f9f9f9; }
+          .np-search-input { width: 100px; padding: 0.2rem 0.4rem; font-size: 0.72rem; }
+          .np-search-btn { padding: 0.2rem 0.4rem; }
+          .np-logo-btns { flex-direction: row; gap: 0.2rem; }
+          .np-subscribe-btn, .np-report-btn { width: 70px; padding: 0.25rem 0; font-size: 0.7rem; }
           .np-logo-right a { width: auto; }
-          .np-logo-section { padding: 0.4rem 0; }
+          .np-logo-section { padding: 0.2rem 0 !important; border-bottom: none !important; }
+          .np-nav { border-top: 1.5px solid #2E7D52 !important; }
+          .np-nav-link { padding: 0.5rem 0 !important; font-size: 0.8rem; }
         }
       `}</style>
     </header>
