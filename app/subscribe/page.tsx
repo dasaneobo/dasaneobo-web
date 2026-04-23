@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import emailjs from '@emailjs/browser';
 import Header from '@/components/Header';
 
@@ -10,6 +11,7 @@ const EMAILJS_SERVICE_ID = process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID || '';
 const EMAILJS_TEMPLATE_ID = process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID || '';
 
 export default function SubscribePage() {
+  const router = useRouter();
   const [currentPlan, setCurrentPlan] = useState('연간 구독');
   const [currentAmount, setCurrentAmount] = useState('100,000원/년');
   const [isLoading, setIsLoading] = useState(false);
@@ -100,12 +102,18 @@ export default function SubscribePage() {
       }
 
       const isLifetime = currentPlan === '평생 구독';
+      const successMsg = isLifetime
+        ? '✓ 창간 후원 신청이 완료되었습니다! 입금 확인 후 명예 독자증과 함께 안내 드리겠습니다. 감사합니다 🙏'
+        : '✓ 구독 신청이 완료되었습니다! 입금 확인 후 배송이 시작됩니다. 감사합니다 🙏';
+      
       setNotice({
-        msg: isLifetime
-          ? '✓ 창간 후원 신청이 완료되었습니다! 입금 확인 후 명예 독자증과 함께 안내 드리겠습니다. 감사합니다 🙏'
-          : '✓ 구독 신청이 완료되었습니다! 입금 확인 후 배송이 시작됩니다. 감사합니다 🙏',
+        msg: successMsg,
         type: 'success'
       });
+
+      // Show alert and redirect to home
+      alert(successMsg);
+      router.push('/');
 
       setFormData({
         subName: '',
