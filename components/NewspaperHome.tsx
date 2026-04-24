@@ -383,23 +383,25 @@ export function NewspaperMain({ articles, farmPrices, sidebarAd, settings }: { a
     <div className="container np-main-container">
       {/* 3-column layout */}
       <div className="np-three-col">
-        <LeftSidebar articles={articles} />
+        {/* Mobile order: Center(1) -> Left(2) -> Right(3) */}
+        <div className="np-col-center">
+          <div className="mobile-gold-ad">
+            <Link href="/ad-apply">
+              <div style={{ position: 'relative', width: '100%', aspectRatio: '460/100', overflow: 'hidden', borderRadius: '4px', border: '1px solid #ddd' }}>
+                <Image src="/ads/gold_fisher_v2.png" alt="황금어장 광고" fill style={{ objectFit: 'cover' }} />
+              </div>
+            </Link>
+          </div>
+          <CenterMain articles={articles} />
+        </div>
         
-        <div className="mobile-gold-ad">
-          <Link href="/ad-apply">
-            <div style={{ position: 'relative', width: '100%', aspectRatio: '460/100', overflow: 'hidden', borderRadius: '4px', border: '1px solid #ddd' }}>
-              <Image 
-                src="/ads/gold_fisher_v2.png" 
-                alt="황금어장 광고" 
-                fill
-                style={{ objectFit: 'cover' }} 
-              />
-            </div>
-          </Link>
+        <div className="np-col-left">
+          <LeftSidebar articles={articles} />
         </div>
 
-        <CenterMain articles={articles} />
-        <RightSidebar farmPrices={farmPrices} sidebarAd={sidebarAd} />
+        <div className="np-col-right">
+          <RightSidebar farmPrices={farmPrices} sidebarAd={sidebarAd} />
+        </div>
       </div>
 
       <RegionalNews articles={articles} />
@@ -407,40 +409,78 @@ export function NewspaperMain({ articles, farmPrices, sidebarAd, settings }: { a
       <BottomSections articles={articles} />
 
       <style jsx global>{`
+        /* Desktop Grid */
         .np-three-col {
           display: grid;
           grid-template-columns: 200px 1fr 200px;
+          grid-template-areas: "left center right";
           gap: 2rem;
           border-top: 3px double #2E7D52;
           padding-top: 1.5rem;
         }
+        .np-col-left { grid-area: left; }
+        .np-col-center { grid-area: center; }
+        .np-col-right { grid-area: right; }
+
         @media (max-width: 1024px) {
           .np-three-col { grid-template-columns: 180px 1fr 180px; gap: 1.2rem; }
         }
+
+        /* Mobile Layout */
         @media (max-width: 768px) {
-          .np-three-col { display: flex; flex-direction: column; gap: 1rem; }
-          .mobile-gold-ad { display: block; }
+          .np-three-col { 
+            display: flex; 
+            flex-direction: column; 
+            gap: 1.5rem; 
+            border-top: 2px solid #2E7D52;
+          }
+          .np-col-center { order: 1; }
+          .np-col-left { order: 2; }
+          .np-col-right { order: 3; }
+          
+          .mobile-gold-ad { display: block; margin-bottom: 1rem; }
+          
+          /* Services Grid */
+          .np-sidebar-services-grid {
+            display: grid !important;
+            grid-template-columns: repeat(2, 1fr) !important;
+            gap: 0.8rem !important;
+            margin-top: 1rem;
+          }
+          .np-sidebar-item { margin-bottom: 0 !important; }
+          
+          /* Regional News Grid */
+          .np-region-grid {
+            display: grid !important;
+            grid-template-columns: repeat(2, 1fr) !important;
+            gap: 0 !important;
+          }
+          .np-region-item {
+            border-bottom: 1px solid #e5e5e5 !important;
+            border-right: 1px solid #e5e5e5 !important;
+          }
+          .np-region-item:nth-child(2n) { border-right: none !important; }
+          .np-region-item:nth-last-child(-n+2) { border-bottom: none !important; }
+          
+          /* Bottom Sections Grid */
+          .np-bottom-latest-grid { grid-template-columns: 1fr !important; }
+          .np-bottom-split { grid-template-columns: 1fr !important; gap: 2rem !important; }
+          .np-bottom-photos-grid { 
+            display: grid !important;
+            grid-template-columns: repeat(2, 1fr) !important; 
+            gap: 0.8rem !important;
+          }
         }
         
         .mobile-gold-ad { display: none; }
         .np-main-container { padding-top: 1.5rem; padding-bottom: 2rem; }
         
-        /* Sidebars */
-        .np-sidebar { display: flex; flex-direction: column; gap: 1.8rem; }
-        .np-sidebar-services-grid { display: flex; flex-direction: column; gap: 1.8rem; }
-
-        /* Regional */
+        /* Desktop styles for regional/bottom */
         .np-region-section { margin-top: 2.5rem; margin-bottom: 1.5rem; }
-        .np-region-grid {
-          display: grid;
-          grid-template-columns: repeat(4, 1fr);
-          gap: 0;
-          border-top: 2px solid #2E7D52;
-        }
+        .np-region-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0; border-top: 2px solid #2E7D52; }
         .np-region-item { padding: 0.8rem 1rem; border-right: 1px solid #e5e5e5; }
         .np-region-item:last-child { border-right: none; }
         
-        /* Bottom */
         .np-bottom-latest-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 0 2rem; }
         .np-bottom-latest-item {
           text-decoration: none; color: inherit; display: flex;
@@ -461,25 +501,6 @@ export function NewspaperMain({ articles, farmPrices, sidebarAd, settings }: { a
 
         @media (max-width: 768px) {
           .np-main-container { padding-top: 0.3rem !important; }
-          .np-region-grid { grid-template-columns: repeat(2, 1fr); }
-          .np-region-item { padding: 0.6rem 0.8rem; border-bottom: 1px solid #e5e5e5; }
-          .np-region-item:nth-child(2n) { border-right: none; }
-          .np-region-item:nth-last-child(-n+2) { border-bottom: none; }
-          .np-region-section { margin-top: 1.5rem; }
-          
-          .np-bottom-latest-grid { grid-template-columns: 1fr; }
-          .np-bottom-split { grid-template-columns: 1fr; gap: 2rem; }
-          .np-bottom-photos-grid { grid-template-columns: repeat(2, 1fr); }
-          
-          /* Services Grid for Mobile */
-          .np-sidebar-services-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 0.8rem;
-            margin-top: 1rem;
-          }
-          
-          /* Component-specific overrides for density */
           .np-ticker-track span { font-size: 0.72rem !important; padding: 0.35rem 0.8rem !important; }
           h2 { font-size: 1.25rem !important; margin: 0.3rem 0 0.5rem !important; }
           h3 { font-size: 0.9rem !important; }
