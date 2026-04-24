@@ -327,12 +327,12 @@ function BottomSections({ articles }: { articles: any[] }) {
       <hr style={{ border: 'none', borderTop: '3px solid #2E7D52', marginBottom: '2rem' }} />
 
       {/* 최신기사 목록 */}
-      <div style={{ marginBottom: '3rem' }}>
+      <div className="np-bottom-latest">
         <SectionHeader title="최신 기사" href="/region" />
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '0 2rem' }}>
+        <div className="np-bottom-latest-grid">
           {latest.map((art) => (
-            <Link key={art.id} href={`/article/${art.id}`} style={{ textDecoration: 'none', color: 'inherit', display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: '0.5rem', padding: '0.6rem 0', borderBottom: '1px solid #f0f0f0' }}>
-              <span style={{ fontSize: '0.82rem', fontWeight: 500, color: '#222', lineHeight: 1.35, wordBreak: 'keep-all', flex: 1 }}>{art.title}</span>
+            <Link key={art.id} href={`/article/${art.id}`} className="np-bottom-latest-item">
+              <span className="np-bottom-latest-title">{art.title}</span>
               <ArticleDate dateStr={art.created_at} />
             </Link>
           ))}
@@ -340,11 +340,11 @@ function BottomSections({ articles }: { articles: any[] }) {
       </div>
 
       {/* 오피니언/칼럼 + 기획연재 */}
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '3rem', marginBottom: '3rem' }}>
-        <div>
+      <div className="np-bottom-split">
+        <div className="np-bottom-split-section">
           <SectionHeader title="오피니언 · 칼럼" href="/column" />
           {columns.length > 0 ? columns.map((art) => (
-            <Link key={art.id} href={`/article/${art.id}`} style={{ textDecoration: 'none', color: 'inherit', display: 'flex', gap: '0.7rem', alignItems: 'flex-start', paddingBottom: '0.8rem', marginBottom: '0.8rem', borderBottom: '1px solid #f0f0f0' }}>
+            <Link key={art.id} href={`/article/${art.id}`} className="np-bottom-split-item">
               <ArticleImg src={art.image_url} alt={art.title} width={70} height={52} />
               <div>
                 <h5 style={{ margin: '0 0 0.2rem', fontSize: '0.85rem', fontWeight: 700, lineHeight: 1.35, wordBreak: 'keep-all' }}>{art.title}</h5>
@@ -353,10 +353,10 @@ function BottomSections({ articles }: { articles: any[] }) {
             </Link>
           )) : <p style={{ color: '#ccc', fontSize: '0.82rem' }}>등록된 칼럼이 없습니다.</p>}
         </div>
-        <div>
+        <div className="np-bottom-split-section">
           <SectionHeader title="기획 · 연재" href="/region" />
           {planned.length > 0 ? planned.map((art) => (
-            <Link key={art.id} href={`/article/${art.id}`} style={{ textDecoration: 'none', color: 'inherit', display: 'flex', gap: '0.7rem', alignItems: 'flex-start', paddingBottom: '0.8rem', marginBottom: '0.8rem', borderBottom: '1px solid #f0f0f0' }}>
+            <Link key={art.id} href={`/article/${art.id}`} className="np-bottom-split-item">
               <ArticleImg src={art.image_url} alt={art.title} width={70} height={52} />
               <div>
                 <h5 style={{ margin: '0 0 0.2rem', fontSize: '0.85rem', fontWeight: 700, lineHeight: 1.35, wordBreak: 'keep-all' }}>{art.title}</h5>
@@ -368,15 +368,15 @@ function BottomSections({ articles }: { articles: any[] }) {
       </div>
 
       {/* 포토뉴스 */}
-      <div>
+      <div className="np-bottom-photos">
         <SectionHeader title="포토 뉴스" href="/region" />
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '0.8rem' }}>
+        <div className="np-bottom-photos-grid">
           {photos.map((art) => (
-            <Link key={art.id} href={`/article/${art.id}`} style={{ textDecoration: 'none', color: 'inherit' }}>
-              <div style={{ position: 'relative', width: '100%', aspectRatio: '4/3', overflow: 'hidden', marginBottom: '0.4rem' }}>
+            <Link key={art.id} href={`/article/${art.id}`} className="np-bottom-photo-item">
+              <div className="np-bottom-photo-img-wrap">
                 <Image src={art.image_url} alt={art.title} fill style={{ objectFit: 'cover' }} />
               </div>
-              <p style={{ margin: 0, fontSize: '0.75rem', fontWeight: 600, color: '#333', lineHeight: 1.3, wordBreak: 'keep-all' }}>{art.title}</p>
+              <p className="np-bottom-photo-title">{art.title}</p>
             </Link>
           ))}
         </div>
@@ -428,67 +428,64 @@ export function NewspaperMain({ articles, farmPrices, sidebarAd, settings }: { a
           .np-three-col { grid-template-columns: 180px 1fr 180px; gap: 1.2rem; }
         }
         @media (max-width: 768px) {
-          .np-three-col { grid-template-columns: 1fr; gap: 1rem; }
-        }
-        @media (max-width: 480px) {
-          .np-three-col { grid-template-columns: 1fr; }
-        }
-        .mobile-gold-ad {
-          display: none;
-        }
-        @media (max-width: 768px) {
-          .mobile-gold-ad {
-            display: block;
+          .np-three-col { display: flex; flex-direction: column; gap: 1rem; }
+          .mobile-gold-ad { display: block; }
+          
+          /* Services / Sidebar elements arrangement for mobile */
+          aside {
+            display: grid !important;
+            grid-template-columns: repeat(2, 1fr) !important;
+            gap: 0.8rem !important;
           }
+          aside > div { margin-bottom: 0 !important; }
+          aside > div:first-child { grid-column: span 2; }
         }
-        .np-main-container {
-          padding-top: 1.5rem;
-          padding-bottom: 2rem;
-        }
-        .np-region-section {
-          margin-top: 2.5rem;
-          margin-bottom: 1.5rem;
-        }
+        
+        .mobile-gold-ad { display: none; }
+        .np-main-container { padding-top: 1.5rem; padding-bottom: 2rem; }
+        
+        .np-region-section { margin-top: 2.5rem; margin-bottom: 1.5rem; }
         .np-region-grid {
           display: grid;
           grid-template-columns: repeat(4, 1fr);
           gap: 0;
           border-top: 2px solid #2E7D52;
         }
-        .np-region-item {
-          padding: 0.8rem 1rem;
-          border-right: 1px solid #e5e5e5;
+        .np-region-item { padding: 0.8rem 1rem; border-right: 1px solid #e5e5e5; }
+        .np-region-item:last-child { border-right: none; }
+        
+        .np-bottom-latest-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 0 2rem; }
+        .np-bottom-latest-item {
+          text-decoration: none; color: inherit; display: flex;
+          justify-content: space-between; align-items: flex-start;
+          gap: 0.5rem; padding: 0.6rem 0; border-bottom: 1px solid #f0f0f0;
         }
-        .np-region-item:last-child {
-          border-right: none;
+        .np-bottom-latest-title { font-size: 0.82rem; font-weight: 500; color: #222; line-height: 1.35; word-break: keep-all; flex: 1; }
+        
+        .np-bottom-split { display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; margin-bottom: 3rem; }
+        .np-bottom-split-item {
+          text-decoration: none; color: inherit; display: flex; gap: 0.7rem;
+          align-items: flex-start; padding-bottom: 0.8rem; margin-bottom: 0.8rem; border-bottom: 1px solid #f0f0f0;
         }
+        
+        .np-bottom-photos-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.8rem; }
+        .np-bottom-photo-img-wrap { position: relative; width: 100%; aspect-ratio: 4/3; overflow: hidden; margin-bottom: 0.4rem; }
+        .np-bottom-photo-title { margin: 0; font-size: 0.75rem; font-weight: 600; color: #333; line-height: 1.3; word-break: keep-all; }
+
         @media (max-width: 768px) {
-          .np-region-grid {
-            grid-template-columns: repeat(2, 1fr);
-          }
-          .np-region-item {
-            padding: 0.6rem 0.8rem;
-            border-bottom: 1px solid #e5e5e5;
-          }
-          /* Remove right border for every second item on 2-col layout */
-          .np-region-item:nth-child(2n) {
-            border-right: none;
-          }
-          /* Remove bottom border for last row on 2-col layout */
-          .np-region-item:nth-last-child(-n+2) {
-            border-bottom: none;
-          }
-          .np-region-section {
-            margin-top: 1.5rem;
-          }
-          .np-main-container {
-            padding-top: 0.3rem !important;
-          }
+          .np-main-container { padding-top: 0.3rem !important; }
+          .np-region-grid { grid-template-columns: repeat(2, 1fr); }
+          .np-region-item { padding: 0.6rem 0.8rem; border-bottom: 1px solid #e5e5e5; }
+          .np-region-item:nth-child(2n) { border-right: none; }
+          .np-region-item:nth-last-child(-n+2) { border-bottom: none; }
+          .np-region-section { margin-top: 1.5rem; }
+          
+          .np-bottom-latest-grid { grid-template-columns: 1fr; }
+          .np-bottom-split { grid-template-columns: 1fr; gap: 2rem; }
+          .np-bottom-photos-grid { grid-template-columns: repeat(2, 1fr); }
+          
           /* Component-specific overrides for density */
-          .np-ticker-track span {
-            font-size: 0.72rem !important;
-            padding: 0.35rem 0.8rem !important;
-          }
+          .np-ticker-track span { font-size: 0.72rem !important; padding: 0.35rem 0.8rem !important; }
           h2 { font-size: 1.25rem !important; margin: 0.3rem 0 0.5rem !important; }
           h3 { font-size: 0.9rem !important; }
           h4 { font-size: 0.82rem !important; }
