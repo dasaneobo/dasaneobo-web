@@ -102,7 +102,7 @@ export default function AdminPage() {
       }
       const { data: profile } = await supabase.from('profiles').select('*').eq('id', session.user.id).single();
       
-      if (!profile || (profile.role !== 'editor' && profile.role !== 'admin')) {
+      if (!profile || (profile.role !== 'editor' && profile.role !== 'admin' && profile.role !== 'member')) {
         alert('편집국 권한이 없습니다.');
         router.push('/');
         return;

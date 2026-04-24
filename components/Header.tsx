@@ -120,12 +120,12 @@ export default function Header() {
                 <Link href="/profile" className="np-user-name" style={{ color: '#fff', textDecoration: 'none' }}>
                   {userProfile.name} 님
                 </Link>
-                {(userProfile.role === 'admin' || userProfile.role === 'editor') && (
+                {(userProfile.role === 'admin' || userProfile.role === 'editor' || userProfile.role === 'member') && (
                   <Link href="/admin" className="np-topbar-link">
                     <BookOpen size={12} /> 편집국
                   </Link>
                 )}
-                {(userProfile.role === 'admin' || userProfile.role === 'editor' || userProfile.role === 'reporter') && (
+                {(userProfile.role === 'admin' || userProfile.role === 'editor' || userProfile.role === 'reporter' || userProfile.role === 'member') && (
                   <Link href="/admin/new" className="np-topbar-link">
                     <FileText size={12} /> 기사작성
                   </Link>

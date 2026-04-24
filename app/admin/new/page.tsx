@@ -49,8 +49,9 @@ function EditArticleForm() {
         return;
       }
       const { data: profile } = await supabase.from('profiles').select('*').eq('id', session.user.id).single();
-      if (!profile || profile.role === 'normal') {
-        alert("기사 작성 권한이 없습니다. (리포터 이상만 가능)");
+      const allowedRoles = ['admin', 'editor', 'reporter', 'member'];
+      if (!profile || !allowedRoles.includes(profile.role)) {
+        alert("기사 작성 권한이 없습니다. (리포터 및 조합원 이상만 가능)");
         router.push('/');
         return;
       }
@@ -93,12 +94,12 @@ function EditArticleForm() {
         setFormData(prev => ({ ...prev, author_id: session.user.id }));
       }
 
-      // If admin or editor, fetch all possible authors
-      if (profile.role === 'admin' || profile.role === 'editor') {
+      // If admin or editor or member, fetch all possible authors
+      if (profile.role === 'admin' || profile.role === 'editor' || profile.role === 'member') {
         const { data: allProfiles } = await supabase
           .from('profiles')
           .select('id, name, role')
-          .in('role', ['admin', 'editor', 'reporter'])
+          .in('role', ['admin', 'editor', 'reporter', 'member'])
           .order('name');
         if (allProfiles) setAuthors(allProfiles);
       }
@@ -199,7 +200,7 @@ function EditArticleForm() {
         if (error) throw error;
         alert('기사가 성공적으로 수정되었습니다!');
       } else {
-        const finalStatus = userProfile.role === 'reporter' ? 'pending' : 'published';
+        const finalStatus = (userProfile.role === 'reporter') ? 'pending' : 'published';
         const { error } = await supabase.from('articles').insert([{ ...payload, status: finalStatus }]);
         if (error) throw error;
         alert('기사가 성공적으로 접수/발행되었습니다!');
@@ -286,7 +287,7 @@ function EditArticleForm() {
                  <option>강진</option><option>보성</option><option>장흥</option><option>고흥</option><option>전국/일반</option>
               </select>
             </div>
-            {(userProfile?.role === 'admin' || userProfile?.role === 'editor') && authors.length > 0 && (
+            {(userProfile?.role === 'admin' || userProfile?.role === 'editor' || userProfile?.role === 'member') && authors.length > 0 && (
               <div style={{ marginTop: '1rem', paddingTop: '1rem', borderTop: '1px solid #eee' }}>
                 <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: 600, marginBottom: '0.5rem' }}>작성 기자 선택</label>
                 <select 
@@ -300,7 +301,7 @@ function EditArticleForm() {
                     </option>
                   ))}
                 </select>
-                <p style={{ fontSize: '0.7rem', color: '#666', marginTop: '0.4rem' }}>* 편집국 권한으로 기사 바이라인을 변경할 수 있습니다.</p>
+                <p style={{ fontSize: '0.7rem', color: '#666', marginTop: '0.4rem' }}>* 편집국 및 조합원 권한으로 기사 바이라인을 변경할 수 있습니다.</p>
               </div>
             )}
           </div>

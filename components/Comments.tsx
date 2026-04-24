@@ -163,7 +163,7 @@ export default function Comments({ articleId }: { articleId: string }) {
                   <span style={{ fontWeight: 800, fontSize: '0.95rem', marginRight: '0.6rem' }}>{comment.profiles?.name || '익명'}</span>
                   <span style={{ fontSize: '0.8rem', color: '#aaa' }}>{new Date(comment.created_at).toLocaleString('ko-KR')}</span>
                 </div>
-                {(currentUser?.id === comment.user_id || currentUser?.role === 'admin' || currentUser?.role === 'editor') && (
+                {(currentUser?.id === comment.user_id || currentUser?.role === 'admin' || currentUser?.role === 'editor' || currentUser?.role === 'member') && (
                   <button onClick={() => handleDelete(comment.id)} style={{ background: 'none', border: 'none', color: '#ff6b6b', cursor: 'pointer' }} title="댓글 삭제">
                     <Trash2 size={16} />
                   </button>

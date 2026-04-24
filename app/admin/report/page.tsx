@@ -40,7 +40,7 @@ export default function ReportPage() {
         .select('*')
         .eq('id', session.user.id)
         .single();
-      if (!profile || (profile.role !== 'reporter' && profile.role !== 'editor' && profile.role !== 'admin')) {
+      if (!profile || (profile.role !== 'reporter' && profile.role !== 'editor' && profile.role !== 'admin' && profile.role !== 'member')) {
         alert('이 메뉴를 볼 권한이 없습니다. (취재기자 등급 이상 필요)');
         router.push('/');
         return;

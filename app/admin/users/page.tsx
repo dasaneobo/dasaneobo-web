@@ -90,7 +90,7 @@ export default function UserManagementPage() {
 
     // CSV Rows
     filteredUsers.forEach(user => {
-      const roleName = user.role === 'admin' ? '관리자' : user.role === 'editor' ? '편집자' : user.role === 'reporter' ? '리포터' : '구독자';
+      const roleName = user.role === 'admin' ? '관리자' : user.role === 'editor' ? '편집자' : user.role === 'reporter' ? '리포터' : user.role === 'member' ? '조합원' : '구독자';
       const row = [
         user.name || '',
         user.email || '',
@@ -210,10 +210,10 @@ export default function UserManagementPage() {
                       borderRadius: '15px', 
                       fontSize: '0.8rem', 
                       fontWeight: 700,
-                      background: user.role === 'admin' ? '#fee2e2' : user.role === 'editor' ? '#e1f5fe' : user.role === 'reporter' ? '#f0fdf4' : '#f3f4f6',
-                      color: user.role === 'admin' ? '#991b1b' : user.role === 'editor' ? '#075985' : user.role === 'reporter' ? '#166534' : '#4b5563'
+                      background: user.role === 'admin' ? '#fee2e2' : user.role === 'editor' ? '#e1f5fe' : user.role === 'reporter' ? '#f0fdf4' : user.role === 'member' ? '#fef3c7' : '#f3f4f6',
+                      color: user.role === 'admin' ? '#991b1b' : user.role === 'editor' ? '#075985' : user.role === 'reporter' ? '#166534' : user.role === 'member' ? '#92400e' : '#4b5563'
                     }}>
-                      {user.role === 'admin' ? '관리자' : user.role === 'editor' ? '편집자' : user.role === 'reporter' ? '리포터' : '구독자'}
+                      {user.role === 'admin' ? '관리자' : user.role === 'editor' ? '편집자' : user.role === 'reporter' ? '리포터' : user.role === 'member' ? '조합원' : '구독자'}
                     </span>
                   </td>
                   <td style={{ padding: '1.2rem' }}>
@@ -230,6 +230,7 @@ export default function UserManagementPage() {
                       }}
                     >
                       <option value="subscriber">구독자 (일반)</option>
+                      <option value="member">조합원</option>
                       <option value="reporter">리포터</option>
                       <option value="editor">편집자 (데스크)</option>
                       <option value="admin">관리자</option>
