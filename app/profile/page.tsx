@@ -71,9 +71,9 @@ export default function ProfilePage() {
 
   if (loading) return <div style={{ padding: '5rem', textAlign: 'center' }}>회원 정보 불러오는 중...</div>;
 
-  const roleLabel = userProfile.role === 'admin' ? '최고관리자' : 
-                    userProfile.role === 'editor' ? '편집국 데스크' : 
-                    userProfile.role === 'reporter' ? '지역 리포터' : '독자 회원';
+  const roleLabel = userProfile.role === 'admin' ? '관리자' : 
+                    userProfile.role === 'editor' ? '편집자' : 
+                    userProfile.role === 'reporter' ? '리포터' : '구독자';
 
   return (
     <main style={{ minHeight: '100vh', background: '#f8fafc' }}>

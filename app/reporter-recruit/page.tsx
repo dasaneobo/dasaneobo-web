@@ -143,7 +143,7 @@ export default function ReporterRecruitPage() {
             <ul style={{ paddingLeft: '1.2rem', fontSize: '0.95rem', color: '#64748b', lineHeight: 1.8 }}>
               <li>스마트폰으로 현장 사진 촬영</li>
               <li>육하원칙 작성 후 제보폼 전송</li>
-              <li>데스크 검토 후 기사 게재</li>
+              <li>편집자 검토 후 기사 게재</li>
             </ul>
           </div>
         </div>

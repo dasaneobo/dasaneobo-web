@@ -229,7 +229,7 @@ export default function ReportPage() {
             disabled={submitting}
           >
             {submitting && <div className="report-spinner"></div>}
-            <span className="btn-text">{submitting ? '보내는 중...' : '데스크로 제보 보내기'}</span>
+            <span className="btn-text">{submitting ? '보내는 중...' : '편집국으로 제보 보내기'}</span>
           </button>
           {notice && (
             <div className={`report-notice ${notice.success ? 'success' : ''}`}>

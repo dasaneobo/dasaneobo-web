@@ -55,7 +55,7 @@ export default function LoginPage() {
             email: email,
             name: name,
             recommender: recommender, // 추천인 저장
-            role: 'normal' // 최초 가입 시 무조건 일반 회원
+            role: 'subscriber' // 최초 가입 시 무조건 구독자 등급
           }]);
         }
         alert('회원가입이 완료되었습니다! 로그인해 주세요.');

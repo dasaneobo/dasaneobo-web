@@ -90,7 +90,7 @@ export default function UserManagementPage() {
 
     // CSV Rows
     filteredUsers.forEach(user => {
-      const roleName = user.role === 'admin' ? '관리자' : user.role === 'editor' ? '데스크' : user.role === 'reporter' ? '리포터' : '일반회원';
+      const roleName = user.role === 'admin' ? '관리자' : user.role === 'editor' ? '편집자' : user.role === 'reporter' ? '리포터' : '구독자';
       const row = [
         user.name || '',
         user.email || '',
@@ -211,9 +211,9 @@ export default function UserManagementPage() {
                       fontSize: '0.8rem', 
                       fontWeight: 700,
                       background: user.role === 'admin' ? '#fee2e2' : user.role === 'editor' ? '#e1f5fe' : user.role === 'reporter' ? '#f0fdf4' : '#f3f4f6',
-                      color: user.role === 'admin' ? '#991b1b' : user.role === 'editor' ? '#075985' : user.role === '166534' ? '#166534' : '#4b5563'
+                      color: user.role === 'admin' ? '#991b1b' : user.role === 'editor' ? '#075985' : user.role === 'reporter' ? '#166534' : '#4b5563'
                     }}>
-                      {user.role === 'admin' ? '관리자' : user.role === 'editor' ? '데스크' : user.role === 'reporter' ? '리포터' : '일반회원'}
+                      {user.role === 'admin' ? '관리자' : user.role === 'editor' ? '편집자' : user.role === 'reporter' ? '리포터' : '구독자'}
                     </span>
                   </td>
                   <td style={{ padding: '1.2rem' }}>
@@ -229,14 +229,14 @@ export default function UserManagementPage() {
                         cursor: 'pointer'
                       }}
                     >
-                      <option value="normal">일반회원</option>
+                      <option value="subscriber">구독자 (일반)</option>
                       <option value="reporter">리포터</option>
-                      <option value="editor">데스크 (편집자)</option>
+                      <option value="editor">편집자 (데스크)</option>
                       <option value="admin">관리자</option>
                     </select>
                   </td>
                   <td style={{ padding: '1.2rem' }}>
-                    {user.role !== 'normal' ? (
+                    {user.role !== 'subscriber' && user.role !== 'normal' ? (
                       <span style={{ color: '#059669', display: 'flex', alignItems: 'center', gap: '0.3rem', fontSize: '0.85rem' }}>
                         <ShieldCheck size={16} /> 활동 중
                       </span>

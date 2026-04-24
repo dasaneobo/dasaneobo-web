@@ -372,7 +372,7 @@ export default function AdminPage() {
             <ClipboardList color="#1a1a1a" size={28} />
           </div>
           <div>
-            <h1 style={{ margin: 0, fontSize: '1.5rem', fontWeight: 800 }}>다산어보 편집국 (Desk)</h1>
+            <h1 style={{ margin: 0, fontSize: '1.5rem', fontWeight: 800 }}>다산어보 편집국 (편집자)</h1>
             <p style={{ color: '#666', fontSize: '0.9rem', margin: '0.2rem 0 0' }}>리포터 발제 승인 및 톱뉴스 지정을 관리합니다.</p>
           </div>
           <div style={{ marginLeft: 'auto', display: 'flex', gap: '0.8rem' }}>
