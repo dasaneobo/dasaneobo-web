@@ -493,4 +493,115 @@ h1, h2, h3, h4, h5, h6 {
   body { font-size: 14px; }
 }
 
+/* ============================================================
+   NEWSPAPER PLATFORM SPECIFIC STYLES
+   ============================================================ */
+
+.np-main-container { padding-top: 1.5rem; padding-bottom: 2rem; }
+.mobile-gold-ad { display: none; }
+
+/* Desktop Grid System */
+.np-three-col {
+  display: grid;
+  grid-template-columns: 200px 1fr 200px;
+  grid-template-areas: "left center right";
+  gap: 2rem;
+  border-top: 3px double var(--primary);
+  padding-top: 1.5rem;
+}
+.np-col-left { grid-area: left; }
+.np-col-center { grid-area: center; }
+.np-col-right { grid-area: right; }
+
+/* Regional News */
+.np-region-section { margin-top: 2.5rem; margin-bottom: 1.5rem; }
+.np-region-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0; border-top: 2px solid var(--primary); }
+.np-region-item { padding: 0.8rem 1rem; border-right: 1px solid #e5e5e5; }
+.np-region-item:last-child { border-right: none; }
+
+/* Bottom Sections */
+.np-bottom-latest-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 0 2rem; }
+.np-bottom-latest-item {
+  text-decoration: none; color: inherit; display: flex;
+  justify-content: space-between; align-items: flex-start;
+  gap: 0.5rem; padding: 0.6rem 0; border-bottom: 1px solid #f0f0f0;
+}
+.np-bottom-latest-title { font-size: 0.82rem; font-weight: 500; color: #222; line-height: 1.35; word-break: keep-all; flex: 1; }
+
+.np-bottom-split { display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; margin-bottom: 3rem; }
+.np-bottom-split-item {
+  text-decoration: none; color: inherit; display: flex; gap: 0.7rem;
+  align-items: flex-start; padding-bottom: 0.8rem; margin-bottom: 0.8rem; border-bottom: 1px solid #f0f0f0;
+}
+
+.np-bottom-photos-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.8rem; }
+.np-bottom-photo-img-wrap { position: relative; width: 100%; aspect-ratio: 4/3; overflow: hidden; margin-bottom: 0.4rem; }
+.np-bottom-photo-title { margin: 0; font-size: 0.75rem; font-weight: 600; color: #333; line-height: 1.3; word-break: keep-all; }
+
+/* Sidebars */
+.np-sidebar { display: flex; flex-direction: column; gap: 1.8rem; }
+.np-sidebar-services-grid { display: flex; flex-direction: column; gap: 1.8rem; }
+
+/* ============================================================
+   RESPONSIVE OVERRIDES (MOBILE)
+   ============================================================ */
+@media (max-width: 991px) {
+  .np-three-col { grid-template-columns: 180px 1fr 180px; gap: 1.2rem; }
+}
+
+@media (max-width: 768px) {
+  .np-three-col { 
+    display: flex !important; 
+    flex-direction: column !important; 
+    gap: 1.5rem !important; 
+    border-top: 2px solid var(--primary);
+  }
+  .np-col-center { order: 1 !important; }
+  .np-col-left { order: 2 !important; }
+  .np-col-right { order: 3 !important; }
+  
+  .mobile-gold-ad { display: block !important; margin-bottom: 1.5rem; }
+  
+  /* FORCE 2-COLUMN GRIDS ON MOBILE */
+  .np-region-grid {
+    display: grid !important;
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 0 !important;
+  }
+  .np-region-item {
+    border-bottom: 1px solid #e5e5e5 !important;
+    border-right: 1px solid #e5e5e5 !important;
+    padding: 0.6rem 0.8rem !important;
+  }
+  .np-region-item:nth-child(2n) { border-right: none !important; }
+  .np-region-item:nth-last-child(-n+2) { border-bottom: none !important; }
+  .np-region-section { margin-top: 1.5rem !important; }
+
+  .np-sidebar-services-grid {
+    display: grid !important;
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 0.8rem !important;
+    margin-top: 1rem !important;
+  }
+  .np-sidebar-item { margin-bottom: 0 !important; }
+
+  .np-bottom-latest-grid { grid-template-columns: 1fr !important; }
+  .np-bottom-split { grid-template-columns: 1fr !important; gap: 2rem !important; }
+  .np-bottom-photos-grid { 
+    display: grid !important;
+    grid-template-columns: repeat(2, 1fr) !important; 
+    gap: 0.8rem !important;
+  }
+
+  /* Global scale down */
+  .np-main-container { padding-top: 0.3rem !important; }
+  .np-ticker-track span { font-size: 0.72rem !important; padding: 0.35rem 0.8rem !important; }
+  h2 { font-size: 1.25rem !important; margin: 0.3rem 0 0.5rem !important; }
+  h3 { font-size: 0.95rem !important; }
+  h4 { font-size: 0.85rem !important; }
+  p { font-size: 0.78rem !important; line-height: 1.5 !important; }
+  span { font-size: 0.68rem !important; }
+}
+
+
 
