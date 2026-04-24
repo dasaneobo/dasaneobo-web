@@ -126,7 +126,11 @@ export default function Footer() {
         }
         @media (max-width: 480px) {
           .np-footer-grid {
-            grid-template-columns: 1fr;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+          }
+          .np-footer-brand {
+            grid-column: span 2;
           }
         }
 

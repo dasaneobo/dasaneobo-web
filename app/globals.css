@@ -584,6 +584,13 @@ h1, h2, h3, h4, h5, h6 {
     margin-top: 1rem !important;
   }
   .np-sidebar-item { margin-bottom: 0 !important; }
+  
+  /* Photo Grid for Sidebar on Mobile */
+  .np-sidebar-photo-grid {
+    display: grid !important;
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 0.8rem !important;
+  }
 
   .np-bottom-latest-grid { grid-template-columns: 1fr !important; }
   .np-bottom-split { grid-template-columns: 1fr !important; gap: 2rem !important; }
@@ -601,6 +608,16 @@ h1, h2, h3, h4, h5, h6 {
   h4 { font-size: 0.85rem !important; }
   p { font-size: 0.78rem !important; line-height: 1.5 !important; }
   span { font-size: 0.68rem !important; }
+}
+
+@media (max-width: 480px) {
+  .np-sidebar-services-grid {
+    /* If there is only one service item (like in left sidebar), make it full width */
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+  .np-service-subscribe {
+    grid-column: span 2 !important;
+  }
 }
 
 
