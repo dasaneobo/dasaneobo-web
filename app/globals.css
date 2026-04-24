@@ -96,9 +96,11 @@ h1, h2, h3, h4, h5, h6 {
   will-change: transform;
 }
 
-.np-ticker-track:hover {
-  -webkit-animation-play-state: paused;
-  animation-play-state: paused;
+@media (hover: hover) {
+  .np-ticker-track:hover {
+    -webkit-animation-play-state: paused;
+    animation-play-state: paused;
+  }
 }
 
 /* Button styles */
@@ -180,8 +182,10 @@ h1, h2, h3, h4, h5, h6 {
   padding-left: 100%;
 }
 
-.ticker-container:hover .ticker-content {
-  animation-play-state: paused;
+@media (hover: hover) {
+  .ticker-container:hover .ticker-content {
+    animation-play-state: paused;
+  }
 }
 
 .ticker-item {
