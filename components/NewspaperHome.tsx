@@ -205,13 +205,13 @@ function RegionalNews({ articles }: { articles: any[] }) {
   const regionRoutes: Record<string, string> = { 강진: '/gangjin', 고흥: '/goheung', 보성: '/boseong', 장흥: '/jangheung' };
 
   return (
-    <div style={{ marginTop: '2.5rem', marginBottom: '1.5rem' }}>
+    <div className="np-region-section">
       <SectionHeader title="4대 권역 소식" />
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '0', borderTop: '2px solid #2E7D52' }}>
+      <div className="np-region-grid">
         {regions.map((region) => {
           const regionArticles = articles.filter((a) => a.region === region).slice(0, 3);
           return (
-            <div key={region} style={{ borderRight: region !== '장흥' ? '1px solid #e5e5e5' : 'none', padding: '0.8rem 1rem 0', paddingLeft: region === '강진' ? 0 : '1rem' }}>
+            <div key={region} className="np-region-item">
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.7rem' }}>
                 <h4 style={{ margin: 0, fontSize: '0.88rem', fontWeight: 900, color: '#2E7D52', fontFamily: 'Noto Serif KR, serif' }}>● {region}</h4>
                 <Link href={regionRoutes[region]} style={{ fontSize: '0.68rem', color: '#888', textDecoration: 'none' }}>더보기</Link>
@@ -445,7 +445,42 @@ export function NewspaperMain({ articles, farmPrices, sidebarAd, settings }: { a
           padding-top: 1.5rem;
           padding-bottom: 2rem;
         }
+        .np-region-section {
+          margin-top: 2.5rem;
+          margin-bottom: 1.5rem;
+        }
+        .np-region-grid {
+          display: grid;
+          grid-template-columns: repeat(4, 1fr);
+          gap: 0;
+          border-top: 2px solid #2E7D52;
+        }
+        .np-region-item {
+          padding: 0.8rem 1rem;
+          border-right: 1px solid #e5e5e5;
+        }
+        .np-region-item:last-child {
+          border-right: none;
+        }
         @media (max-width: 768px) {
+          .np-region-grid {
+            grid-template-columns: repeat(2, 1fr);
+          }
+          .np-region-item {
+            padding: 0.6rem 0.8rem;
+            border-bottom: 1px solid #e5e5e5;
+          }
+          /* Remove right border for every second item on 2-col layout */
+          .np-region-item:nth-child(2n) {
+            border-right: none;
+          }
+          /* Remove bottom border for last row on 2-col layout */
+          .np-region-item:nth-last-child(-n+2) {
+            border-bottom: none;
+          }
+          .np-region-section {
+            margin-top: 1.5rem;
+          }
           .np-main-container {
             padding-top: 0.3rem !important;
           }
