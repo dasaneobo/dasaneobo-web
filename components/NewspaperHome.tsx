@@ -97,9 +97,9 @@ function LeftSidebar({ articles }: { articles: any[] }) {
   const photoArticles = articles.filter((a) => a.image_url).slice(0, 3);
 
   return (
-    <aside style={{ display: 'flex', flexDirection: 'column', gap: '1.8rem' }}>
+    <aside className="np-sidebar np-left-sidebar">
       {/* 많이 본 뉴스 */}
-      <div>
+      <div className="np-sidebar-item">
         <SectionHeader title="많이 본 뉴스" />
         <ol style={{ margin: 0, padding: 0, listStyle: 'none', display: 'flex', flexDirection: 'column', gap: '0.7rem' }}>
           {popularArticles.map((art, i) => (
@@ -113,30 +113,31 @@ function LeftSidebar({ articles }: { articles: any[] }) {
         </ol>
       </div>
 
-      {/* 최신 포토 */}
-      {photoArticles.length > 0 && (
-        <div>
-          <SectionHeader title="포토 뉴스" />
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.7rem' }}>
-            {photoArticles.map((art) => (
-              <Link key={art.id} href={`/article/${art.id}`} style={{ textDecoration: 'none', color: 'inherit' }}>
-                <div style={{ position: 'relative', width: '100%', aspectRatio: '3/2', overflow: 'hidden', marginBottom: '0.3rem' }}>
-                  <Image src={art.image_url} alt={art.title} fill style={{ objectFit: 'cover' }} />
-                </div>
-                <p style={{ margin: 0, fontSize: '0.78rem', fontWeight: 600, color: '#333', lineHeight: 1.3 }}>{art.title}</p>
-              </Link>
-            ))}
+      <div className="np-sidebar-services-grid">
+        {/* 최신 포토 */}
+        {photoArticles.length > 0 && (
+          <div className="np-sidebar-item">
+            <SectionHeader title="포토 뉴스" />
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.7rem' }}>
+              {photoArticles.map((art) => (
+                <Link key={art.id} href={`/article/${art.id}`} style={{ textDecoration: 'none', color: 'inherit' }}>
+                  <div style={{ position: 'relative', width: '100%', aspectRatio: '3/2', overflow: 'hidden', marginBottom: '0.3rem' }}>
+                    <Image src={art.image_url} alt={art.title} fill style={{ objectFit: 'cover' }} />
+                  </div>
+                  <p style={{ margin: 0, fontSize: '0.78rem', fontWeight: 600, color: '#333', lineHeight: 1.3 }}>{art.title}</p>
+                </Link>
+              ))}
+            </div>
           </div>
+        )}
+
+        {/* 구독 배너 */}
+        <div style={{ background: '#f5fdf9', border: '1.5px solid #2E7D52', borderRadius: '4px', padding: '1.2rem', textAlign: 'center' }} className="np-sidebar-item">
+          <div style={{ fontSize: '0.72rem', color: '#2E7D52', fontWeight: 800, marginBottom: '0.5rem', letterSpacing: '1px' }}>◈ 다산어보 구독</div>
+          <p style={{ fontSize: '0.78rem', color: '#555', lineHeight: 1.5, margin: '0 0 1rem', wordBreak: 'keep-all' }}>정기구독으로 지역 저널리즘을 지킵니다.</p>
+          <Link href="/subscribe" style={{ display: 'block', background: '#2E7D52', color: '#fff', padding: '0.5rem', borderRadius: '3px', fontSize: '0.8rem', fontWeight: 700, textDecoration: 'none' }}>구독 신청</Link>
         </div>
-      )}
-
-      {/* 구독 배너 */}
-      <div style={{ background: '#f5fdf9', border: '1.5px solid #2E7D52', borderRadius: '4px', padding: '1.2rem', textAlign: 'center', marginBottom: '1.5rem' }}>
-        <div style={{ fontSize: '0.72rem', color: '#2E7D52', fontWeight: 800, marginBottom: '0.5rem', letterSpacing: '1px' }}>◈ 다산어보 구독</div>
-        <p style={{ fontSize: '0.78rem', color: '#555', lineHeight: 1.5, margin: '0 0 1rem', wordBreak: 'keep-all' }}>지역 독립언론을 응원해 주세요. 정기구독으로 지역 저널리즘을 지킵니다.</p>
-        <Link href="/subscribe" style={{ display: 'block', background: '#2E7D52', color: '#fff', padding: '0.5rem', borderRadius: '3px', fontSize: '0.8rem', fontWeight: 700, textDecoration: 'none' }}>구독 신청하기</Link>
       </div>
-
     </aside>
   );
 }
@@ -244,70 +245,59 @@ function RightSidebar({ farmPrices, sidebarAd }: { farmPrices: any[]; sidebarAd:
   const prices = farmPrices.length > 0 ? farmPrices.slice(0, 6) : defaultPrices;
 
   return (
-    <aside style={{ display: 'flex', flexDirection: 'column', gap: '1.8rem' }}>
+    <aside className="np-sidebar np-right-sidebar">
       {/* 농산물 가격 */}
-      <div>
-        <SectionHeader title="오늘의 농산물 가격(소매)" />
+      <div className="np-sidebar-item">
+        <SectionHeader title="오늘의 농산물 가격" />
         <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
           {prices.map((p: any, i: number) => {
             const diff = parseInt(p.diff || '0');
             return (
-              <div key={i} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0.5rem 0.6rem', background: i % 2 === 0 ? '#f9f9f9' : '#fff', borderRadius: '2px' }}>
-                <span style={{ fontSize: '0.82rem', color: '#444' }}>{p.item_name} <span style={{ fontSize: '0.68rem', color: '#999' }}>({p.unit})</span></span>
+              <div key={i} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0.4rem 0.6rem', background: i % 2 === 0 ? '#f9f9f9' : '#fff', borderRadius: '2px' }}>
+                <span style={{ fontSize: '0.78rem', color: '#444' }}>{p.item_name} <span style={{ fontSize: '0.65rem', color: '#999' }}>({p.unit})</span></span>
                 <div style={{ textAlign: 'right' }}>
-                  <span style={{ fontSize: '0.88rem', fontWeight: 800, color: '#111' }}>{parseInt(p.price).toLocaleString()}원</span>
-                  <span style={{ marginLeft: '0.4rem', fontSize: '0.7rem', fontWeight: 700, color: diff > 0 ? '#e03030' : diff < 0 ? '#2E7D52' : '#aaa' }}>
-                    {diff > 0 ? '▲' : diff < 0 ? '▼' : '-'}{diff !== 0 ? Math.abs(diff).toLocaleString() : ''}
-                  </span>
+                  <span style={{ fontSize: '0.82rem', fontWeight: 800, color: '#111' }}>{parseInt(p.price).toLocaleString()}원</span>
                 </div>
               </div>
             );
           })}
         </div>
-        <p style={{ fontSize: '0.65rem', color: '#bbb', marginTop: '0.5rem' }}>출처: 한국농수산식품유통공사(KAMIS)</p>
+        <p style={{ fontSize: '0.6rem', color: '#bbb', marginTop: '0.4rem' }}>출처: KAMIS</p>
       </div>
 
-      {/* 광고 배너 */}
-      {sidebarAd ? (
-        <Link href={sidebarAd.link_url || "/ad-apply"} style={{ textDecoration: 'none', display: 'block' }}>
-          <div style={{ border: '1.5px solid #2E7D52', padding: '1.2rem', textAlign: 'center', borderRadius: '4px', background: '#fff' }}>
-            <div style={{ fontSize: '0.65rem', color: '#2E7D52', fontWeight: 700, marginBottom: '0.5rem', letterSpacing: '1px' }}>PARTNERSHIP</div>
-            <h5 style={{ margin: '0 0 0.5rem', fontSize: '1rem', fontWeight: 800, color: '#111' }}>{sidebarAd.title}</h5>
-            <p style={{ fontSize: '0.8rem', color: '#555', lineHeight: 1.5, margin: '0 0 1rem' }}>{sidebarAd.description}</p>
-            <div style={{ background: '#2E7D52', color: '#fff', padding: '0.5rem 0', borderRadius: '3px', fontSize: '0.8rem', fontWeight: 800 }}>자세히 보기 →</div>
-          </div>
-        </Link>
-      ) : (
-        <Link href="/ad-apply" style={{ textDecoration: 'none', display: 'block' }}>
-          <div style={{ border: '2px solid #2E7D52', padding: '1.4rem', textAlign: 'center', borderRadius: '4px', background: '#fff', cursor: 'pointer', transition: 'all 0.2s' }} className="ad-hover">
-            <div style={{ fontSize: '1.4rem', marginBottom: '0.5rem' }}>📣</div>
-            <div style={{ fontSize: '0.72rem', color: '#2E7D52', fontWeight: 900, letterSpacing: '1px', marginBottom: '0.5rem' }}>PARTNERSHIP</div>
-            <h5 style={{ margin: '0 0 0.5rem', fontSize: '1rem', fontWeight: 800, color: '#111' }}>광고주가 되어주세요</h5>
-            <p style={{ fontSize: '0.8rem', color: '#555', lineHeight: 1.5, margin: '0 0 1rem', wordBreak: 'keep-all' }}>
-              지속가능한 독립언론을 위한 자리입니다.<br />
-              다산어보와 함께 지역을 빛내주세요.
-            </p>
-            <div style={{ background: '#2E7D52', color: '#fff', padding: '0.5rem 0', borderRadius: '3px', fontSize: '0.8rem', fontWeight: 800 }}>
-              광고 신청하기 →
-            </div>
-          </div>
-        </Link>
-      )}
+      <div className="np-sidebar-services-grid">
+        {/* 광고 배너 */}
+        <div className="np-sidebar-item">
+          {sidebarAd ? (
+            <Link href={sidebarAd.link_url || "/ad-apply"} style={{ textDecoration: 'none', display: 'block' }}>
+              <div style={{ border: '1.5px solid #2E7D52', padding: '1rem', textAlign: 'center', borderRadius: '4px', background: '#fff' }}>
+                <div style={{ fontSize: '0.6rem', color: '#2E7D52', fontWeight: 700, marginBottom: '0.3rem' }}>AD</div>
+                <h5 style={{ margin: '0 0 0.3rem', fontSize: '0.85rem', fontWeight: 800, color: '#111' }}>{sidebarAd.title}</h5>
+                <div style={{ background: '#2E7D52', color: '#fff', padding: '0.3rem 0', borderRadius: '3px', fontSize: '0.72rem', fontWeight: 800 }}>보기</div>
+              </div>
+            </Link>
+          ) : (
+            <Link href="/ad-apply" style={{ textDecoration: 'none', display: 'block' }}>
+              <div style={{ border: '1.5px solid #2E7D52', padding: '1rem', textAlign: 'center', borderRadius: '4px', background: '#fff' }}>
+                <div style={{ fontSize: '0.6rem', color: '#2E7D52', fontWeight: 900, marginBottom: '0.3rem' }}>PARTNERSHIP</div>
+                <h5 style={{ margin: '0 0 0.3rem', fontSize: '0.85rem', fontWeight: 800, color: '#111' }}>광고 신청</h5>
+                <div style={{ background: '#2E7D52', color: '#fff', padding: '0.3rem 0', borderRadius: '3px', fontSize: '0.72rem', fontWeight: 800 }}>신청하기</div>
+              </div>
+            </Link>
+          )}
+        </div>
 
-      {/* 마을 리포터 모집 배너 */}
-      <div style={{ background: '#fff', border: '1px solid #ddd', borderRadius: '4px', padding: '1.2rem', textAlign: 'center', marginBottom: '1.5rem' }}>
-        <div style={{ fontSize: '1.2rem', marginBottom: '0.5rem' }}>✍️</div>
-        <h4 style={{ margin: '0 0 0.5rem', fontSize: '0.9rem', fontWeight: 800, color: '#111' }}>마을 리포터 모집</h4>
-        <p style={{ fontSize: '0.75rem', color: '#666', lineHeight: 1.5, margin: '0 0 1rem', wordBreak: 'keep-all' }}>내가 사는 마을의 이야기를 직접 전해주세요. 다산어보와 함께할 리포터를 찾습니다.</p>
-        <Link href="/reporter-apply" style={{ display: 'block', border: '1.5px solid #2E7D52', color: '#2E7D52', padding: '0.45rem', borderRadius: '3px', fontSize: '0.8rem', fontWeight: 900, textDecoration: 'none' }}>지금 신청하기</Link>
-      </div>
+        {/* 마을 리포터 모집 배너 */}
+        <div style={{ background: '#fff', border: '1px solid #ddd', borderRadius: '4px', padding: '1rem', textAlign: 'center' }} className="np-sidebar-item">
+          <h4 style={{ margin: '0 0 0.3rem', fontSize: '0.85rem', fontWeight: 800, color: '#111' }}>리포터 모집</h4>
+          <Link href="/reporter-apply" style={{ display: 'block', border: '1.5px solid #2E7D52', color: '#2E7D52', padding: '0.35rem', borderRadius: '3px', fontSize: '0.75rem', fontWeight: 900, textDecoration: 'none' }}>신청하기</Link>
+        </div>
 
-      {/* 기사 제보 */}
-      <div style={{ background: '#2E7D52', color: '#fff', padding: '1.2rem', borderRadius: '4px', textAlign: 'center' }}>
-        <div style={{ fontSize: '1.5rem', marginBottom: '0.5rem' }}>📢</div>
-        <h4 style={{ margin: '0 0 0.5rem', fontSize: '0.95rem', fontWeight: 800, fontFamily: 'Noto Serif KR, serif' }}>기사 제보</h4>
-        <p style={{ fontSize: '0.78rem', lineHeight: 1.5, opacity: 0.9, margin: '0 0 0.8rem', wordBreak: 'keep-all' }}>현장의 소식을 다산어보에 제보해 주세요.</p>
-        <Link href="/admin/report" style={{ display: 'block', background: '#fff', color: '#2E7D52', padding: '0.5rem', borderRadius: '3px', fontSize: '0.82rem', fontWeight: 900, textDecoration: 'none' }}>제보하기</Link>
+        {/* 기사 제보 */}
+        <div style={{ background: '#2E7D52', color: '#fff', padding: '1rem', borderRadius: '4px', textAlign: 'center' }} className="np-sidebar-item">
+          <h4 style={{ margin: '0 0 0.3rem', fontSize: '0.85rem', fontWeight: 800 }}>기사 제보</h4>
+          <Link href="/admin/report" style={{ display: 'block', background: '#fff', color: '#2E7D52', padding: '0.35rem', borderRadius: '3px', fontSize: '0.75rem', fontWeight: 900, textDecoration: 'none' }}>제보하기</Link>
+        </div>
       </div>
     </aside>
   );
@@ -430,20 +420,16 @@ export function NewspaperMain({ articles, farmPrices, sidebarAd, settings }: { a
         @media (max-width: 768px) {
           .np-three-col { display: flex; flex-direction: column; gap: 1rem; }
           .mobile-gold-ad { display: block; }
-          
-          /* Services / Sidebar elements arrangement for mobile */
-          aside {
-            display: grid !important;
-            grid-template-columns: repeat(2, 1fr) !important;
-            gap: 0.8rem !important;
-          }
-          aside > div { margin-bottom: 0 !important; }
-          aside > div:first-child { grid-column: span 2; }
         }
         
         .mobile-gold-ad { display: none; }
         .np-main-container { padding-top: 1.5rem; padding-bottom: 2rem; }
         
+        /* Sidebars */
+        .np-sidebar { display: flex; flex-direction: column; gap: 1.8rem; }
+        .np-sidebar-services-grid { display: flex; flex-direction: column; gap: 1.8rem; }
+
+        /* Regional */
         .np-region-section { margin-top: 2.5rem; margin-bottom: 1.5rem; }
         .np-region-grid {
           display: grid;
@@ -454,6 +440,7 @@ export function NewspaperMain({ articles, farmPrices, sidebarAd, settings }: { a
         .np-region-item { padding: 0.8rem 1rem; border-right: 1px solid #e5e5e5; }
         .np-region-item:last-child { border-right: none; }
         
+        /* Bottom */
         .np-bottom-latest-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 0 2rem; }
         .np-bottom-latest-item {
           text-decoration: none; color: inherit; display: flex;
@@ -483,6 +470,14 @@ export function NewspaperMain({ articles, farmPrices, sidebarAd, settings }: { a
           .np-bottom-latest-grid { grid-template-columns: 1fr; }
           .np-bottom-split { grid-template-columns: 1fr; gap: 2rem; }
           .np-bottom-photos-grid { grid-template-columns: repeat(2, 1fr); }
+          
+          /* Services Grid for Mobile */
+          .np-sidebar-services-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 0.8rem;
+            margin-top: 1rem;
+          }
           
           /* Component-specific overrides for density */
           .np-ticker-track span { font-size: 0.72rem !important; padding: 0.35rem 0.8rem !important; }
