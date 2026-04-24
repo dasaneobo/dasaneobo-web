@@ -477,10 +477,6 @@ h1, h2, h3, h4, h5, h6 {
     margin-left: -1rem !important;
     margin-right: -1rem !important;
   }
-  /* Disable animations on mobile */
-  * {
-    animation: none !important;
-  }
 }
 
 
