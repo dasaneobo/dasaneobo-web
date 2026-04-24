@@ -456,20 +456,22 @@ export default function Header() {
           .np-topbar-left { display: none; }
           .np-topbar-inner { justify-content: center; }
           .np-topbar-right { gap: 0.6rem; width: 100%; justify-content: center; }
-          .np-logo-title { font-size: 1.6rem; margin-bottom: 0.1rem; }
+          .np-logo-title { font-size: 1.4rem; margin-bottom: 0.1rem; }
+          .np-logo-sub { font-size: 0.5rem; letter-spacing: 1px; }
           .np-logo-inner { flex-direction: column; gap: 0.1rem !important; text-align: center; display: flex !important; }
           .np-logo-link { order: 1; margin-bottom: 0.1rem; }
           .np-logo-right { order: 2; flex-direction: row; min-width: unset !important; align-items: center; justify-content: center; gap: 0.3rem; margin-bottom: 0.2rem; }
           .np-logo-left { display: none !important; }
           .np-header-ad-container { display: none; }
-          .np-search-input { width: 100px; padding: 0.2rem 0.4rem; font-size: 0.72rem; }
+          .np-search-input { width: 90px; padding: 0.2rem 0.4rem; font-size: 0.7rem; }
           .np-search-btn { padding: 0.2rem 0.4rem; }
           .np-logo-btns { flex-direction: row; gap: 0.2rem; }
-          .np-subscribe-btn, .np-report-btn { width: 70px; padding: 0.25rem 0; font-size: 0.7rem; }
+          .np-subscribe-btn, .np-report-btn { width: 65px; padding: 0.25rem 0; font-size: 0.65rem; }
           .np-logo-right a { width: auto; }
-          .np-logo-section { padding: 0.2rem 0 !important; border-bottom: none !important; }
+          .np-logo-section { padding: 0.15rem 0 !important; border-bottom: none !important; }
           .np-nav { border-top: 1.5px solid #2E7D52 !important; }
-          .np-nav-link { padding: 0.5rem 0 !important; font-size: 0.8rem; }
+          .np-nav-link { padding: 0.45rem 0 !important; font-size: 0.72rem; }
+          .np-nav-item { margin-left: 0.1rem; padding-left: 0.1rem; }
         }
       `}</style>
     </header>

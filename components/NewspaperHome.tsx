@@ -447,8 +447,19 @@ export function NewspaperMain({ articles, farmPrices, sidebarAd, settings }: { a
         }
         @media (max-width: 768px) {
           .np-main-container {
-            padding-top: 0.5rem !important;
+            padding-top: 0.3rem !important;
           }
+          /* Component-specific overrides for density */
+          .np-ticker-track span {
+            font-size: 0.72rem !important;
+            padding: 0.35rem 0.8rem !important;
+          }
+          h2 { font-size: 1.25rem !important; margin: 0.3rem 0 0.5rem !important; }
+          h3 { font-size: 0.9rem !important; }
+          h4 { font-size: 0.82rem !important; }
+          p { font-size: 0.75rem !important; line-height: 1.5 !important; }
+          span { font-size: 0.65rem !important; }
+          .container { padding: 0 0.5rem !important; }
         }
       `}</style>
     </div>

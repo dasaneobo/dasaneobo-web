@@ -283,8 +283,14 @@ h1, h2, h3, h4, h5, h6 {
     display: none !important;
   }
   
-  h1 { font-size: 1.8rem !important; }
-  h2 { font-size: 1.5rem !important; }
+  h1 { font-size: 1.5rem !important; }
+  h2 { font-size: 1.3rem !important; }
+  h3 { font-size: 1.1rem !important; }
+  h4 { font-size: 1rem !important; }
+  
+  .container {
+    padding: 0 0.75rem; /* Reduce padding for more width */
+  }
   
   .header-container {
     flex-direction: column !important;
@@ -478,9 +484,13 @@ h1, h2, h3, h4, h5, h6 {
     border-radius: 0;
   }
   .article-figure {
-    margin-left: -1rem !important;
-    margin-right: -1rem !important;
+    margin-left: -0.75rem !important;
+    margin-right: -0.75rem !important;
   }
+  /* Further reduce for very small screens */
+  h1 { font-size: 1.35rem !important; }
+  h2 { font-size: 1.2rem !important; }
+  body { font-size: 14px; }
 }
 
 
