@@ -131,11 +131,7 @@ function LeftSidebar({ articles }: { articles: any[] }) {
         )}
 
         <div className="np-sidebar-services-grid">
-          {/* 구독 신청 - span 2 columns if needed or group with others */}
-          <div style={{ background: '#f5fdf9', border: '1.5px solid #2E7D52', borderRadius: '4px', padding: '0.8rem', textAlign: 'center' }} className="np-sidebar-item np-service-subscribe">
-            <div style={{ fontSize: '0.65rem', color: '#2E7D52', fontWeight: 800, marginBottom: '0.3rem' }}>◈ 구독 신청</div>
-            <Link href="/subscribe" style={{ display: 'block', background: '#2E7D52', color: '#fff', padding: '0.4rem', borderRadius: '3px', fontSize: '0.75rem', fontWeight: 700 }}>신청하기</Link>
-          </div>
+          {/* Service items moved to right sidebar for better grouping */}
         </div>
     </aside>
   );
@@ -290,6 +286,12 @@ function RightSidebar({ farmPrices, sidebarAd }: { farmPrices: any[]; sidebarAd:
         <div style={{ background: '#fff', border: '1px solid #ddd', borderRadius: '4px', padding: '0.8rem', textAlign: 'center' }} className="np-sidebar-item">
           <h4 style={{ margin: '0 0 0.3rem', fontSize: '0.75rem', fontWeight: 800 }}>리포터 모집</h4>
           <Link href="/reporter-apply" style={{ display: 'block', border: '1.5px solid #2E7D52', color: '#2E7D52', padding: '0.25rem', borderRadius: '3px', fontSize: '0.65rem', fontWeight: 900, textDecoration: 'none' }}>신청</Link>
+        </div>
+
+        {/* 구독 신청 - Moved here to be next to Report on mobile */}
+        <div style={{ background: '#f5fdf9', border: '1.5px solid #2E7D52', borderRadius: '4px', padding: '0.8rem', textAlign: 'center' }} className="np-sidebar-item">
+          <h4 style={{ margin: '0 0 0.3rem', fontSize: '0.75rem', fontWeight: 800, color: '#2E7D52' }}>구독 신청</h4>
+          <Link href="/subscribe" style={{ display: 'block', background: '#2E7D52', color: '#fff', padding: '0.25rem', borderRadius: '3px', fontSize: '0.65rem', fontWeight: 900, textDecoration: 'none' }}>신청하기</Link>
         </div>
 
         {/* 기사 제보 */}

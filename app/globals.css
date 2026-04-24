@@ -612,11 +612,8 @@ h1, h2, h3, h4, h5, h6 {
 
 @media (max-width: 480px) {
   .np-sidebar-services-grid {
-    /* If there is only one service item (like in left sidebar), make it full width */
+    /* If there is only one service item, make it full width */
     grid-template-columns: repeat(2, 1fr) !important;
-  }
-  .np-service-subscribe {
-    grid-column: span 2 !important;
   }
 }
 
