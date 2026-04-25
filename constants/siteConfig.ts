@@ -37,6 +37,7 @@ export const SITE_CONFIG = {
     { label: '칼럼', href: '/column' },
     { label: '기획연재', href: '/region' },
     { label: '포토', href: '/region' },
+    { label: '이용안내', href: '/guide' },
     { label: '기사제보', href: '/admin/report', accent: true },
   ] as { label: string; href: string; region?: boolean; accent?: boolean }[],
   
