@@ -45,7 +45,7 @@ const GUIDE_DATA = {
       {
         step: 2,
         title: '리포터 모집 페이지 이동',
-        description: '상단 메뉴 → 마을 리포터 또는 /reporter-recruit 접속',
+        description: '리포터 모집 신청 클릭 또는 /reporter-recruit 접속',
       },
       {
         step: 3,
@@ -77,7 +77,7 @@ const GUIDE_DATA = {
       {
         step: 2,
         title: '제보 페이지 이동',
-        description: '로그인 후 상단 메뉴 → 제보하기 또는 /admin/report 접속',
+        description: '기사제보하기 또는 /admin/report 접속',
       },
       {
         step: 3,
