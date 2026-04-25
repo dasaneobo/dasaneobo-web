@@ -14,6 +14,14 @@ export default async function Home() {
     .order('created_at', { ascending: false })
     .limit(60);
 
+  // Fetch popular articles separately
+  const { data: popularArticles } = await supabase
+    .from('articles')
+    .select('*')
+    .eq('status', 'published')
+    .order('view_count', { ascending: false })
+    .limit(5);
+
   const safeArticles = recentArticles || [];
 
   // Fetch ads
@@ -39,6 +47,7 @@ export default async function Home() {
       {/* Main 3-column newspaper layout */}
       <NewspaperMain
         articles={safeArticles}
+        popularArticles={popularArticles || []}
         farmPrices={farmPrices || []}
         sidebarAd={sidebarAd}
         settings={settings}

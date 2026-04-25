@@ -14,6 +14,7 @@ export type Article = {
   author_id?: string;
   status: 'draft' | 'published';
   category: string;
+  view_count?: number;
 };
 
 export type Draft = {

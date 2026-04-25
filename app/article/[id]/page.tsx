@@ -3,11 +3,12 @@ import { supabase } from '@/lib/supabase';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import Image from 'next/image';
-import { ChevronLeft, Clock, User, Share2 } from 'lucide-react';
+import { ChevronLeft, Clock, User, Share2, Eye } from 'lucide-react';
 import DeleteArticleButton from '@/components/DeleteArticleButton';
 import ShareArticleButton from '@/components/ShareArticleButton';
 import Comments from '@/components/Comments';
 import MarkdownRenderer from '@/components/MarkdownRenderer';
+import ViewCounter from '@/components/ViewCounter';
 
 export const revalidate = 0; // Ensure data is always fetch freshly
 
@@ -113,6 +114,7 @@ export default async function ArticlePage({ params }: { params: Promise<{ id: st
       <Header />
       
       <div className="container" style={{ paddingTop: '3rem', paddingBottom: '5rem' }}>
+        <ViewCounter articleId={article.id} />
         <div className="article-layout" style={{ display: 'grid', gap: '3rem' }}>
           <article className="article-card" style={{ background: 'white', borderRadius: '8px', boxShadow: '0 2px 10px rgba(0,0,0,0.02)' }}>
             {/* Breadcrumb */}
@@ -158,6 +160,11 @@ export default async function ArticlePage({ params }: { params: Promise<{ id: st
                   <span style={{ display: 'inline-flex', alignItems: 'center', gap: '0.3rem' }}>
                     <Clock size={12} /> {date}
                   </span>
+                  {article.view_count !== undefined && (
+                    <span style={{ display: 'inline-flex', alignItems: 'center', gap: '0.3rem', marginLeft: '1.2rem', paddingLeft: '1.2rem', borderLeft: '1px solid #eee' }}>
+                      <Eye size={12} /> <span style={{ opacity: 0.8 }}>{article.view_count.toLocaleString()}</span>
+                    </span>
+                  )}
                 </div>
                 
                 <div style={{ display: 'flex', gap: '0.6rem' }}>

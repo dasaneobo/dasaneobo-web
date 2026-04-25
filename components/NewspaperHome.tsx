@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { supabase } from '@/lib/supabase';
+import { Eye } from 'lucide-react';
 
 /* =========================================
    BREAKING NEWS TICKER
@@ -40,8 +41,17 @@ export function BreakingTicker({ articles }: { articles: any[] }) {
 /* =========================================
    ARTICLE HELPERS
    ========================================= */
-function ArticleDate({ dateStr }: { dateStr: string }) {
-  return <span style={{ fontSize: '0.72rem', color: '#888' }}>{new Date(dateStr).toLocaleDateString('ko-KR')}</span>;
+function ArticleDate({ dateStr, viewCount }: { dateStr: string, viewCount?: number }) {
+  return (
+    <div style={{ display: 'inline-flex', alignItems: 'center', gap: '0.8rem', fontSize: '0.72rem', color: '#888' }}>
+      <span>{new Date(dateStr).toLocaleDateString('ko-KR')}</span>
+      {viewCount !== undefined && (
+        <span style={{ display: 'flex', alignItems: 'center', gap: '0.2rem' }}>
+          <Eye size={11} /> {viewCount.toLocaleString()}
+        </span>
+      )}
+    </div>
+  );
 }
 
 function ArticleImg({ src, alt, width = 80, height = 60 }: { src: string; alt: string; width?: number; height?: number }) {
@@ -92,8 +102,7 @@ function NoticeFounding() {
 /* =========================================
    LEFT SIDEBAR
    ========================================= */
-function LeftSidebar({ articles }: { articles: any[] }) {
-  const popularArticles = articles.slice(0, 5);
+function LeftSidebar({ popularArticles, articles }: { popularArticles: any[]; articles: any[] }) {
   const photoArticles = articles.filter((a) => a.image_url).slice(0, 3);
 
   return (
@@ -165,7 +174,7 @@ function CenterMain({ articles }: { articles: any[] }) {
             <p style={{ margin: 0, fontSize: '0.88rem', color: '#555', lineHeight: 1.6, display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
               {topStory.content?.replace(/<[^>]*>/g, '').replace(/[#*`~]/g, '').substring(0, 160)}...
             </p>
-            <div style={{ marginTop: '0.5rem' }}><ArticleDate dateStr={topStory.created_at} /></div>
+            <div style={{ marginTop: '0.5rem' }}><ArticleDate dateStr={topStory.created_at} viewCount={topStory.view_count} /></div>
           </Link>
         )}
       </div>
@@ -182,7 +191,7 @@ function CenterMain({ articles }: { articles: any[] }) {
               <div>
                 <span style={{ fontSize: '0.68rem', color: '#2E7D52', fontWeight: 700 }}>{art.category}</span>
                 <h4 style={{ margin: '0.2rem 0 0.3rem', fontSize: '0.92rem', fontWeight: 700, lineHeight: 1.35, wordBreak: 'keep-all', color: '#111' }}>{art.title}</h4>
-                <ArticleDate dateStr={art.created_at} />
+                <ArticleDate dateStr={art.created_at} viewCount={art.view_count} />
               </div>
             </Link>
           ))}
@@ -215,7 +224,7 @@ function RegionalNews({ articles }: { articles: any[] }) {
               {regionArticles.length > 0 ? regionArticles.map((art, i) => (
                 <Link key={art.id} href={`/article/${art.id}`} style={{ textDecoration: 'none', color: 'inherit', display: 'block', marginBottom: '0.5rem', paddingBottom: '0.5rem', borderBottom: i < regionArticles.length - 1 ? '1px solid #f5f5f5' : 'none' }}>
                   <p style={{ margin: 0, fontSize: '0.82rem', fontWeight: 600, lineHeight: 1.4, color: '#222', wordBreak: 'keep-all' }}>{art.title}</p>
-                  <ArticleDate dateStr={art.created_at} />
+                  <ArticleDate dateStr={art.created_at} viewCount={art.view_count} />
                 </Link>
               )) : <p style={{ fontSize: '0.78rem', color: '#ccc' }}>최신 소식이 없습니다.</p>}
             </div>
@@ -324,7 +333,7 @@ function BottomSections({ articles }: { articles: any[] }) {
           {latest.map((art) => (
             <Link key={art.id} href={`/article/${art.id}`} className="np-bottom-latest-item">
               <span className="np-bottom-latest-title">{art.title}</span>
-              <ArticleDate dateStr={art.created_at} />
+              <ArticleDate dateStr={art.created_at} viewCount={art.view_count} />
             </Link>
           ))}
         </div>
@@ -339,7 +348,7 @@ function BottomSections({ articles }: { articles: any[] }) {
               <ArticleImg src={art.image_url} alt={art.title} width={70} height={52} />
               <div>
                 <h5 style={{ margin: '0 0 0.2rem', fontSize: '0.85rem', fontWeight: 700, lineHeight: 1.35, wordBreak: 'keep-all' }}>{art.title}</h5>
-                <ArticleDate dateStr={art.created_at} />
+                <ArticleDate dateStr={art.created_at} viewCount={art.view_count} />
               </div>
             </Link>
           )) : <p style={{ color: '#ccc', fontSize: '0.82rem' }}>등록된 칼럼이 없습니다.</p>}
@@ -351,7 +360,7 @@ function BottomSections({ articles }: { articles: any[] }) {
               <ArticleImg src={art.image_url} alt={art.title} width={70} height={52} />
               <div>
                 <h5 style={{ margin: '0 0 0.2rem', fontSize: '0.85rem', fontWeight: 700, lineHeight: 1.35, wordBreak: 'keep-all' }}>{art.title}</h5>
-                <ArticleDate dateStr={art.created_at} />
+                <ArticleDate dateStr={art.created_at} viewCount={art.view_count} />
               </div>
             </Link>
           )) : <p style={{ color: '#ccc', fontSize: '0.82rem' }}>등록된 기획기사가 없습니다.</p>}
@@ -379,7 +388,7 @@ function BottomSections({ articles }: { articles: any[] }) {
 /* =========================================
    MAIN EXPORT
    ========================================= */
-export function NewspaperMain({ articles, farmPrices, sidebarAd, settings }: { articles: any[]; farmPrices: any[]; sidebarAd: any; settings: any }) {
+export function NewspaperMain({ articles, popularArticles, farmPrices, sidebarAd, settings }: { articles: any[]; popularArticles: any[]; farmPrices: any[]; sidebarAd: any; settings: any }) {
   return (
     <div className="container np-main-container">
       {/* 3-column layout */}
@@ -397,7 +406,7 @@ export function NewspaperMain({ articles, farmPrices, sidebarAd, settings }: { a
         </div>
         
         <div className="np-col-left">
-          <LeftSidebar articles={articles} />
+          <LeftSidebar popularArticles={popularArticles} articles={articles} />
         </div>
 
         <div className="np-col-right">

@@ -2,6 +2,7 @@
 
 import Image from 'next/image';
 import { Article } from '@/lib/supabase';
+import { Eye } from 'lucide-react';
 
 export default function ArticleCard({ article }: { article: Article }) {
   return (
@@ -72,9 +73,15 @@ export default function ArticleCard({ article }: { article: Article }) {
           fontSize: '0.8rem',
           color: '#999',
           display: 'flex',
-          justifyContent: 'space-between'
+          justifyContent: 'space-between',
+          alignItems: 'center'
         }}>
           <span>{new Date(article.created_at).toLocaleDateString()}</span>
+          {article.view_count !== undefined && (
+            <span style={{ display: 'flex', alignItems: 'center', gap: '0.3rem' }}>
+              <Eye size={14} /> {article.view_count.toLocaleString()}
+            </span>
+          )}
         </div>
       </div>
     </div>
