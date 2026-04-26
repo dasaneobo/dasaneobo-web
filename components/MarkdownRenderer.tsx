@@ -2,7 +2,6 @@
 
 import MarkdownPreview from '@uiw/react-markdown-preview';
 import "@uiw/react-markdown-preview/markdown.css";
-import 'suneditor/dist/css/suneditor.min.css';
 
 export default function MarkdownRenderer({ content }: { content: string }) {
   const isHtml = content.trim().startsWith('<');
@@ -10,7 +9,7 @@ export default function MarkdownRenderer({ content }: { content: string }) {
   if (isHtml) {
     return (
       <div 
-        className="sun-editor-editable"
+        className="html-content"
         style={{ 
           background: 'transparent', 
           fontSize: '1.1rem', 
