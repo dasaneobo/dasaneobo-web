@@ -37,6 +37,7 @@ function EditArticleForm() {
   });
   const [authors, setAuthors] = useState<any[]>([]);
   const [bodyUploading, setBodyUploading] = useState(false);
+  const [authLoading, setAuthLoading] = useState(true);
 
   useEffect(() => {
     const checkAuth = async () => {
@@ -64,29 +65,31 @@ function EditArticleForm() {
           .single();
         
         if (article) {
+          // Safety check for content
+          const rawContent = article.content || '';
           // If it looks like Markdown (doesn't start with <), convert it to HTML
-          const isMarkdown = !article.content.trim().startsWith('<');
-          const content = isMarkdown ? marked.parse(article.content) : article.content;
+          const isMarkdown = !rawContent.trim().startsWith('<');
+          const content = isMarkdown ? marked.parse(rawContent) : rawContent;
           
           setFormData({
-            title: article.title,
-            content: content as string,
-            image_url: article.image_url,
-            category: article.category,
-            region: article.region,
-            author_id: article.author_id
+            title: article.title || '',
+            content: (content as string) || '',
+            image_url: article.image_url || '',
+            category: article.category || '사회',
+            region: article.region || '강진',
+            author_id: article.author_id || ''
           });
         }
       } else if (reportId) {
         const { data: report } = await supabase.from('village_reports').select('*').eq('id', reportId).single();
         if (report) {
-          const generatedContent = `**누가:** ${report.who}  \n**무엇을:** ${report.what}  \n**어디서:** ${report.where}  \n**언제:** ${report.when}  \n**어떻게:** ${report.how}  \n**왜:** ${report.why}  \n\n**추가 내용:** ${report.extra || ''}  \n\n*(제보자: ${report.sender_name} 리포터 / 제보 스타일: ${report.style})*`;
+          const generatedContent = `**누가:** ${report.who || ''}  \n**무엇을:** ${report.what || ''}  \n**어디서:** ${report.where || ''}  \n**언제:** ${report.when || ''}  \n**어떻게:** ${report.how || ''}  \n**왜:** ${report.why || ''}  \n\n**추가 내용:** ${report.extra || ''}  \n\n*(제보자: ${report.sender_name || ''} 리포터 / 제보 스타일: ${report.style || ''})*`;
           const htmlContent = marked.parse(generatedContent);
           setFormData(prev => ({ 
             ...prev, 
             author_id: session.user.id,
-            title: `[제보 바탕] ${report.what}`,
-            content: htmlContent as string,
+            title: `[제보 바탕] ${report.what || ''}`,
+            content: (htmlContent as string) || '',
             image_url: report.high_res_url || report.low_res_url || ''
           }));
         } else {
@@ -106,6 +109,7 @@ function EditArticleForm() {
           .order('name');
         if (allProfiles) setAuthors(allProfiles);
       }
+      setAuthLoading(false);
     };
     checkAuth();
   }, [router, articleId]);
@@ -215,6 +219,10 @@ function EditArticleForm() {
       setLoading(false);
     }
   };
+
+  if (authLoading) {
+    return <div style={{ padding: '10rem 0', textAlign: 'center', fontSize: '1.2rem', color: '#666' }}>권한을 확인하는 중입니다...</div>;
+  }
 
   return (
     <div className="container" style={{ paddingTop: '2rem', paddingBottom: '5rem' }}>
