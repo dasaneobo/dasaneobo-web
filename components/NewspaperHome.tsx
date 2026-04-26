@@ -123,7 +123,7 @@ function LeftSidebar({ popularArticles, articles }: { popularArticles: any[]; ar
         <ol style={{ margin: 0, padding: 0, listStyle: 'none', display: 'flex', flexDirection: 'column', gap: '0.7rem' }}>
           {popularArticles.map((art, i) => (
             <li key={art.id}>
-              <Link href={`/article/${art.id}`} style={{ textDecoration: 'none', color: 'inherit', display: 'flex', gap: '0.7rem', alignItems: 'flex-start' }}>
+              <Link href={`/article/${art.slug ?? art.id}`} style={{ textDecoration: 'none', color: 'inherit', display: 'flex', gap: '0.7rem', alignItems: 'flex-start' }}>
                 <span style={{ fontSize: '1.1rem', fontWeight: 900, color: i < 3 ? '#2E7D52' : '#ccc', flexShrink: 0, lineHeight: 1.2, minWidth: '1.2rem' }}>{i + 1}</span>
                 <span style={{ fontSize: '0.82rem', fontWeight: 600, lineHeight: 1.4, color: '#222', wordBreak: 'keep-all' }}>{art.title}</span>
               </Link>
@@ -138,7 +138,7 @@ function LeftSidebar({ popularArticles, articles }: { popularArticles: any[]; ar
             <SectionHeader title="포토 뉴스" />
             <div className="np-sidebar-photo-grid">
               {photoArticles.map((art) => (
-                <Link key={art.id} href={`/article/${art.id}`} style={{ textDecoration: 'none', color: 'inherit' }}>
+                <Link key={art.id} href={`/article/${art.slug ?? art.id}`} style={{ textDecoration: 'none', color: 'inherit' }}>
                   <div style={{ position: 'relative', width: '100%', aspectRatio: '3/2', overflow: 'hidden', marginBottom: '0.3rem' }}>
                     <Image src={art.image_url} alt={art.title} fill style={{ objectFit: 'cover' }} />
                   </div>
@@ -173,7 +173,7 @@ function CenterMain({ articles }: { articles: any[] }) {
           <span style={{ background: '#2E7D52', color: '#fff', fontSize: '0.72rem', fontWeight: 900, padding: '0.2rem 0.7rem', letterSpacing: '1px' }}>{SITE_CONFIG.labels.topNews}</span>
         </div>
         {topStory && (
-          <Link href={`/article/${topStory.id}`} style={{ textDecoration: 'none', color: 'inherit' }}>
+          <Link href={`/article/${topStory.slug ?? topStory.id}`} style={{ textDecoration: 'none', color: 'inherit' }}>
             <div style={{ width: '100%', aspectRatio: '16/7', position: 'relative', overflow: 'hidden', marginBottom: '1rem' }}>
               <Image 
                 src={topStory.image_url || '/fallback/article-default.svg'} 
@@ -203,7 +203,7 @@ function CenterMain({ articles }: { articles: any[] }) {
         </div>
         <div style={{ display: 'flex', flexDirection: 'column', gap: '0.8rem' }}>
           {importantNews.map((art) => (
-            <Link key={art.id} href={`/article/${art.id}`} style={{ textDecoration: 'none', color: 'inherit', display: 'flex', gap: '0.8rem', alignItems: 'flex-start', paddingBottom: '0.8rem', borderBottom: '1px solid #f0f0f0' }}>
+            <Link key={art.id} href={`/article/${art.slug ?? art.id}`} style={{ textDecoration: 'none', color: 'inherit', display: 'flex', gap: '0.8rem', alignItems: 'flex-start', paddingBottom: '0.8rem', borderBottom: '1px solid #f0f0f0' }}>
               <ArticleImg src={art.image_url} alt={art.title} width={90} height={65} />
               <div>
                 <span style={{ fontSize: '0.68rem', color: '#2E7D52', fontWeight: 700 }}>{art.category}</span>
@@ -239,7 +239,7 @@ function RegionalNews({ articles }: { articles: any[] }) {
                 <Link href={regionRoutes[region]} style={{ fontSize: '0.68rem', color: '#888', textDecoration: 'none' }}>더보기</Link>
               </div>
               {regionArticles.length > 0 ? regionArticles.map((art, i) => (
-                <Link key={art.id} href={`/article/${art.id}`} style={{ textDecoration: 'none', color: 'inherit', display: 'block', marginBottom: '0.5rem', paddingBottom: '0.5rem', borderBottom: i < regionArticles.length - 1 ? '1px solid #f5f5f5' : 'none' }}>
+                <Link key={art.id} href={`/article/${art.slug ?? art.id}`} style={{ textDecoration: 'none', color: 'inherit', display: 'block', marginBottom: '0.5rem', paddingBottom: '0.5rem', borderBottom: i < regionArticles.length - 1 ? '1px solid #f5f5f5' : 'none' }}>
                   <p style={{ margin: 0, fontSize: '0.82rem', fontWeight: 600, lineHeight: 1.4, color: '#222', wordBreak: 'keep-all' }}>{art.title}</p>
                   <ArticleDate dateStr={art.created_at} viewCount={art.view_count} />
                 </Link>
@@ -365,7 +365,7 @@ function BottomSections({ articles }: { articles: any[] }) {
         <SectionHeader title="최신 기사" href="/region" />
         <div className="np-bottom-latest-grid">
           {latest.map((art) => (
-            <Link key={art.id} href={`/article/${art.id}`} className="np-bottom-latest-item">
+            <Link key={art.id} href={`/article/${art.slug ?? art.id}`} className="np-bottom-latest-item">
               <span className="np-bottom-latest-title">{art.title}</span>
               <ArticleDate dateStr={art.created_at} viewCount={art.view_count} />
             </Link>
@@ -378,7 +378,7 @@ function BottomSections({ articles }: { articles: any[] }) {
         <div className="np-bottom-split-section">
           <SectionHeader title="오피니언 · 칼럼" href="/column" />
           {columns.length > 0 ? columns.map((art) => (
-            <Link key={art.id} href={`/article/${art.id}`} className="np-bottom-split-item">
+            <Link key={art.id} href={`/article/${art.slug ?? art.id}`} className="np-bottom-split-item">
               <ArticleImg src={art.image_url} alt={art.title} width={70} height={52} />
               <div>
                 <h5 style={{ margin: '0 0 0.2rem', fontSize: '0.85rem', fontWeight: 700, lineHeight: 1.35, wordBreak: 'keep-all' }}>{art.title}</h5>
@@ -391,7 +391,7 @@ function BottomSections({ articles }: { articles: any[] }) {
           <div className="np-bottom-split-section">
             <SectionHeader title="기획 · 연재" href="/region" />
             {planned.map((art) => (
-              <Link key={art.id} href={`/article/${art.id}`} className="np-bottom-split-item">
+              <Link key={art.id} href={`/article/${art.slug ?? art.id}`} className="np-bottom-split-item">
                 <ArticleImg src={art.image_url} alt={art.title} width={70} height={52} />
                 <div>
                   <h5 style={{ margin: '0 0 0.2rem', fontSize: '0.85rem', fontWeight: 700, lineHeight: 1.35, wordBreak: 'keep-all' }}>{art.title}</h5>
@@ -409,7 +409,7 @@ function BottomSections({ articles }: { articles: any[] }) {
           <SectionHeader title="포토 뉴스" href="/region" />
           <div className="np-bottom-photos-grid">
             {photos.map((art) => (
-              <Link key={art.id} href={`/article/${art.id}`} className="np-bottom-photo-item">
+              <Link key={art.id} href={`/article/${art.slug ?? art.id}`} className="np-bottom-photo-item">
                 <div className="np-bottom-photo-img-wrap">
                   <Image src={art.image_url} alt={art.title} fill style={{ objectFit: 'cover' }} />
                 </div>

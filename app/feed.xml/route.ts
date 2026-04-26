@@ -22,8 +22,8 @@ export async function GET() {
   const itemsXml = (articles || []).map(article => `
     <item>
       <title><![CDATA[${article.title}]]></title>
-      <link>${SITE_CONFIG.url}/article/${article.id}</link>
-      <guid isPermaLink="true">${SITE_CONFIG.url}/article/${article.id}</guid>
+      <link>${SITE_CONFIG.url}/article/${article.slug ?? article.id}</link>
+      <guid isPermaLink="true">${SITE_CONFIG.url}/article/${article.slug ?? article.id}</guid>
       <pubDate>${new Date(article.created_at).toUTCString()}</pubDate>
       <description><![CDATA[${article.content ? article.content.replace(/<[^>]*>/g, '').replace(/[#*`~]/g, '').substring(0, 300) : ''}]]></description>
       <category><![CDATA[${article.category}]]></category>

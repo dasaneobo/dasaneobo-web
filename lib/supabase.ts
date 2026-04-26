@@ -7,6 +7,7 @@ export const supabase = createBrowserClient(supabaseUrl, supabaseAnonKey);
 
 export type Article = {
   id: string;
+  slug?: string;
   created_at: string;
   title: string;
   content: string;

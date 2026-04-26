@@ -5,6 +5,7 @@ import { Clock, User as UserIcon, Calendar, ArrowRight } from 'lucide-react';
 
 interface Article {
   id: string;
+  slug?: string;
   title: string;
   subtitle?: string;
   content: string;
@@ -108,7 +109,7 @@ export default async function NewspaperLayout({ title, type, value, page = 1 }: 
       {page === 1 && (
         <div className="newspaper-main-grid" style={{ marginBottom: '4rem' }}>
           {/* Featured Article */}
-          <Link href={`/article/${featured.id}`} style={{ textDecoration: 'none', color: 'inherit' }}>
+          <Link href={`/article/${featured.slug ?? featured.id}`} style={{ textDecoration: 'none', color: 'inherit' }}>
             <div className="newspaper-featured" style={{ cursor: 'pointer' }}>
               <div style={{ width: '100%', height: '400px', overflow: 'hidden', borderRadius: '4px', marginBottom: '1.5rem', position: 'relative' }}>
                 <Image 
@@ -137,7 +138,7 @@ export default async function NewspaperLayout({ title, type, value, page = 1 }: 
           {/* Secondary Column */}
           <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
             {secondary.map(article => (
-              <Link key={article.id} href={`/article/${article.id}`} style={{ textDecoration: 'none', color: 'inherit' }}>
+              <Link key={article.id} href={`/article/${article.slug ?? article.id}`} style={{ textDecoration: 'none', color: 'inherit' }}>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', borderBottom: '1px solid #eee', paddingBottom: '1.5rem', cursor: 'pointer' }}>
                   <div style={{ width: '100%', height: '180px', overflow: 'hidden', borderRadius: '4px', position: 'relative' }}>
                     <Image 
@@ -173,7 +174,7 @@ export default async function NewspaperLayout({ title, type, value, page = 1 }: 
           )}
           <div className="category-grid" style={{ gap: '2rem' }}>
             {(page > 1 ? articles : others).map(article => (
-              <Link key={article.id} href={`/article/${article.id}`} style={{ textDecoration: 'none', color: 'inherit' }}>
+              <Link key={article.id} href={`/article/${article.slug ?? article.id}`} style={{ textDecoration: 'none', color: 'inherit' }}>
                 <div style={{ cursor: 'pointer' }}>
                   <div style={{ width: '100%', height: '200px', overflow: 'hidden', borderRadius: '8px', background: '#f5f5f5', marginBottom: '1rem', position: 'relative' }}>
                     <Image 

@@ -137,7 +137,7 @@ export default async function ArticlePage({ params }: { params: Promise<{ id: st
   // Fetch recent articles for sidebar
   const { data: recentArticles } = await supabase
     .from('articles')
-    .select('id, title, created_at, category')
+    .select('id, title, created_at, category, slug')
     .eq('status', 'published')
     .neq('id', id) // current article excluded
     .order('created_at', { ascending: false })
@@ -291,7 +291,7 @@ export default async function ArticlePage({ params }: { params: Promise<{ id: st
               <h3 style={{ fontSize: '1.1rem', fontWeight: 900, marginBottom: '1.5rem' }}>가장 최근 뉴스</h3>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '1.2rem' }}>
                 {recentArticles?.map(art => (
-                  <Link key={art.id} href={`/article/${art.id}`} style={{ textDecoration: 'none', color: 'inherit' }}>
+                  <Link key={art.id} href={`/article/${art.slug ?? art.id}`} style={{ textDecoration: 'none', color: 'inherit' }}>
                     <div style={{ cursor: 'pointer' }}>
                       <span style={{ fontSize: '0.75rem', color: 'var(--primary-dark)', fontWeight: 'bold' }}>{art.category}</span>
                       <h4 style={{ fontSize: '0.95rem', margin: '0.3rem 0', lineHeight: 1.4, fontWeight: 700 }}>{art.title}</h4>

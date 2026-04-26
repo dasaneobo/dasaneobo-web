@@ -47,7 +47,7 @@ function SearchResultsContent() {
       ) : results.length > 0 ? (
         <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
           {results.map((article) => (
-            <Link key={article.id} href={`/article/${article.id}`} style={{ textDecoration: 'none', color: 'inherit' }}>
+            <Link key={article.id} href={`/article/${article.slug ?? article.id}`} style={{ textDecoration: 'none', color: 'inherit' }}>
               <div style={{ 
                 display: 'grid', 
                 gridTemplateColumns: '240px 1fr', 
