@@ -2,6 +2,7 @@
 
 import MarkdownPreview from '@uiw/react-markdown-preview';
 import "@uiw/react-markdown-preview/markdown.css";
+import 'react-quill/dist/quill.snow.css';
 
 export default function MarkdownRenderer({ content }: { content: string }) {
   const isHtml = content.trim().startsWith('<');

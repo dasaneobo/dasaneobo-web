@@ -6,14 +6,8 @@ import { Save, Image as ImageIcon, Layout, ChevronLeft, Type } from 'lucide-reac
 import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { supabase } from '@/lib/supabase';
-import dynamic from 'next/dynamic';
 import { marked } from 'marked';
-import 'react-quill/dist/quill.snow.css';
-
-const ReactQuill = dynamic(
-  () => import("react-quill"),
-  { ssr: false }
-);
+import RichTextEditor from '@/components/RichTextEditor';
 
 
 
@@ -258,21 +252,9 @@ function EditArticleForm() {
               style={{ display: 'none' }} 
               onChange={handleBodyImageUpload} 
             />
-            <ReactQuill
-              theme="snow"
+            <RichTextEditor
               value={formData.content}
               onChange={(val) => setFormData({ ...formData, content: val })}
-              style={{ height: '600px', marginBottom: '3rem' }}
-              modules={{
-                toolbar: [
-                  [{ 'header': [1, 2, 3, false] }],
-                  ['bold', 'italic', 'underline', 'strike'],
-                  [{'color': []}, {'background': []}],
-                  [{ 'list': 'ordered'}, { 'list': 'bullet' }],
-                  ['link', 'image'],
-                  ['clean']
-                ],
-              }}
             />
           </div>
         </div>
