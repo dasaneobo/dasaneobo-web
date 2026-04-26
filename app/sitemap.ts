@@ -2,16 +2,17 @@ import { MetadataRoute } from 'next';
 import { supabase } from '@/lib/supabase';
 import { SITE_CONFIG } from '@/constants/siteConfig';
 
+export const revalidate = 3600;
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const { data: articles } = await supabase
     .from('articles')
-    .select('id, slug, updated_at')
+    .select('id, slug, created_at')
     .eq('status', 'published')
-    .order('updated_at', { ascending: false });
+    .order('created_at', { ascending: false });
 
   const articleEntries = (articles || []).map(a => ({
     url: `${SITE_CONFIG.url}/article/${a.slug ?? a.id}`,
-    lastModified: new Date(a.updated_at),
+    lastModified: new Date(a.created_at),
     changeFrequency: 'weekly' as const,
     priority: 0.8,
   }));
