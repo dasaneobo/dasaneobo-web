@@ -2,7 +2,7 @@
 
 import MarkdownPreview from '@uiw/react-markdown-preview';
 import "@uiw/react-markdown-preview/markdown.css";
-import 'react-quill/dist/quill.snow.css';
+import 'suneditor/dist/css/suneditor.min.css';
 
 export default function MarkdownRenderer({ content }: { content: string }) {
   const isHtml = content.trim().startsWith('<');
@@ -10,13 +10,14 @@ export default function MarkdownRenderer({ content }: { content: string }) {
   if (isHtml) {
     return (
       <div 
-        className="ql-editor"
+        className="sun-editor-editable"
         style={{ 
           background: 'transparent', 
           fontSize: '1.1rem', 
           lineHeight: '2', 
           color: '#333', 
-          fontFamily: '"Nanum Myeongjo", serif' 
+          fontFamily: '"Nanum Myeongjo", serif',
+          padding: 0
         }}
         dangerouslySetInnerHTML={{ __html: content }} 
       />

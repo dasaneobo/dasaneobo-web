@@ -6,7 +6,7 @@ import { Save, Image as ImageIcon, Layout, ChevronLeft, Type } from 'lucide-reac
 import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { supabase } from '@/lib/supabase';
-// import { marked } from 'marked';
+import { marked } from 'marked';
 import RichTextEditor from '@/components/RichTextEditor';
 
 
@@ -61,10 +61,9 @@ function EditArticleForm() {
         if (article) {
           // Safety check for content
           const rawContent = article.content || '';
-          // Temporarily disable marked for testing
-          // const isMarkdown = !rawContent.trim().startsWith('<');
-          // const content = isMarkdown ? marked.parse(rawContent) : rawContent;
-          const content = rawContent;
+          // If it looks like Markdown (doesn't start with <), convert it to HTML
+          const isMarkdown = !rawContent.trim().startsWith('<');
+          const content = isMarkdown ? marked.parse(rawContent) : rawContent;
           
           setFormData({
             title: article.title || '',
@@ -79,9 +78,7 @@ function EditArticleForm() {
         const { data: report } = await supabase.from('village_reports').select('*').eq('id', reportId).single();
         if (report) {
           const generatedContent = `**누가:** ${report.who || ''}  \n**무엇을:** ${report.what || ''}  \n**어디서:** ${report.where || ''}  \n**언제:** ${report.when || ''}  \n**어떻게:** ${report.how || ''}  \n**왜:** ${report.why || ''}  \n\n**추가 내용:** ${report.extra || ''}  \n\n*(제보자: ${report.sender_name || ''} 리포터 / 제보 스타일: ${report.style || ''})*`;
-          // Temporarily disable marked
-          // const htmlContent = marked.parse(generatedContent);
-          const htmlContent = generatedContent;
+          const htmlContent = marked.parse(generatedContent);
           setFormData(prev => ({ 
             ...prev, 
             author_id: session.user.id,

@@ -1,13 +1,13 @@
 'use client';
 
 import React from 'react';
-// import dynamic from 'next/dynamic';
-// import 'react-quill/dist/quill.snow.css';
+import dynamic from 'next/dynamic';
+import 'suneditor/dist/css/suneditor.min.css';
 
-// const ReactQuill = dynamic(() => import('react-quill'), {
-//   ssr: false,
-//   loading: () => <div style={{ height: '600px', background: '#f9f9f9', display: 'flex', alignItems: 'center', justifyContent: 'center', border: '1px solid #eee', borderRadius: '8px' }}>에디터를 불러오는 중...</div>,
-// });
+const SunEditor = dynamic(() => import('suneditor-react'), {
+  ssr: false,
+  loading: () => <div style={{ height: '600px', background: '#f9f9f9', display: 'flex', alignItems: 'center', justifyContent: 'center', border: '1px solid #eee', borderRadius: '8px' }}>에디터를 불러오는 중...</div>,
+});
 
 interface EditorProps {
   value: string;
@@ -16,11 +16,25 @@ interface EditorProps {
 
 export default function RichTextEditor({ value, onChange }: EditorProps) {
   return (
-    <textarea
-      value={value}
-      onChange={(e) => onChange(e.target.value)}
-      style={{ width: '100%', height: '550px', padding: '1rem', border: '1px solid #ddd', borderRadius: '8px', marginBottom: '3rem', fontSize: '1rem' }}
-      placeholder="기사 내용을 입력하세요..."
-    />
+    <div className="rich-text-editor">
+      <SunEditor
+        setContents={value}
+        onChange={onChange}
+        setOptions={{
+          height: '600px',
+          buttonList: [
+            ['undo', 'redo'],
+            ['formatBlock', 'fontColor', 'hiliteColor'],
+            ['bold', 'underline', 'italic', 'strike', 'subscript', 'superscript'],
+            ['removeFormat'],
+            ['list', 'align', 'horizontalRule', 'table'],
+            ['link', 'image', 'video'],
+            ['fullScreen', 'showBlocks', 'codeView'],
+            ['preview', 'print']
+          ],
+          lang: 'ko'
+        }}
+      />
+    </div>
   );
 }
