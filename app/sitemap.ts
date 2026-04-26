@@ -1,65 +1,34 @@
 import { MetadataRoute } from 'next';
 import { supabase } from '@/lib/supabase';
+import { SITE_CONFIG } from '@/constants/siteConfig';
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const baseUrl = 'https://www.dasaneobo.kr';
-
   const { data: articles } = await supabase
     .from('articles')
-    .select('id, created_at')
-    .eq('status', 'published');
+    .select('id, updated_at')
+    .eq('status', 'published')
+    .order('updated_at', { ascending: false });
 
-  const articleEntries: MetadataRoute.Sitemap = (articles || []).map((article) => ({
-    url: `${baseUrl}/article/${article.id}`,
-    lastModified: new Date(article.created_at),
-    changeFrequency: 'weekly',
+  const articleEntries = (articles || []).map(a => ({
+    url: `${SITE_CONFIG.url}/article/${a.id}`,
+    lastModified: new Date(a.updated_at),
+    changeFrequency: 'weekly' as const,
     priority: 0.8,
   }));
 
-  const staticEntries: MetadataRoute.Sitemap = [
-    {
-      url: `${baseUrl}`,
-      lastModified: new Date(),
-      changeFrequency: 'always',
-      priority: 1.0,
-    },
-    {
-      url: `${baseUrl}/gangjin`,
-      lastModified: new Date(),
-      changeFrequency: 'daily',
-      priority: 0.9,
-    },
-    {
-      url: `${baseUrl}/goheung`,
-      lastModified: new Date(),
-      changeFrequency: 'daily',
-      priority: 0.9,
-    },
-    {
-      url: `${baseUrl}/boseong`,
-      lastModified: new Date(),
-      changeFrequency: 'daily',
-      priority: 0.9,
-    },
-    {
-      url: `${baseUrl}/jangheung`,
-      lastModified: new Date(),
-      changeFrequency: 'daily',
-      priority: 0.9,
-    },
-    {
-      url: `${baseUrl}/ethics`,
-      lastModified: new Date(),
-      changeFrequency: 'monthly',
-      priority: 0.5,
-    },
-    {
-      url: `${baseUrl}/subscribe`,
-      lastModified: new Date(),
-      changeFrequency: 'monthly',
-      priority: 0.7,
-    },
-  ];
+  const staticEntries = SITE_CONFIG.categories.map(cat => ({
+    url: `${SITE_CONFIG.url}${cat.href}`,
+    priority: cat.href === '/' || cat.href === '/region' ? 1.0 : 0.9,
+  }));
 
-  return [...staticEntries, ...articleEntries];
+  // Deduplicate staticEntries manually
+  const uniqueStaticEntries = Array.from(new Map(staticEntries.map(item => [item.url, item])).values());
+
+  return [
+    { url: SITE_CONFIG.url, priority: 1.0 },
+    { url: `${SITE_CONFIG.url}/subscribe`, priority: 0.8 },
+    { url: `${SITE_CONFIG.url}/guide`, priority: 0.8 },
+    ...uniqueStaticEntries,
+    ...articleEntries,
+  ];
 }

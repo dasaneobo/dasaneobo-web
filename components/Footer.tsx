@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import { SITE_CONFIG } from '@/constants/siteConfig';
 
 export default function Footer() {
   return (
@@ -11,13 +12,8 @@ export default function Footer() {
           <div className="np-footer-grid">
             {/* Brand */}
             <div className="np-footer-brand">
-              <h3 className="np-footer-logo">다산어보</h3>
-              <p className="np-footer-tagline">
-                전남 4개 권역(강진·장흥·고흥·보성)<br />
-                밀착 독립언론<br />
-                투명한 보도와 주민 참여로<br />
-                지역의 미래를 씁니다.
-              </p>
+              <h3 className="np-footer-logo">{SITE_CONFIG.name}</h3>
+              <p className="np-footer-tagline" dangerouslySetInnerHTML={{ __html: SITE_CONFIG.description.replace(/\. /g, '.<br />') }} />
             </div>
 
             {/* 권역 뉴스 */}
@@ -49,7 +45,7 @@ export default function Footer() {
               <h4 className="np-footer-heading">서비스</h4>
               <ul className="np-footer-links">
                 <li><Link href="/subscribe">구독 신청</Link></li>
-                <li><Link href="/admin/report">기사 제보</Link></li>
+                <li><Link href="/report">기사 제보</Link></li>
                 <li><Link href="/reporter-apply">리포터 신청</Link></li>
                 <li><Link href="/ad-apply">광고 문의</Link></li>
                 <li><Link href="/search">기사 검색</Link></li>
@@ -60,10 +56,10 @@ export default function Footer() {
             <div>
               <h4 className="np-footer-heading">연락처</h4>
               <ul className="np-footer-links">
-                <li>📍 전라남도 강진군 강진읍</li>
-                <li>📞 061-000-0000</li>
-                <li>📠 061-000-0001</li>
-                <li>✉ dinoskorea@gmail.com</li>
+                <li>📍 {SITE_CONFIG.contact.address}</li>
+                <li>📞 {SITE_CONFIG.contact.phone}</li>
+                <li>📠 {SITE_CONFIG.contact.fax}</li>
+                <li>✉ {SITE_CONFIG.contact.email}</li>
               </ul>
             </div>
           </div>
@@ -75,13 +71,13 @@ export default function Footer() {
         <div className="container">
           <div className="np-footer-legal-info">
             <p>
-              <strong>다산어보</strong> · 등록번호: 전남, 아00XXX · 등록일: 2024-01-01 · 
-              발행인: 강상우 · 편집인: 이득규 · 청소년보호책임자: 강상우 · 
-              법인명: 다산어보 언론협동조합 · 제호: 다산어보
+              <strong>{SITE_CONFIG.name}</strong> · 등록번호: {SITE_CONFIG.contact.registrationNumber} · 등록일: {SITE_CONFIG.contact.registrationDate} · 
+              발행인: {SITE_CONFIG.contact.publisher} · 편집인: {SITE_CONFIG.contact.editor} · 청소년보호책임자: {SITE_CONFIG.contact.youthProtector} · 
+              법인명: {SITE_CONFIG.contact.corporation} · 제호: {SITE_CONFIG.name}
             </p>
             <p>
-              전라남도 강진군 강진읍 오감길 · 대표전화: 061-000-0000 · 팩스: 061-000-0001 · 
-              이메일: dinoskorea@gmail.com
+              {SITE_CONFIG.contact.address} · 대표전화: {SITE_CONFIG.contact.phone} · 팩스: {SITE_CONFIG.contact.fax} · 
+              이메일: {SITE_CONFIG.contact.email}
             </p>
             <p style={{ marginTop: '0.5rem', fontSize: '0.72rem', opacity: 0.7 }}>
               다산어보 모든 콘텐츠(영상, 기사, 사진)는 저작권법의 보호를 받는 바, 무단 전재와 복사, 배포 등을 금합니다.
@@ -91,12 +87,13 @@ export default function Footer() {
             <Link href="/ethics">윤리규정</Link>
             <Link href="/terms">이용약관</Link>
             <Link href="/privacy" className="np-highlight">개인정보처리방침</Link>
+            <Link href="/refund-policy">환불정책</Link>
             <Link href="/youth">청소년보호정책</Link>
             <Link href="/copyright">저작권보호정책</Link>
             <Link href="/no-email-collect">이메일무단수집거부</Link>
           </div>
           <div className="np-footer-copyright">
-            Copyright © 2026 다산어보(Dasan-Eobo). All rights reserved.
+            Copyright © {new Date().getFullYear()} {SITE_CONFIG.name}({SITE_CONFIG.englishName}). All rights reserved.
           </div>
         </div>
       </div>

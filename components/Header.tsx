@@ -139,7 +139,7 @@ export default function Header() {
                 <Link href="/login" className="np-topbar-link">
                   <LogIn size={12} /> 로그인
                 </Link>
-                <Link href="/login" className="np-topbar-link">
+                <Link href="/signup" className="np-topbar-link">
                   <UserPlus size={12} /> 회원가입
                 </Link>
               </>
@@ -187,7 +187,7 @@ export default function Header() {
               <Link href="/subscribe" className="np-subscribe-btn">
                 구독 신청
               </Link>
-              <Link href="/admin/report" className="np-report-btn">
+              <Link href="/report" className="np-report-btn">
                 기사 제보
               </Link>
             </div>

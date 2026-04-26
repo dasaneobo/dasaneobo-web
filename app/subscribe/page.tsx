@@ -612,7 +612,7 @@ export default function SubscribePage() {
               <div className="plan-name">월간 구독</div>
               <div className="plan-price-wrap">
                 <div className="plan-price"><sup>₩</sup>10,000</div>
-                <div className="plan-period">매월 결제</div>
+                <div className="plan-period">월 1회 계좌이체</div>
               </div>
               <hr className="plan-divider" />
               <ul className="plan-features">
@@ -631,7 +631,7 @@ export default function SubscribePage() {
               <div className="plan-name">연간 구독</div>
               <div className="plan-price-wrap">
                 <div className="plan-price"><sup>₩</sup>100,000</div>
-                <div className="plan-period">연 1회 결제</div>
+                <div className="plan-period">연 1회 일괄 입금</div>
                 <div className="plan-saving green">2개월 무료 혜택</div>
               </div>
               <hr className="plan-divider" />
@@ -671,6 +671,14 @@ export default function SubscribePage() {
             모든 플랜에 종이신문 월 1회 이상 우편 배송이 포함됩니다<br />
             평생 구독자는 다산어보를 처음부터 함께 만든 창간 후원인으로 영구 기록됩니다
           </p>
+
+          <div style={{ maxWidth: '860px', margin: '2rem auto 0', padding: '1.5rem', background: '#fff', border: '1px solid var(--rule)', borderRadius: '8px' }}>
+            <h5 style={{ margin: '0 0 0.5rem', fontSize: '14px', color: 'var(--ink)' }}>결제 방식 안내</h5>
+            <p style={{ margin: 0, fontSize: '13px', color: 'var(--ink2)', lineHeight: 1.6 }}>
+              현재 다산어보는 카드 자동결제·간편결제를 준비 중이며, <strong>계좌이체로만 신청을 받고 있습니다.</strong><br />
+              월간 구독자는 매월 직접 입금해 주셔야 구독이 유지됩니다. 정기결제 도입 시점은 결정되는 대로 공지드립니다.
+            </p>
+          </div>
         </div>
 
         {/* lifetime perks detail */}
@@ -780,7 +788,7 @@ export default function SubscribePage() {
               checked={formData.agreeCheck} 
               onChange={handleInputChange} 
             />
-            개인정보(이름·연락처·주소·이메일)를 구독 서비스 제공 목적으로 수집·이용하는 것에 동의합니다. 수집된 정보는 신문 배송 및 구독 관리 외 목적으로 사용되지 않습니다.
+            이용약관 및 환불정책에 동의합니다. (개인정보를 구독 서비스 제공 목적으로 수집·이용하는 데 동의합니다.)
           </label>
 
           <button 

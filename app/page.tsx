@@ -57,7 +57,7 @@ export default async function Home() {
 
       {/* Mobile FAB */}
       <div className="fab-container">
-        <a href="/admin/report" style={{ textDecoration: 'none' }}>
+        <a href="/report" style={{ textDecoration: 'none' }}>
           <button className="fab-button">제보<br />하기</button>
         </a>
       </div>

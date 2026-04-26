@@ -317,7 +317,7 @@ function RightSidebar({ farmPrices, sidebarAd }: { farmPrices: any[]; sidebarAd:
 
         {/* 기사 제보 */}
         <div className="np-sidebar-item">
-          <Link href="/admin/report" style={{ textDecoration: 'none', display: 'block' }}>
+          <Link href="/report" style={{ textDecoration: 'none', display: 'block' }}>
             <div style={{ background: '#fff', border: '1px solid #2E7D52', padding: '1rem 0.8rem', textAlign: 'center', borderRadius: '4px', height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
               <div style={{ fontSize: '0.6rem', color: '#2E7D52', fontWeight: 700, marginBottom: '0.2rem' }}>REPORT</div>
               <h4 style={{ margin: '0 0 0.8rem', fontSize: '0.85rem', fontWeight: 800, color: '#333' }}>기사 제보</h4>

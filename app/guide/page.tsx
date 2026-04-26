@@ -21,9 +21,9 @@ const GUIDE_DATA = {
       },
       {
         step: 3,
-        title: '이메일·비밀번호 입력 후 가입 완료',
-        description: '이름, 이메일 주소, 비밀번호를 입력하고 가입 버튼을 누르면 바로 가입이 완료됩니다.',
-        tags: ['무료 가입', '별도 인증 없음']
+        title: '이메일 인증 및 가입 완료',
+        description: '이름, 이메일 주소, 비밀번호를 입력하고 가입 버튼을 누르면 인증 메일이 발송됩니다. 메일함에서 인증 링크를 클릭해야 가입이 완료됩니다.',
+        tags: ['무료 가입', '이메일 인증 필수']
       },
       {
         step: 4,
@@ -77,7 +77,7 @@ const GUIDE_DATA = {
       {
         step: 2,
         title: '제보 페이지 이동',
-        description: '기사제보하기 또는 /admin/report 접속',
+        description: '홈페이지 상단/하단의 기사제보 버튼 클릭 또는 /report 접속',
       },
       {
         step: 3,

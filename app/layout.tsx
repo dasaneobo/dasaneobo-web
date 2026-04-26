@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono, Noto_Sans_KR, Noto_Serif_KR } from "next/font/google";
 import "./globals.css";
+import { SITE_CONFIG } from "@/constants/siteConfig";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -25,18 +26,21 @@ const notoSerifKR = Noto_Serif_KR({
 });
 
 export const metadata: Metadata = {
-  title: "다산어보 | 강진·장흥·고흥·보성 독립언론",
-  description: "전남 4개 군(강진·장흥·고흥·보성) 밀착 독립언론. 투명한 보도와 주민 참여로 지역의 미래를 씁니다.",
+  metadataBase: new URL(SITE_CONFIG.url),
+  title: { default: SITE_CONFIG.name, template: `%s | ${SITE_CONFIG.name}` },
+  description: SITE_CONFIG.description,
   keywords: "강진, 장흥, 고흥, 보성, 전남 뉴스, 지역 언론, 독립언론",
   openGraph: {
-    title: "다산어보 | 강진·장흥·고흥·보성 독립언론",
-    description: "전남 4개 군(강진·장흥·고흥·보성) 밀착 독립언론. 투명한 보도와 주민 참여로 지역의 미래를 씁니다.",
-    url: "https://www.dasaneobo.kr",
-    images: [{ url: "https://www.dasaneobo.kr/og-image.png", width: 1200, height: 630 }],
-    siteName: "다산어보",
+    title: { default: SITE_CONFIG.name, template: `%s | ${SITE_CONFIG.name}` },
+    description: SITE_CONFIG.description,
+    url: SITE_CONFIG.url,
+    images: [{ url: `${SITE_CONFIG.url}/og-image.png`, width: 1200, height: 630 }],
+    siteName: SITE_CONFIG.name,
     locale: "ko_KR",
     type: "website",
   },
+  twitter: { card: 'summary_large_image' },
+  robots: { index: true, follow: true },
   verification: {
     google: "FafkuE0YBRZtLsqTthBQeQT2wWpk90jfoLvp5OGXhCw",
   },
@@ -50,9 +54,27 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const jsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'NewsMediaOrganization',
+    name: SITE_CONFIG.name,
+    url: SITE_CONFIG.url,
+    logo: { '@type': 'ImageObject', url: `${SITE_CONFIG.url}/logo.png` },
+  };
+
   return (
     <html lang="ko" className={`${geistSans.variable} ${geistMono.variable} ${notoSansKR.variable} ${notoSerifKR.variable}`}>
-      <body>{children}</body>
+      <head>
+        <link rel="alternate" type="application/rss+xml" title={`${SITE_CONFIG.name} RSS`} href="/feed.xml" />
+      </head>
+      <body>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        />
+        {children}
+      </body>
     </html>
   );
 }
+

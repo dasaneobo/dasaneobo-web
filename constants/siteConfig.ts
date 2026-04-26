@@ -6,8 +6,8 @@
 export const SITE_CONFIG = {
   name: "다산어보",
   englishName: "DASANEOBO",
-  slogan: "전남·광주 독립언론 · LOCAL MEDIA",
-  description: "지속가능한 지역 저널리즘을 꿈꾸는 독립 언론",
+  slogan: "전남 4개 권역 밀착 보도 · LOCAL MEDIA",
+  description: "강진·장흥·고흥·보성 4개 권역 밀착 독립언론. 투명한 보도와 주민 참여로 지역의 미래를 씁니다.",
   
   // 브랜딩 컬러
   colors: {
@@ -38,13 +38,22 @@ export const SITE_CONFIG = {
     { label: '기획연재', href: '/region' },
     { label: '포토', href: '/region' },
     { label: '이용안내', href: '/guide' },
-    { label: '기사제보', href: '/admin/report', accent: true },
+    { label: '기사제보', href: '/report', accent: true },
   ] as { label: string; href: string; region?: boolean; accent?: boolean }[],
   
   // 연락처 및 하단 정보
   contact: {
-    email: "dinoskorea@gmail.com",
-    address: "전라남도 강진군 강진읍",
-    registrationNumber: "123-45-67890",
-  }
+    publisher: "강상우",
+    editor: "이득규",
+    youthProtector: "강상우",
+    corporation: "다산어보 언론협동조합",
+    registrationNumber: "전남, 아00000",
+    registrationDate: "2026-XX-XX",
+    address: "전라남도 강진군 강진읍 오감길",
+    phone: "061-000-0000",
+    fax: "061-000-0001",
+    email: "editor@dasaneobo.kr",
+  },
+  url: "https://www.dasaneobo.kr"
 };
+

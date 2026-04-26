@@ -2,11 +2,13 @@ import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import NewspaperLayout from '@/components/NewspaperLayout';
 
-export default function AdministrationPage() {
+export default async function AdministrationPage({ searchParams }: { searchParams: Promise<{ [key: string]: string | string[] | undefined }> }) {
+  const resolvedParams = await searchParams;
+  const page = typeof resolvedParams.page === 'string' ? parseInt(resolvedParams.page, 10) : 1;
   return (
     <main>
       <Header />
-      <NewspaperLayout title="행정 뉴스" type="category" value="행정" />
+      <NewspaperLayout title="행정 뉴스" type="category" value="행정" page={page} />
       <Footer />
     </main>
   );
