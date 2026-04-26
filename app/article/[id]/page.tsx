@@ -1,6 +1,6 @@
 import Header from '@/components/Header';
 import { supabase } from '@/lib/supabase';
-import { notFound } from 'next/navigation';
+import { notFound, redirect } from 'next/navigation';
 import Link from 'next/link';
 import Image from 'next/image';
 import { ChevronLeft, Clock, User, Share2, Eye } from 'lucide-react';
@@ -17,13 +17,22 @@ export const revalidate = 0; // Ensure data is always fetch freshly
 export async function generateMetadata({ params }: { params: Promise<{ id: string }> }) {
   const resolvedParams = await params;
   const { id } = resolvedParams;
-  const { data: article } = await supabase.from('articles').select('*').eq('id', id).single();
+  const isUUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(id);
+  
+  let query = supabase.from('articles').select('*');
+  if (isUUID) {
+    query = query.eq('id', id);
+  } else {
+    query = query.eq('slug', decodeURIComponent(id));
+  }
+  
+  const { data: article } = await query.single();
   
   if (!article) return { title: '기사를 찾을 수 없습니다 | 다산어보' };
   
   const contentSnippet = article.content ? article.content.substring(0, 150).replace(/<[^>]*>/g, '').replace(/[#*`~]/g, '') + '...' : '다산어보 지역 뉴스';
 
-  const url = `${SITE_CONFIG.url}/article/${article.id}`;
+  const url = `${SITE_CONFIG.url}/article/${article.slug || article.id}`;
   
   return {
     title: `${article.title} | ${SITE_CONFIG.name}`,
@@ -50,11 +59,37 @@ export default async function ArticlePage({ params }: { params: Promise<{ id: st
 
   const { data: { session } } = await supabase.auth.getSession();
   
-  const { data: article, error } = await supabase
-    .from('articles')
-    .select('*')
-    .eq('id', id)
-    .single();
+  const isUUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(id);
+  
+  let query = supabase.from('articles').select('*');
+  if (isUUID) {
+    query = query.eq('id', id);
+  } else {
+    query = query.eq('slug', decodeURIComponent(id));
+  }
+  
+  let { data: article, error } = await query.single();
+  
+  // If not found by slug, check history table for 301 redirect
+  if (!article && !isUUID) {
+    const { data: history } = await supabase
+      .from('article_slug_history')
+      .select('article_id')
+      .eq('old_slug', decodeURIComponent(id))
+      .single();
+      
+    if (history?.article_id) {
+      const { data: currentArticle } = await supabase
+        .from('articles')
+        .select('slug')
+        .eq('id', history.article_id)
+        .single();
+        
+      if (currentArticle?.slug) {
+        redirect(`/article/${currentArticle.slug}`);
+      }
+    }
+  }
 
   if (error || !article) {
     console.error("Supabase Error fetch article:", error);

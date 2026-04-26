@@ -8,6 +8,7 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import { supabase } from '@/lib/supabase';
 import { marked } from 'marked';
 import RichTextEditor from '@/components/RichTextEditor';
+import { generateSlug } from '@/lib/utils/slugify';
 
 
 
@@ -23,6 +24,7 @@ function EditArticleForm() {
   const [userProfile, setUserProfile] = useState<any>(null);
   const [formData, setFormData] = useState({
     title: '',
+    slug: '',
     content: '',
     image_url: '',
     category: '사회',
@@ -67,6 +69,7 @@ function EditArticleForm() {
           
           setFormData({
             title: article.title || '',
+            slug: article.slug || '',
             content: (content as string) || '',
             image_url: article.image_url || '',
             category: article.category || '사회',
@@ -187,8 +190,17 @@ function EditArticleForm() {
     setLoading(true);
 
     try {
+      let finalSlug = formData.slug.trim() || generateSlug(formData.title);
+      
+      // Check slug uniqueness
+      const { data: existing } = await supabase.from('articles').select('id').eq('slug', finalSlug).maybeSingle();
+      if (existing && existing.id !== articleId) {
+        finalSlug = `${finalSlug}-${Math.random().toString(36).substring(2, 6)}`;
+      }
+
       const payload = { 
         title: formData.title,
+        slug: finalSlug,
         content: formData.content,
         image_url: formData.image_url,
         category: formData.category,
@@ -197,6 +209,12 @@ function EditArticleForm() {
       };
 
       if (isEditMode && articleId) {
+        // Log to history if slug changed
+        const { data: currentArticle } = await supabase.from('articles').select('slug').eq('id', articleId).single();
+        if (currentArticle && currentArticle.slug !== finalSlug && currentArticle.slug) {
+          await supabase.from('article_slug_history').insert({ article_id: articleId, old_slug: currentArticle.slug });
+        }
+        
         const { error } = await supabase.from('articles').update(payload).eq('id', articleId);
         if (error) throw error;
         alert('기사가 성공적으로 수정되었습니다!');
@@ -246,6 +264,14 @@ function EditArticleForm() {
             value={formData.title} onChange={(e) => setFormData({...formData, title: e.target.value})}
             style={{ width: '100%', padding: '1rem 0', fontSize: '2.2rem', fontWeight: 800, border: 'none', borderBottom: '2px solid #eee', outline: 'none', fontFamily: '"Nanum Myeongjo", serif' }}
           />
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', background: '#f8f9fa', padding: '0.8rem', borderRadius: '6px' }}>
+            <span style={{ fontSize: '0.85rem', color: '#666', fontWeight: 'bold', whiteSpace: 'nowrap' }}>URL 슬러그 (선택)</span>
+            <input 
+              type="text" placeholder="입력하지 않으면 제목에서 자동 생성됩니다"
+              value={formData.slug} onChange={(e) => setFormData({...formData, slug: e.target.value})}
+              style={{ width: '100%', padding: '0.4rem 0.8rem', fontSize: '0.85rem', border: '1px solid #ddd', borderRadius: '4px', outline: 'none' }}
+            />
+          </div>
           <div className="quill-wrapper">
             <input 
               type="file" accept="image/*" id="body-image-upload" 

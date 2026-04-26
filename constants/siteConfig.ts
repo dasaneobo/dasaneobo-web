@@ -16,6 +16,16 @@ export const SITE_CONFIG = {
     accent: "#ACE1AF", // 청자색
   },
   
+  // UI 라벨 (영문 대문자 한글화)
+  labels: {
+    topNews: "주요 뉴스",
+    importantNews: "추천 기사",
+    community: "독자 참여",
+    subscription: "구독",
+    report: "제보",
+    ad: "광고",
+  },
+  
   // 지역 설정 (날씨 등)
   location: {
     city: "Gangjin",
@@ -35,11 +45,11 @@ export const SITE_CONFIG = {
     { label: '사회', href: '/society' },
     { label: '문화', href: '/culture' },
     { label: '칼럼', href: '/column' },
-    { label: '기획연재', href: '/region' },
-    { label: '포토', href: '/region' },
+    // { label: '기획연재', href: '/series', enabled: false }, // 콘텐츠 추가 시 활성화
+    // { label: '포토', href: '/photo', enabled: false },     // 콘텐츠 추가 시 활성화
     { label: '이용안내', href: '/guide' },
     { label: '기사제보', href: '/report', accent: true },
-  ] as { label: string; href: string; region?: boolean; accent?: boolean }[],
+  ] as { label: string; href: string; region?: boolean; accent?: boolean; enabled?: boolean }[],
   
   // 등록 상태
   isRegistered: false,

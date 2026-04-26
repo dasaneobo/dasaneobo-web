@@ -40,7 +40,6 @@ export default function ArticleCard({ article }: { article: Article }) {
           fontSize: '0.75rem',
           fontWeight: 700,
           color: 'var(--primary-dark)',
-          textTransform: 'uppercase',
           letterSpacing: '1px'
         }}>{article.category}</span>
         <h3 style={{ 

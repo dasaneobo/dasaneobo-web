@@ -5,6 +5,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { supabase } from '@/lib/supabase';
 import { Eye } from 'lucide-react';
+import { SITE_CONFIG } from '@/constants/siteConfig';
 
 /* =========================================
    BREAKING NEWS TICKER
@@ -112,7 +113,7 @@ function NoticeFounding() {
    LEFT SIDEBAR
    ========================================= */
 function LeftSidebar({ popularArticles, articles }: { popularArticles: any[]; articles: any[] }) {
-  const photoArticles = articles.filter((a) => a.image_url).slice(0, 3);
+  const photoArticles = articles.filter((a) => a.image_url && !a.image_url.includes('fallback')).slice(0, 4);
 
   return (
     <aside className="np-sidebar np-left-sidebar">
@@ -132,7 +133,7 @@ function LeftSidebar({ popularArticles, articles }: { popularArticles: any[]; ar
       </div>
 
         {/* 최신 포토 - 2 columns on mobile */}
-        {photoArticles.length > 0 && (
+        {photoArticles.length >= 4 && (
           <div className="np-sidebar-item">
             <SectionHeader title="포토 뉴스" />
             <div className="np-sidebar-photo-grid">
@@ -169,7 +170,7 @@ function CenterMain({ articles }: { articles: any[] }) {
       {/* TOP NEWS */}
       <div style={{ marginBottom: '1.8rem' }}>
         <div style={{ borderBottom: '3px solid #2E7D52', paddingBottom: '0.4rem', marginBottom: '1rem', display: 'flex', alignItems: 'center', gap: '0.8rem' }}>
-          <span style={{ background: '#2E7D52', color: '#fff', fontSize: '0.72rem', fontWeight: 900, padding: '0.2rem 0.7rem', letterSpacing: '1px' }}>TOP NEWS</span>
+          <span style={{ background: '#2E7D52', color: '#fff', fontSize: '0.72rem', fontWeight: 900, padding: '0.2rem 0.7rem', letterSpacing: '1px' }}>{SITE_CONFIG.labels.topNews}</span>
         </div>
         {topStory && (
           <Link href={`/article/${topStory.id}`} style={{ textDecoration: 'none', color: 'inherit' }}>
@@ -198,7 +199,7 @@ function CenterMain({ articles }: { articles: any[] }) {
       {/* IMPORTANT NEWS */}
       <div style={{ marginBottom: '1.8rem' }}>
         <div style={{ borderBottom: '2px solid #333', paddingBottom: '0.4rem', marginBottom: '1rem' }}>
-          <span style={{ fontSize: '0.72rem', fontWeight: 900, letterSpacing: '1px', background: '#333', color: '#fff', padding: '0.2rem 0.7rem' }}>IMPORTANT NEWS</span>
+          <span style={{ fontSize: '0.72rem', fontWeight: 900, letterSpacing: '1px', background: '#333', color: '#fff', padding: '0.2rem 0.7rem' }}>{SITE_CONFIG.labels.importantNews}</span>
         </div>
         <div style={{ display: 'flex', flexDirection: 'column', gap: '0.8rem' }}>
           {importantNews.map((art) => (
@@ -293,7 +294,7 @@ function RightSidebar({ farmPrices, sidebarAd }: { farmPrices: any[]; sidebarAd:
           {sidebarAd ? (
             <Link href={sidebarAd.link_url || "/ad-apply"} style={{ textDecoration: 'none', display: 'block' }}>
               <div style={{ background: '#fff', border: '1px solid #2E7D52', padding: '1rem 0.8rem', textAlign: 'center', borderRadius: '4px', height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
-                <div style={{ fontSize: '0.6rem', color: '#2E7D52', fontWeight: 700, marginBottom: '0.2rem' }}>AD</div>
+                <div style={{ fontSize: '0.6rem', color: '#2E7D52', fontWeight: 900, marginBottom: '0.2rem' }}>{SITE_CONFIG.labels.ad}</div>
                 <h5 style={{ margin: '0 0 0.8rem', fontSize: '0.85rem', fontWeight: 800, color: '#333' }}>{sidebarAd.title}</h5>
                 <div style={{ background: '#2E7D52', color: '#fff', padding: '0.5rem 0', borderRadius: '4px', fontSize: '0.75rem', fontWeight: 800 }}>보기</div>
               </div>
@@ -301,7 +302,7 @@ function RightSidebar({ farmPrices, sidebarAd }: { farmPrices: any[]; sidebarAd:
           ) : (
             <Link href="/ad-apply" style={{ textDecoration: 'none', display: 'block' }}>
               <div style={{ background: '#fff', border: '1px solid #2E7D52', padding: '1rem 0.8rem', textAlign: 'center', borderRadius: '4px', height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
-                <div style={{ fontSize: '0.6rem', color: '#2E7D52', fontWeight: 900, marginBottom: '0.2rem' }}>PARTNERSHIP</div>
+                <div style={{ fontSize: '0.6rem', color: '#2E7D52', fontWeight: 900, marginBottom: '0.2rem' }}>{SITE_CONFIG.labels.ad}</div>
                 <h5 style={{ margin: '0 0 0.8rem', fontSize: '0.85rem', fontWeight: 800, color: '#333' }}>광고 신청</h5>
                 <div style={{ background: '#2E7D52', color: '#fff', padding: '0.5rem 0', borderRadius: '4px', fontSize: '0.75rem', fontWeight: 800 }}>신청하기</div>
               </div>
@@ -313,7 +314,7 @@ function RightSidebar({ farmPrices, sidebarAd }: { farmPrices: any[]; sidebarAd:
         <div className="np-sidebar-item">
           <Link href="/reporter-apply" style={{ textDecoration: 'none', display: 'block' }}>
             <div style={{ background: '#fff', border: '1px solid #2E7D52', padding: '1rem 0.8rem', textAlign: 'center', borderRadius: '4px', height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
-              <div style={{ fontSize: '0.6rem', color: '#2E7D52', fontWeight: 700, marginBottom: '0.2rem' }}>COMMUNITY</div>
+              <div style={{ fontSize: '0.6rem', color: '#2E7D52', fontWeight: 700, marginBottom: '0.2rem' }}>{SITE_CONFIG.labels.community}</div>
               <h4 style={{ margin: '0 0 0.8rem', fontSize: '0.85rem', fontWeight: 800, color: '#333' }}>리포터 모집</h4>
               <div style={{ background: '#2E7D52', color: '#fff', padding: '0.5rem 0', borderRadius: '4px', fontSize: '0.75rem', fontWeight: 800 }}>신청하기</div>
             </div>
@@ -324,7 +325,7 @@ function RightSidebar({ farmPrices, sidebarAd }: { farmPrices: any[]; sidebarAd:
         <div className="np-sidebar-item">
           <Link href="/subscribe" style={{ textDecoration: 'none', display: 'block' }}>
             <div style={{ background: '#fff', border: '1px solid #2E7D52', padding: '1rem 0.8rem', textAlign: 'center', borderRadius: '4px', height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
-              <div style={{ fontSize: '0.6rem', color: '#2E7D52', fontWeight: 700, marginBottom: '0.2rem' }}>SUBSCRIPTION</div>
+              <div style={{ fontSize: '0.6rem', color: '#2E7D52', fontWeight: 700, marginBottom: '0.2rem' }}>{SITE_CONFIG.labels.subscription}</div>
               <h4 style={{ margin: '0 0 0.8rem', fontSize: '0.85rem', fontWeight: 800, color: '#333' }}>구독 신청</h4>
               <div style={{ background: '#2E7D52', color: '#fff', padding: '0.5rem 0', borderRadius: '4px', fontSize: '0.75rem', fontWeight: 800 }}>신청하기</div>
             </div>
@@ -335,7 +336,7 @@ function RightSidebar({ farmPrices, sidebarAd }: { farmPrices: any[]; sidebarAd:
         <div className="np-sidebar-item">
           <Link href="/report" style={{ textDecoration: 'none', display: 'block' }}>
             <div style={{ background: '#fff', border: '1px solid #2E7D52', padding: '1rem 0.8rem', textAlign: 'center', borderRadius: '4px', height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
-              <div style={{ fontSize: '0.6rem', color: '#2E7D52', fontWeight: 700, marginBottom: '0.2rem' }}>REPORT</div>
+              <div style={{ fontSize: '0.6rem', color: '#2E7D52', fontWeight: 700, marginBottom: '0.2rem' }}>{SITE_CONFIG.labels.report}</div>
               <h4 style={{ margin: '0 0 0.8rem', fontSize: '0.85rem', fontWeight: 800, color: '#333' }}>기사 제보</h4>
               <div style={{ background: '#2E7D52', color: '#fff', padding: '0.5rem 0', borderRadius: '4px', fontSize: '0.75rem', fontWeight: 800 }}>제보하기</div>
             </div>
@@ -386,34 +387,38 @@ function BottomSections({ articles }: { articles: any[] }) {
             </Link>
           )) : <p style={{ color: '#ccc', fontSize: '0.82rem' }}>등록된 칼럼이 없습니다.</p>}
         </div>
-        <div className="np-bottom-split-section">
-          <SectionHeader title="기획 · 연재" href="/region" />
-          {planned.length > 0 ? planned.map((art) => (
-            <Link key={art.id} href={`/article/${art.id}`} className="np-bottom-split-item">
-              <ArticleImg src={art.image_url} alt={art.title} width={70} height={52} />
-              <div>
-                <h5 style={{ margin: '0 0 0.2rem', fontSize: '0.85rem', fontWeight: 700, lineHeight: 1.35, wordBreak: 'keep-all' }}>{art.title}</h5>
-                <ArticleDate dateStr={art.created_at} viewCount={art.view_count} />
-              </div>
-            </Link>
-          )) : <p style={{ color: '#ccc', fontSize: '0.82rem' }}>등록된 기획기사가 없습니다.</p>}
-        </div>
+        {planned.length > 0 && (
+          <div className="np-bottom-split-section">
+            <SectionHeader title="기획 · 연재" href="/region" />
+            {planned.map((art) => (
+              <Link key={art.id} href={`/article/${art.id}`} className="np-bottom-split-item">
+                <ArticleImg src={art.image_url} alt={art.title} width={70} height={52} />
+                <div>
+                  <h5 style={{ margin: '0 0 0.2rem', fontSize: '0.85rem', fontWeight: 700, lineHeight: 1.35, wordBreak: 'keep-all' }}>{art.title}</h5>
+                  <ArticleDate dateStr={art.created_at} viewCount={art.view_count} />
+                </div>
+              </Link>
+            ))}
+          </div>
+        )}
       </div>
 
       {/* 포토뉴스 */}
-      <div className="np-bottom-photos">
-        <SectionHeader title="포토 뉴스" href="/region" />
-        <div className="np-bottom-photos-grid">
-          {photos.map((art) => (
-            <Link key={art.id} href={`/article/${art.id}`} className="np-bottom-photo-item">
-              <div className="np-bottom-photo-img-wrap">
-                <Image src={art.image_url} alt={art.title} fill style={{ objectFit: 'cover' }} />
-              </div>
-              <p className="np-bottom-photo-title">{art.title}</p>
-            </Link>
-          ))}
+      {photos.length >= 4 && (
+        <div className="np-bottom-photos">
+          <SectionHeader title="포토 뉴스" href="/region" />
+          <div className="np-bottom-photos-grid">
+            {photos.map((art) => (
+              <Link key={art.id} href={`/article/${art.id}`} className="np-bottom-photo-item">
+                <div className="np-bottom-photo-img-wrap">
+                  <Image src={art.image_url} alt={art.title} fill style={{ objectFit: 'cover' }} />
+                </div>
+                <p className="np-bottom-photo-title">{art.title}</p>
+              </Link>
+            ))}
+          </div>
         </div>
-      </div>
+      )}
     </div>
   );
 }
