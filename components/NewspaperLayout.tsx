@@ -117,10 +117,6 @@ export default async function NewspaperLayout({ title, type, value, page = 1 }: 
                   alt={featured.image_url ? featured.title : `${featured.title} - 다산어보`} 
                   fill 
                   style={{ objectFit: 'cover' }} 
-                  onError={(e) => { 
-                    (e.target as HTMLImageElement).src = '/fallback/article-default.svg'; 
-                    (e.target as HTMLImageElement).srcset = '';
-                  }}
                 />
               </div>
               <h3 style={{ fontSize: '2.2rem', fontWeight: 900, marginBottom: '1rem', lineHeight: 1.2, letterSpacing: '-1px' }}>{featured.title}</h3>
@@ -146,10 +142,6 @@ export default async function NewspaperLayout({ title, type, value, page = 1 }: 
                       alt={article.image_url ? article.title : `${article.title} - 다산어보`} 
                       fill 
                       style={{ objectFit: 'cover' }} 
-                      onError={(e) => { 
-                        (e.target as HTMLImageElement).src = '/fallback/article-default.svg'; 
-                        (e.target as HTMLImageElement).srcset = '';
-                      }}
                     />
                   </div>
                   <h4 style={{ fontSize: '1.3rem', fontWeight: 800, margin: 0, lineHeight: 1.3 }}>{article.title}</h4>
@@ -182,10 +174,6 @@ export default async function NewspaperLayout({ title, type, value, page = 1 }: 
                       alt={article.image_url ? article.title : `${article.title} - 다산어보`} 
                       fill 
                       style={{ objectFit: 'cover' }} 
-                      onError={(e) => { 
-                        (e.target as HTMLImageElement).src = '/fallback/article-default.svg'; 
-                        (e.target as HTMLImageElement).srcset = '';
-                      }}
                     />
                   </div>
                   <div style={{ marginBottom: '0.5rem' }}>
