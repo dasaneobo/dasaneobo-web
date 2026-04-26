@@ -57,9 +57,18 @@ export default function Footer() {
               <h4 className="np-footer-heading">연락처</h4>
               <ul className="np-footer-links">
                 <li>📍 {SITE_CONFIG.contact.address}</li>
-                <li>📞 {SITE_CONFIG.contact.phone}</li>
-                <li>📠 {SITE_CONFIG.contact.fax}</li>
-                <li>✉ {SITE_CONFIG.contact.email}</li>
+                {SITE_CONFIG.isRegistered && SITE_CONFIG.contact.phone ? (
+                  <>
+                    <li>📞 {SITE_CONFIG.contact.phone}</li>
+                    <li>📠 {SITE_CONFIG.contact.fax}</li>
+                    <li>✉ {SITE_CONFIG.contact.email}</li>
+                  </>
+                ) : (
+                  <>
+                    <li>📧 {SITE_CONFIG.contact.temporaryContact.email}</li>
+                    <li style={{ fontSize: '0.7rem', opacity: 0.7 }}>※ 정식 등록 후 대표전화 안내 예정</li>
+                  </>
+                )}
               </ul>
             </div>
           </div>
@@ -71,13 +80,17 @@ export default function Footer() {
         <div className="container">
           <div className="np-footer-legal-info">
             <p>
-              <strong>{SITE_CONFIG.name}</strong> · 등록번호: {SITE_CONFIG.contact.registrationNumber} · 등록일: {SITE_CONFIG.contact.registrationDate} · 
+              <strong>{SITE_CONFIG.name}</strong>
+              {SITE_CONFIG.isRegistered && ` · 등록번호: ${SITE_CONFIG.contact.registrationNumber} · 등록일: ${SITE_CONFIG.contact.registrationDate}`} · 
               발행인: {SITE_CONFIG.contact.publisher} · 편집인: {SITE_CONFIG.contact.editor} · 청소년보호책임자: {SITE_CONFIG.contact.youthProtector} · 
               법인명: {SITE_CONFIG.contact.corporation} · 제호: {SITE_CONFIG.name}
             </p>
             <p>
-              {SITE_CONFIG.contact.address} · 대표전화: {SITE_CONFIG.contact.phone} · 팩스: {SITE_CONFIG.contact.fax} · 
-              이메일: {SITE_CONFIG.contact.email}
+              {SITE_CONFIG.contact.address}
+              {SITE_CONFIG.isRegistered && SITE_CONFIG.contact.phone ? 
+                ` · 대표전화: ${SITE_CONFIG.contact.phone} · 팩스: ${SITE_CONFIG.contact.fax} · 이메일: ${SITE_CONFIG.contact.email}` : 
+                ` · 이메일: ${SITE_CONFIG.contact.temporaryContact.email}`
+              }
             </p>
             <p style={{ marginTop: '0.5rem', fontSize: '0.72rem', opacity: 0.7 }}>
               다산어보 모든 콘텐츠(영상, 기사, 사진)는 저작권법의 보호를 받는 바, 무단 전재와 복사, 배포 등을 금합니다.

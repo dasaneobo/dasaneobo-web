@@ -55,10 +55,19 @@ function ArticleDate({ dateStr, viewCount }: { dateStr: string, viewCount?: numb
 }
 
 function ArticleImg({ src, alt, width = 80, height = 60 }: { src: string; alt: string; width?: number; height?: number }) {
-  if (!src) return <div style={{ width, height, background: '#e8e8e8', flexShrink: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.6rem', color: '#bbb' }}>NO IMG</div>;
+  const imgSrc = src || '/fallback/article-default.svg';
   return (
     <div style={{ width, height, flexShrink: 0, position: 'relative', overflow: 'hidden' }}>
-      <Image src={src} alt={alt} fill style={{ objectFit: 'cover' }} />
+      <Image 
+        src={imgSrc} 
+        alt={src ? alt : `${alt} - 다산어보`} 
+        fill 
+        style={{ objectFit: 'cover' }} 
+        onError={(e) => { 
+          (e.target as HTMLImageElement).src = '/fallback/article-default.svg'; 
+          (e.target as HTMLImageElement).srcset = '';
+        }}
+      />
     </div>
   );
 }
@@ -164,11 +173,18 @@ function CenterMain({ articles }: { articles: any[] }) {
         </div>
         {topStory && (
           <Link href={`/article/${topStory.id}`} style={{ textDecoration: 'none', color: 'inherit' }}>
-            {topStory.image_url && (
-              <div style={{ width: '100%', aspectRatio: '16/7', position: 'relative', overflow: 'hidden', marginBottom: '1rem' }}>
-                <Image src={topStory.image_url} alt={topStory.title} fill style={{ objectFit: 'cover' }} />
-              </div>
-            )}
+            <div style={{ width: '100%', aspectRatio: '16/7', position: 'relative', overflow: 'hidden', marginBottom: '1rem' }}>
+              <Image 
+                src={topStory.image_url || '/fallback/article-default.svg'} 
+                alt={topStory.image_url ? topStory.title : `${topStory.title} - 다산어보`} 
+                fill 
+                style={{ objectFit: 'cover' }} 
+                onError={(e) => { 
+                  (e.target as HTMLImageElement).src = '/fallback/article-default.svg'; 
+                  (e.target as HTMLImageElement).srcset = '';
+                }}
+              />
+            </div>
             <span style={{ fontSize: '0.72rem', color: '#2E7D52', fontWeight: 700 }}>{topStory.category}</span>
             <h2 style={{ margin: '0.4rem 0 0.6rem', fontSize: '1.6rem', fontWeight: 900, fontFamily: 'Noto Serif KR, serif', lineHeight: 1.3, letterSpacing: '-0.5px', wordBreak: 'keep-all', color: '#111' }}>{topStory.title}</h2>
             <p style={{ margin: 0, fontSize: '0.88rem', color: '#555', lineHeight: 1.6, display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>

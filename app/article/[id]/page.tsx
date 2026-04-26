@@ -34,7 +34,7 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
     openGraph: {
       title: `${article.title} | ${SITE_CONFIG.name}`,
       description: contentSnippet,
-      images: article.image_url ? [{ url: article.image_url }] : [{ url: `${SITE_CONFIG.url}/og-image.png` }],
+      images: article.image_url ? [{ url: article.image_url }] : [{ url: `${SITE_CONFIG.url}/fallback/article-default.svg` }],
       url: url,
       type: 'article',
       publishedTime: article.created_at,
@@ -112,7 +112,7 @@ export default async function ArticlePage({ params }: { params: Promise<{ id: st
     '@context': 'https://schema.org',
     '@type': 'NewsArticle',
     headline: article.title,
-    image: article.image_url ? [article.image_url] : ['https://www.dasaneobo.kr/og-image.png'],
+    image: article.image_url ? [article.image_url] : [`${SITE_CONFIG.url}/fallback/article-default.svg`],
     datePublished: article.created_at,
     author: [{
       '@type': 'Person',

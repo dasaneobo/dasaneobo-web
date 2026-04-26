@@ -41,6 +41,9 @@ export const SITE_CONFIG = {
     { label: '기사제보', href: '/report', accent: true },
   ] as { label: string; href: string; region?: boolean; accent?: boolean }[],
   
+  // 등록 상태
+  isRegistered: false,
+  
   // 연락처 및 하단 정보
   contact: {
     publisher: "강상우",
@@ -53,6 +56,11 @@ export const SITE_CONFIG = {
     phone: "061-000-0000",
     fax: "061-000-0001",
     email: "editor@dasaneobo.kr",
+    temporaryContact: {
+      label: '연락처',
+      value: '대표 이메일로 문의 부탁드립니다',
+      email: 'editor@dasaneobo.kr',
+    },
   },
   url: "https://www.dasaneobo.kr"
 };

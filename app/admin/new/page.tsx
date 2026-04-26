@@ -294,7 +294,11 @@ function EditArticleForm() {
           </div>
 
           <div style={{ background: 'white', padding: '1.5rem', borderRadius: '12px', boxShadow: '0 4px 12px rgba(0,0,0,0.05)' }}>
-            <h4 style={{ marginBottom: '1.5rem', display: 'flex', alignItems: 'center', gap: '0.5rem', borderBottom: '1px solid #eee', paddingBottom: '0.5rem' }}><ImageIcon size={18} /> 이미지 업로드</h4>
+            <h4 style={{ marginBottom: '1.5rem', display: 'flex', alignItems: 'center', gap: '0.5rem', borderBottom: '1px solid #eee', paddingBottom: '0.5rem' }}><ImageIcon size={18} /> 썸네일 업로드</h4>
+            <div style={{ fontSize: '0.8rem', color: '#666', marginBottom: '1rem', lineHeight: '1.5', background: '#f8f9fa', padding: '0.8rem', borderRadius: '6px' }}>
+              썸네일이 없으면 다산어보 기본 이미지로 표시됩니다. 가급적 기사 내용을 잘 보여주는 사진(현장 사진, 인물 사진 등)을 첨부해 주세요. 공문 스캔이나 표 이미지는 피해주세요.<br/>
+              <strong>* 권장 비율:</strong> 1200×630 (웹 가로형)
+            </div>
             <input type="file" accept="image/*" onChange={handleImageUpload} disabled={uploading} style={{ display: 'none' }} id="image-upload" />
             <label htmlFor="image-upload" style={{ display: 'block', width: '100%', padding: '0.8rem', textAlign: 'center', background: uploading ? '#eee' : 'var(--primary)', color: '#fff', borderRadius: '8px', fontWeight: 'bold', cursor: 'pointer', marginBottom: '1rem' }}>
               {uploading ? '처리 중...' : '이미지 파일 선택'}

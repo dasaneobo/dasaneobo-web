@@ -24,25 +24,16 @@ export default function ArticleCard({ article }: { article: Article }) {
     }}
     >
       <div style={{ position: 'relative', height: '200px', width: '100%', background: '#f0f0f0' }}>
-        {article.image_url ? (
-          <Image 
-            src={article.image_url} 
-            alt={article.title} 
-            fill 
-            style={{ objectFit: 'cover' }}
-          />
-        ) : (
-          <div style={{
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            height: '100%',
-            color: '#ccc',
-            background: 'linear-gradient(45deg, var(--primary-light), #fff)'
-          }}>
-            이미지 없음
-          </div>
-        )}
+        <Image 
+          src={article.image_url || '/fallback/article-default.svg'} 
+          alt={article.image_url ? article.title : `${article.title} - 다산어보`} 
+          fill 
+          style={{ objectFit: 'cover' }}
+          onError={(e) => { 
+            (e.target as HTMLImageElement).src = '/fallback/article-default.svg'; 
+            (e.target as HTMLImageElement).srcset = '';
+          }}
+        />
       </div>
       <div style={{ padding: '1.2rem' }}>
         <span style={{

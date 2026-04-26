@@ -110,11 +110,18 @@ export default async function NewspaperLayout({ title, type, value, page = 1 }: 
           {/* Featured Article */}
           <Link href={`/article/${featured.id}`} style={{ textDecoration: 'none', color: 'inherit' }}>
             <div className="newspaper-featured" style={{ cursor: 'pointer' }}>
-              {featured.image_url && (
-                <div style={{ width: '100%', height: '400px', overflow: 'hidden', borderRadius: '4px', marginBottom: '1.5rem', position: 'relative' }}>
-                  <Image src={featured.image_url} alt={featured.title} fill style={{ objectFit: 'cover' }} />
-                </div>
-              )}
+              <div style={{ width: '100%', height: '400px', overflow: 'hidden', borderRadius: '4px', marginBottom: '1.5rem', position: 'relative' }}>
+                <Image 
+                  src={featured.image_url || '/fallback/article-default.svg'} 
+                  alt={featured.image_url ? featured.title : `${featured.title} - 다산어보`} 
+                  fill 
+                  style={{ objectFit: 'cover' }} 
+                  onError={(e) => { 
+                    (e.target as HTMLImageElement).src = '/fallback/article-default.svg'; 
+                    (e.target as HTMLImageElement).srcset = '';
+                  }}
+                />
+              </div>
               <h3 style={{ fontSize: '2.2rem', fontWeight: 900, marginBottom: '1rem', lineHeight: 1.2, letterSpacing: '-1px' }}>{featured.title}</h3>
               {featured.subtitle && <h4 style={{ fontSize: '1.2rem', color: '#555', marginBottom: '1rem', fontWeight: 700 }}>{featured.subtitle}</h4>}
               <p style={{ color: '#444', fontSize: '1.05rem', lineHeight: 1.6, marginBottom: '1.5rem', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
@@ -132,11 +139,18 @@ export default async function NewspaperLayout({ title, type, value, page = 1 }: 
             {secondary.map(article => (
               <Link key={article.id} href={`/article/${article.id}`} style={{ textDecoration: 'none', color: 'inherit' }}>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', borderBottom: '1px solid #eee', paddingBottom: '1.5rem', cursor: 'pointer' }}>
-                  {article.image_url && (
-                    <div style={{ width: '100%', height: '180px', overflow: 'hidden', borderRadius: '4px', position: 'relative' }}>
-                      <Image src={article.image_url} alt={article.title} fill style={{ objectFit: 'cover' }} />
-                    </div>
-                  )}
+                  <div style={{ width: '100%', height: '180px', overflow: 'hidden', borderRadius: '4px', position: 'relative' }}>
+                    <Image 
+                      src={article.image_url || '/fallback/article-default.svg'} 
+                      alt={article.image_url ? article.title : `${article.title} - 다산어보`} 
+                      fill 
+                      style={{ objectFit: 'cover' }} 
+                      onError={(e) => { 
+                        (e.target as HTMLImageElement).src = '/fallback/article-default.svg'; 
+                        (e.target as HTMLImageElement).srcset = '';
+                      }}
+                    />
+                  </div>
                   <h4 style={{ fontSize: '1.3rem', fontWeight: 800, margin: 0, lineHeight: 1.3 }}>{article.title}</h4>
                   <div style={{ fontSize: '0.85rem', color: '#999' }}>{new Date(article.created_at).toLocaleDateString()}</div>
                 </div>
@@ -162,11 +176,16 @@ export default async function NewspaperLayout({ title, type, value, page = 1 }: 
               <Link key={article.id} href={`/article/${article.id}`} style={{ textDecoration: 'none', color: 'inherit' }}>
                 <div style={{ cursor: 'pointer' }}>
                   <div style={{ width: '100%', height: '200px', overflow: 'hidden', borderRadius: '8px', background: '#f5f5f5', marginBottom: '1rem', position: 'relative' }}>
-                    {article.image_url ? (
-                      <Image src={article.image_url} alt={article.title} fill style={{ objectFit: 'cover' }} />
-                    ) : (
-                      <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#ccc' }}>이미지 없음</div>
-                    )}
+                    <Image 
+                      src={article.image_url || '/fallback/article-default.svg'} 
+                      alt={article.image_url ? article.title : `${article.title} - 다산어보`} 
+                      fill 
+                      style={{ objectFit: 'cover' }} 
+                      onError={(e) => { 
+                        (e.target as HTMLImageElement).src = '/fallback/article-default.svg'; 
+                        (e.target as HTMLImageElement).srcset = '';
+                      }}
+                    />
                   </div>
                   <div style={{ marginBottom: '0.5rem' }}>
                     <span style={{ fontSize: '0.7rem', fontWeight: 800, color: 'var(--primary-dark)', padding: '2px 8px', background: 'var(--primary-light)', borderRadius: '4px' }}>

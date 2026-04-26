@@ -50,7 +50,7 @@ function SearchResultsContent() {
             <Link key={article.id} href={`/article/${article.id}`} style={{ textDecoration: 'none', color: 'inherit' }}>
               <div style={{ 
                 display: 'grid', 
-                gridTemplateColumns: article.image_url ? '240px 1fr' : '1fr', 
+                gridTemplateColumns: '240px 1fr', 
                 gap: '2rem',
                 background: 'white',
                 padding: '1.5rem',
@@ -68,11 +68,17 @@ function SearchResultsContent() {
                 e.currentTarget.style.boxShadow = 'none';
               }}
               >
-                {article.image_url && (
-                  <div style={{ width: '100%', aspectRatio: '16/10', borderRadius: '8px', overflow: 'hidden' }}>
-                    <img src={article.image_url} style={{ width: '100%', height: '100%', objectFit: 'cover' }} alt="" />
-                  </div>
-                )}
+                <div style={{ width: '100%', aspectRatio: '16/10', borderRadius: '8px', overflow: 'hidden' }}>
+                  <img 
+                    src={article.image_url || '/fallback/article-default.svg'} 
+                    style={{ width: '100%', height: '100%', objectFit: 'cover' }} 
+                    alt="" 
+                    onError={(e) => { 
+                      (e.target as HTMLImageElement).src = '/fallback/article-default.svg'; 
+                      (e.target as HTMLImageElement).srcset = '';
+                    }}
+                  />
+                </div>
                 <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '0.8rem', marginBottom: '0.8rem' }}>
                     <span style={{ color: 'var(--primary-dark)', fontWeight: 'bold', fontSize: '0.85rem' }}>[{article.category}]</span>

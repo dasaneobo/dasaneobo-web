@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import emailjs from '@emailjs/browser';
 import Header from '@/components/Header';
+import { SITE_CONFIG } from '@/constants/siteConfig';
 
 // Constants - Use environment variables
 const EMAILJS_PUBLIC_KEY = process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY || '';
@@ -809,9 +810,10 @@ export default function SubscribePage() {
 
 
         <div className="footer-sub">
-          다산어보 언론협동조합 · 전라남도 강진군<br />
-          발행인: 강상우 · 편집인: 이득규 · 등록번호: 전남 다00000<br />
-          문의: dinoskorea@gmail.com
+          {SITE_CONFIG.contact.corporation} · {SITE_CONFIG.contact.address}<br />
+          발행인: {SITE_CONFIG.contact.publisher} · 편집인: {SITE_CONFIG.contact.editor}
+          {SITE_CONFIG.isRegistered && ` · 등록번호: ${SITE_CONFIG.contact.registrationNumber}`}<br />
+          문의: {SITE_CONFIG.contact.email}
         </div>
       </div>
     </main>

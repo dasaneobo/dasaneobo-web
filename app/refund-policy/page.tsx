@@ -49,7 +49,7 @@ export default function RefundPolicyPage() {
               3. 환불 신청 절차
             </h2>
             <ul style={{ paddingLeft: '1.5rem', marginBottom: '1rem' }}>
-              <li>환불 및 구독 해지 신청은 이메일 <strong>{SITE_CONFIG.contact.email}</strong> 또는 고객센터(<strong>{SITE_CONFIG.contact.phone}</strong>)로 접수해 주시기 바랍니다.</li>
+              <li>환불 및 구독 해지 신청은 고객센터(<strong>{SITE_CONFIG.isRegistered ? SITE_CONFIG.contact.phone : SITE_CONFIG.contact.temporaryContact.email}</strong>)로 접수해 주시기 바랍니다.</li>
               <li>신청 확인 후 영업일 기준 7일 이내에 지정하신 계좌로 환불 처리됩니다.</li>
             </ul>
           </section>
