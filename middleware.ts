@@ -31,6 +31,12 @@ export async function middleware(request: NextRequest) {
 
   const { data: { user } } = await supabase.auth.getUser()
 
+  // Catch Supabase fallback redirect to home page containing a code
+  if (request.nextUrl.pathname === '/' && request.nextUrl.searchParams.has('code')) {
+    const code = request.nextUrl.searchParams.get('code');
+    return NextResponse.redirect(new URL(`/auth/confirm?code=${code}`, request.url));
+  }
+
   // Redirect /admin/report to /report
   if (request.nextUrl.pathname === '/admin/report') {
     return NextResponse.redirect(new URL('/report', request.url))
