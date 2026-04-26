@@ -7,13 +7,11 @@ import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { supabase } from '@/lib/supabase';
 import dynamic from 'next/dynamic';
-import "@uiw/react-md-editor/markdown-editor.css";
-import "@uiw/react-markdown-preview/markdown.css";
+import { marked } from 'marked';
+import 'react-quill/dist/quill.snow.css';
 
-const MDEditor = dynamic(
-  () => import("@uiw/react-md-editor").then((mod) => {
-    return mod.default;
-  }),
+const ReactQuill = dynamic(
+  () => import("react-quill"),
   { ssr: false }
 );
 
@@ -66,9 +64,13 @@ function EditArticleForm() {
           .single();
         
         if (article) {
+          // If it looks like Markdown (doesn't start with <), convert it to HTML
+          const isMarkdown = !article.content.trim().startsWith('<');
+          const content = isMarkdown ? marked.parse(article.content) : article.content;
+          
           setFormData({
             title: article.title,
-            content: article.content,
+            content: content as string,
             image_url: article.image_url,
             category: article.category,
             region: article.region,
@@ -79,11 +81,12 @@ function EditArticleForm() {
         const { data: report } = await supabase.from('village_reports').select('*').eq('id', reportId).single();
         if (report) {
           const generatedContent = `**누가:** ${report.who}  \n**무엇을:** ${report.what}  \n**어디서:** ${report.where}  \n**언제:** ${report.when}  \n**어떻게:** ${report.how}  \n**왜:** ${report.why}  \n\n**추가 내용:** ${report.extra || ''}  \n\n*(제보자: ${report.sender_name} 리포터 / 제보 스타일: ${report.style})*`;
+          const htmlContent = marked.parse(generatedContent);
           setFormData(prev => ({ 
             ...prev, 
             author_id: session.user.id,
             title: `[제보 바탕] ${report.what}`,
-            content: generatedContent,
+            content: htmlContent as string,
             image_url: report.high_res_url || report.low_res_url || ''
           }));
         } else {
@@ -241,33 +244,27 @@ function EditArticleForm() {
             value={formData.title} onChange={(e) => setFormData({...formData, title: e.target.value})}
             style={{ width: '100%', padding: '1rem 0', fontSize: '2.2rem', fontWeight: 800, border: 'none', borderBottom: '2px solid #eee', outline: 'none', fontFamily: '"Nanum Myeongjo", serif' }}
           />
-          <div data-color-mode="light">
+          <div className="quill-wrapper">
             <input 
               type="file" accept="image/*" id="body-image-upload" 
               style={{ display: 'none' }} 
               onChange={handleBodyImageUpload} 
             />
-            <MDEditor
+            <ReactQuill
+              theme="snow"
               value={formData.content}
-              onChange={(val) => setFormData({ ...formData, content: val || '' })}
-              preview="edit"
-              height={600}
-              style={{ border: 'none' }}
-              extraCommands={[
-                {
-                  name: 'upload-image',
-                  keyCommand: 'upload-image',
-                  buttonProps: { 'aria-label': '이미지 업로드', title: '본문에 이미지 업로드 및 삽입' },
-                  icon: (
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '4px', color: 'var(--primary-dark)', fontWeight: 'bold', fontSize: '12px' }}>
-                      <ImageIcon size={14} /> {bodyUploading ? '업로드중...' : '사진추가'}
-                    </div>
-                  ),
-                  execute: () => {
-                    document.getElementById('body-image-upload')?.click();
-                  },
-                },
-              ]}
+              onChange={(val) => setFormData({ ...formData, content: val })}
+              style={{ height: '600px', marginBottom: '3rem' }}
+              modules={{
+                toolbar: [
+                  [{ 'header': [1, 2, 3, false] }],
+                  ['bold', 'italic', 'underline', 'strike'],
+                  [{'color': []}, {'background': []}],
+                  [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+                  ['link', 'image'],
+                  ['clean']
+                ],
+              }}
             />
           </div>
         </div>
