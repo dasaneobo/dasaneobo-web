@@ -47,7 +47,7 @@ export default function SignupPage() {
           email: email,
           name: name,
           recommender: recommender,
-          role: 'subscriber'
+          role: 'normal'
         }]);
       }
       alert('회원가입이 접수되었습니다! 입력하신 이메일로 발송된 인증 링크를 클릭하여 가입을 완료해 주세요.');

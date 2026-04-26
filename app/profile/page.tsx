@@ -74,7 +74,8 @@ export default function ProfilePage() {
   const roleLabel = userProfile.role === 'admin' ? '관리자' : 
                     userProfile.role === 'editor' ? '편집자' : 
                     userProfile.role === 'reporter' ? '리포터' : 
-                    userProfile.role === 'member' ? '조합원' : '구독자';
+                    userProfile.role === 'member' ? '조합원' : 
+                    userProfile.role === 'subscriber' ? '구독자' : '일반회원';
 
   return (
     <main style={{ minHeight: '100vh', background: '#f8fafc' }}>

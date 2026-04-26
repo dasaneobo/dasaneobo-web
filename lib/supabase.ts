@@ -28,7 +28,7 @@ export type Profile = {
   id: string;
   email: string;
   name: string;
-  role: 'admin' | 'editor' | 'reporter' | 'normal';
+  role: 'admin' | 'editor' | 'reporter' | 'member' | 'subscriber' | 'normal';
   recommender?: string;
   created_at?: string;
 };
