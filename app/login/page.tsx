@@ -1,17 +1,19 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, Suspense } from 'react';
 import { supabase } from '@/lib/supabase';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import Link from 'next/link';
 
-export default function LoginPage() {
+function LoginForm() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const isVerified = searchParams.get('verified') === 'true';
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -39,24 +41,23 @@ export default function LoginPage() {
   };
 
   return (
-    <main style={{ minHeight: '100vh', background: '#f5f7fa' }}>
-      <Header />
-      
-      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '70vh', padding: '2rem 0' }}>
-        <div style={{ 
-          background: 'white', 
-          padding: '3.5rem 3rem', 
-          borderRadius: '16px', 
-          width: '100%', 
-          maxWidth: '420px',
-          boxShadow: '0 10px 30px rgba(0,0,0,0.05)'
+    <>
+      {isVerified && (
+        <div style={{
+          background: '#f0faf5',
+          color: 'var(--primary-dark)',
+          padding: '1rem',
+          borderRadius: '8px',
+          marginBottom: '1.5rem',
+          border: '1px solid #ACE1AF',
+          textAlign: 'center',
+          fontSize: '0.9rem',
+          fontWeight: 700
         }}>
-          <div style={{ textAlign: 'center', marginBottom: '2.5rem' }}>
-            <h1 style={{ margin: '0 0 0.6rem', fontSize: '2rem', fontWeight: 900, color: '#2E7D52', fontFamily: 'Noto Serif KR, serif' }}>다산어보</h1>
-            <p style={{ color: '#888', fontSize: '0.9rem', fontWeight: 500 }}>로그인하여 지역 소식을 만나보세요.</p>
-          </div>
-
-          <form onSubmit={handleLogin} style={{ display: 'flex', flexDirection: 'column', gap: '1.2rem' }}>
+          이메일 인증이 완료되었습니다. 로그인해 주세요.
+        </div>
+      )}
+      <form onSubmit={handleLogin} style={{ display: 'flex', flexDirection: 'column', gap: '1.2rem' }}>
             <div>
               <label style={{ display: 'block', fontSize: '0.85rem', marginBottom: '0.5rem', fontWeight: 700, color: '#444' }}>이메일</label>
               <input 
@@ -109,6 +110,32 @@ export default function LoginPage() {
           <div style={{ textAlign: 'center', marginTop: '2.5rem', fontSize: '0.9rem', color: '#777', borderTop: '1px solid #eee', paddingTop: '2rem' }}>
             다산어보가 처음이신가요? <Link href="/signup" style={{ color: '#2E7D52', fontWeight: 800, textDecoration: 'none', marginLeft: '0.5rem' }}>회원가입</Link>
           </div>
+    </>
+  );
+}
+
+export default function LoginPage() {
+  return (
+    <main style={{ minHeight: '100vh', background: '#f5f7fa' }}>
+      <Header />
+      
+      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '70vh', padding: '2rem 0' }}>
+        <div style={{ 
+          background: 'white', 
+          padding: '3.5rem 3rem', 
+          borderRadius: '16px', 
+          width: '100%', 
+          maxWidth: '420px',
+          boxShadow: '0 10px 30px rgba(0,0,0,0.05)'
+        }}>
+          <div style={{ textAlign: 'center', marginBottom: '2.5rem' }}>
+            <h1 style={{ margin: '0 0 0.6rem', fontSize: '2rem', fontWeight: 900, color: '#2E7D52', fontFamily: 'Noto Serif KR, serif' }}>다산어보</h1>
+            <p style={{ color: '#888', fontSize: '0.9rem', fontWeight: 500 }}>로그인하여 지역 소식을 만나보세요.</p>
+          </div>
+
+          <Suspense fallback={<div style={{ textAlign: 'center', padding: '2rem' }}>로딩 중...</div>}>
+            <LoginForm />
+          </Suspense>
         </div>
       </div>
       <Footer />
