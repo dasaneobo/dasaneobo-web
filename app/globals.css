@@ -619,3 +619,10 @@ h1, h2, h3, h4, h5, h6 {
 
 
 
+
+.ethics-content section { margin-bottom: 4rem; }
+.ethics-content h2 { font-family: 'Noto Serif KR', serif; font-size: 1.6rem; font-weight: 800; color: #111; margin-bottom: 2rem; padding-bottom: 1rem; border-bottom: 2px solid #e2e8f0; }
+.article { margin-bottom: 2rem; padding-left: 1rem; }
+.article-title { display: block; font-weight: 800; color: #1e293b; margin-bottom: 0.6rem; font-size: 1.05rem; }
+.article p { margin: 0; color: #475569; line-height: 1.8; font-size: 1.05rem; }
+@media (max-width: 768px) { .ethics-content { padding: 2rem !important; } }

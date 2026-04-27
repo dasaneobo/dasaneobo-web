@@ -534,23 +534,74 @@ export default function AdminPage() {
             applications.length > 0 ? (
               applications.map(app => (
                 <div key={app.id} style={{ background: 'white', padding: '1.5rem', borderRadius: '12px', border: '1px solid #eee', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-                  <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                    <h3 style={{ margin: 0, fontSize: '1.2rem', fontWeight: 800 }}>{app.name} <span style={{ fontSize: '0.9rem', color: '#666', fontWeight: 400 }}>({app.birthdate})</span></h3>
-                    <span style={{ fontSize: '0.85rem', color: '#999' }}>{new Date(app.created_at).toLocaleString()}</span>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+                    <div>
+                      <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center', marginBottom: '0.4rem' }}>
+                        <span style={{ 
+                          padding: '4px 8px', borderRadius: '4px', fontSize: '0.75rem', fontWeight: 700,
+                          background: app.status === 'approved' ? '#dcfce7' : app.status === 'rejected' ? '#fee2e2' : '#fef3c7',
+                          color: app.status === 'approved' ? '#166534' : app.status === 'rejected' ? '#991b1b' : '#92400e'
+                        }}>
+                          {app.status === 'approved' ? '승인됨' : app.status === 'rejected' ? '반려됨' : '검토 대기'}
+                        </span>
+                        <span style={{ fontSize: '0.85rem', color: '#999' }}>{new Date(app.created_at).toLocaleString('ko-KR')}</span>
+                      </div>
+                      <h3 style={{ margin: 0, fontSize: '1.2rem', fontWeight: 800 }}>
+                        {app.name} <span style={{ fontSize: '0.9rem', color: '#666', fontWeight: 400 }}>({app.birthdate})</span>
+                      </h3>
+                    </div>
+                    <div style={{ display: 'flex', gap: '0.5rem' }}>
+                      <button 
+                        onClick={async () => {
+                          const { error } = await supabase.from('reporter_applications').update({ status: 'approved' }).eq('id', app.id);
+                          if (!error) { alert('승인되었습니다.'); window.location.reload(); }
+                        }}
+                        style={{ padding: '6px 12px', background: '#10b981', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer', fontSize: '0.8rem', fontWeight: 700 }}
+                      >승인</button>
+                      <button 
+                        onClick={async () => {
+                          const { error } = await supabase.from('reporter_applications').update({ status: 'rejected' }).eq('id', app.id);
+                          if (!error) { alert('반려 처리되었습니다.'); window.location.reload(); }
+                        }}
+                        style={{ padding: '6px 12px', background: '#64748b', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer', fontSize: '0.8rem', fontWeight: 700 }}
+                      >반려</button>
+                    </div>
                   </div>
-                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.5rem', fontSize: '0.9rem', color: '#444' }}>
+                  
+                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.8rem', fontSize: '0.9rem', color: '#444', background: '#f8fafc', padding: '1rem', borderRadius: '8px' }}>
+                    <div><strong>활동 지역:</strong> {app.region || '-'}</div>
+                    <div><strong>직업·소속:</strong> {app.occupation || '-'}</div>
                     <div><strong>연락처:</strong> {app.phone}</div>
                     <div><strong>이메일:</strong> {app.email}</div>
                     <div style={{ gridColumn: '1 / -1' }}><strong>주소:</strong> {app.address}</div>
+                    <div style={{ gridColumn: '1 / -1' }}>
+                      <strong>관심 분야:</strong> {app.interests ? app.interests.join(', ') : '-'}
+                    </div>
                   </div>
+
+                  {(app.guardian_name || app.guardian_contact) && (
+                    <div style={{ borderLeft: '3px solid #f59e0b', paddingLeft: '1rem', color: '#92400e', fontSize: '0.85rem' }}>
+                      <strong>미성년자 보호자 정보:</strong> {app.guardian_name} ({app.guardian_contact})
+                    </div>
+                  )}
+
                   {app.reason && (
-                    <div style={{ background: '#f8f9fa', padding: '1rem', borderRadius: '8px', fontSize: '0.9rem', color: '#333', lineHeight: '1.5', whiteSpace: 'pre-wrap' }}>
+                    <div style={{ background: '#f1f5f9', padding: '1rem', borderRadius: '8px', fontSize: '0.9rem', color: '#333', lineHeight: '1.5', whiteSpace: 'pre-wrap' }}>
                       <strong>신청 사유:</strong><br/>
                       {app.reason}
                     </div>
                   )}
-                  <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '0.5rem' }}>
-                    <button onClick={() => handleDeleteApplication(app.id)} style={{ background: 'none', border: '1px solid #ef4444', color: '#ef4444', padding: '0.4rem 1rem', borderRadius: '6px', cursor: 'pointer', fontSize: '0.85rem', fontWeight: 'bold' }}>삭제</button>
+
+                  <div style={{ fontSize: '0.8rem', color: '#64748b', display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
+                    <strong>동의 내역:</strong>
+                    <span>결격사유({app.agreement_eligibility?'O':'X'})</span>
+                    <span>자원봉사({app.agreement_volunteer?'O':'X'})</span>
+                    <span>윤리규정({app.agreement_ethics?'O':'X'})</span>
+                    <span>개인정보({app.agreement_privacy?'O':'X'})</span>
+                  </div>
+
+                  <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '0.5rem', borderTop: '1px solid #eee', paddingTop: '1rem' }}>
+                    <button onClick={() => handleDeleteApplication(app.id)} style={{ background: 'none', border: '1px solid #ef4444', color: '#ef4444', padding: '0.4rem 1rem', borderRadius: '6px', cursor: 'pointer', fontSize: '0.85rem', fontWeight: 'bold' }}>데이터 완전 삭제</button>
                   </div>
                 </div>
               ))
