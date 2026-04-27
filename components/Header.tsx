@@ -2,15 +2,17 @@
 
 import Link from 'next/link';
 import Image from 'next/image';
-import { Search, LogIn, UserPlus, BookOpen, FileText, LogOut } from 'lucide-react';
+import { Search, LogIn, UserPlus, BookOpen, FileText, LogOut, Menu, X } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { supabase } from '@/lib/supabase';
 import { useRouter, usePathname } from 'next/navigation';
 import { SITE_CONFIG } from '@/constants/siteConfig';
+import BannerAd from '@/components/ads/BannerAd';
 
 export default function Header() {
   const [userProfile, setUserProfile] = useState<any>(null);
   const [searchTerm, setSearchTerm] = useState('');
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const pathname = usePathname();
   const [currentDate, setCurrentDate] = useState('');
   const [weather, setWeather] = useState<{ temp: string; desc: string } | null>(null);
@@ -152,26 +154,20 @@ export default function Header() {
       <div className="np-logo-section">
         <div className="container np-logo-inner">
           <div className="np-logo-left">
-            <Link href="/ad-apply">
-              <div className="np-header-ad-container" style={{ position: 'relative', width: '100%', height: '100px', overflow: 'hidden', borderRadius: '4px', border: '1px solid #ddd' }}>
-                <Image 
-                  src="/ads/gold_fisher_v2.png" 
-                  alt="황금어장 광고" 
-                  fill
-                  style={{ objectFit: 'cover' }} 
-                  priority
-                />
-              </div>
+            <Link href="/" className="np-logo-link">
+              <h1 className="np-logo-title">{SITE_CONFIG.name}</h1>
+              <div className="np-logo-sub" style={{ whiteSpace: 'nowrap' }}>전남 강진·고흥·보성·장흥 4개 권역 밀착 보도</div>
             </Link>
           </div>
 
-          <Link href="/" className="np-logo-link">
-            <h1 className="np-logo-title">{SITE_CONFIG.name}</h1>
-            <div className="np-logo-sub" style={{ whiteSpace: 'nowrap' }}>{SITE_CONFIG.englishName} · {SITE_CONFIG.slogan}</div>
-          </Link>
+          <div className="np-mobile-hamburger desktop-hide">
+            <button onClick={() => setIsDrawerOpen(true)} className="np-hamburger-btn">
+              <Menu size={28} />
+            </button>
+          </div>
 
           <div className="np-logo-right">
-            <form onSubmit={handleSearch} className="np-search-form" style={{ marginRight: '1rem' }}>
+            <form onSubmit={handleSearch} className="np-search-form">
               <input
                 type="text"
                 placeholder="검색어 입력"
@@ -186,9 +182,6 @@ export default function Header() {
             <div className="np-logo-btns">
               <Link href="/subscribe" className="np-subscribe-btn">
                 구독 신청
-              </Link>
-              <Link href="/report" className="np-report-btn">
-                기사 제보
               </Link>
             </div>
           </div>
@@ -220,6 +213,43 @@ export default function Header() {
           </ul>
         </div>
       </nav>
+
+      {/* === MOBILE DRAWER === */}
+      {isDrawerOpen && (
+        <div className="np-mobile-drawer">
+          <div className="np-drawer-overlay" onClick={() => setIsDrawerOpen(false)} />
+          <div className="np-drawer-content">
+            <div className="np-drawer-header">
+              <Link href="/subscribe" className="np-subscribe-btn np-drawer-subscribe" onClick={() => setIsDrawerOpen(false)}>
+                구독 신청
+              </Link>
+              <button onClick={() => setIsDrawerOpen(false)} className="np-drawer-close">
+                <X size={24} />
+              </button>
+            </div>
+            <ul className="np-drawer-nav">
+              {navCategories.map((cat, idx) => (
+                <li key={idx} className="np-drawer-nav-item">
+                  <Link
+                    href={cat.href}
+                    className="np-drawer-link"
+                    onClick={() => setIsDrawerOpen(false)}
+                  >
+                    {cat.label}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
+      )}
+
+      <BannerAd 
+        slot="header-bottom"
+        src="/ads/gold_fisher_v2.png"
+        href="/ad-apply"
+        alt="광고: 황금어장"
+      />
 
       <style jsx>{`
         .np-header {
@@ -274,7 +304,7 @@ export default function Header() {
 
         /* === LOGO === */
         .np-logo-section {
-          padding: 1.2rem 0;
+          padding: 0.8rem 0;
           border-bottom: 1px solid #ddd;
         }
         .np-logo-inner {
@@ -285,8 +315,9 @@ export default function Header() {
         }
         .np-logo-link {
           text-decoration: none;
-          text-align: center;
+          text-align: left;
           flex-shrink: 0;
+          display: block;
         }
         .np-logo-title {
           font-family: 'Noto Serif KR', 'Nanum Myeongjo', 'KoPubWorldBatang', serif;
@@ -298,25 +329,22 @@ export default function Header() {
           margin: 0 0 0.3rem;
         }
         .np-logo-sub {
-          font-size: 0.6rem;
-          color: #888;
-          letter-spacing: 2px;
-          text-transform: uppercase;
+          font-size: 0.75rem;
+          color: #666;
+          letter-spacing: 0px;
+          font-weight: 600;
         }
 
-        /* Search */
+        /* Search & Right Area */
         .np-logo-left {
           display: block;
-          width: 460px;
+          flex: 1;
         }
-        .np-header-ad-container {
-          width: 100%;
-        }
-        @media (max-width: 1100px) {
-          .np-logo-left { width: 300px; }
-        }
-        @media (max-width: 1024px) {
-          .np-logo-left { width: 100%; max-width: 460px; }
+        .np-logo-right {
+          display: flex;
+          align-items: center;
+          gap: 1rem;
+          justify-content: flex-end;
         }
         .np-search-form {
           display: flex;
@@ -332,7 +360,7 @@ export default function Header() {
           padding: 0.45rem 0.7rem;
           font-size: 0.85rem;
           outline: none;
-          width: 160px;
+          width: 180px;
           font-family: inherit;
         }
         .np-search-btn {
@@ -344,48 +372,22 @@ export default function Header() {
           display: flex;
           align-items: center;
         }
-
-        /* Right area */
-        .np-logo-right {
-          display: flex;
-          align-items: center;
-          gap: 0.5rem;
-          min-width: 500px;
-          justify-content: flex-end;
-        }
         .np-logo-btns {
           display: flex;
-          flex-direction: column;
-          gap: 0.4rem;
+          align-items: center;
         }
         .np-subscribe-btn {
           background: #2E7D52;
           color: white;
           border: none;
-          padding: 0.4rem 1rem;
+          padding: 0.45rem 1.2rem;
           border-radius: 3px;
-          font-size: 0.8rem;
+          font-size: 0.85rem;
           font-weight: 700;
           text-decoration: none;
           cursor: pointer;
           font-family: inherit;
           text-align: center;
-          width: 100px;
-          display: block;
-        }
-        .np-report-btn {
-          background: white;
-          color: #2E7D52;
-          border: 1.5px solid #2E7D52;
-          padding: 0.35rem 1rem;
-          border-radius: 3px;
-          font-size: 0.8rem;
-          font-weight: 700;
-          text-decoration: none;
-          cursor: pointer;
-          font-family: inherit;
-          text-align: center;
-          width: 100px;
           display: block;
         }
 
@@ -451,24 +453,54 @@ export default function Header() {
         }
 
         /* === MOBILE === */
+        .desktop-hide { display: none; }
+        .np-mobile-hamburger { display: none; }
+        
+        .np-mobile-drawer { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 9999; display: flex; }
+        .np-drawer-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); }
+        .np-drawer-content { position: relative; width: 80%; max-width: 320px; height: 100%; background: #fff; display: flex; flex-direction: column; animation: slideIn 0.3s ease; }
+        .np-drawer-header { display: flex; justify-content: space-between; align-items: center; padding: 1rem; border-bottom: 1px solid #eee; }
+        .np-drawer-subscribe { width: auto; flex: 1; margin-right: 1rem; padding: 0.6rem; font-size: 0.9rem; }
+        .np-drawer-close { background: none; border: none; padding: 0.5rem; cursor: pointer; color: #333; }
+        .np-drawer-nav { list-style: none; padding: 0; margin: 0; overflow-y: auto; flex: 1; }
+        .np-drawer-nav-item { border-bottom: 1px solid #f5f5f5; }
+        .np-drawer-link { display: block; padding: 1rem; font-size: 1rem; font-weight: 700; color: #333; text-decoration: none; }
+        
+        @keyframes slideIn {
+          from { transform: translateX(-100%); }
+          to { transform: translateX(0); }
+        }
+
         @media (max-width: 768px) {
+          .desktop-hide { display: block; }
           .np-topbar { display: block; padding: 0.2rem 0; }
           .np-topbar-left { display: none; }
           .np-topbar-inner { justify-content: center; }
           .np-topbar-right { gap: 0.6rem; width: 100%; justify-content: center; }
-          .np-logo-title { font-size: 1.4rem; margin-bottom: 0.1rem; }
-          .np-logo-sub { font-size: 0.5rem; letter-spacing: 1px; }
-          .np-logo-inner { flex-direction: column; gap: 0.1rem !important; text-align: center; display: flex !important; }
-          .np-logo-link { order: 1; margin-bottom: 0.1rem; }
-          .np-logo-right { order: 2; flex-direction: row; min-width: unset !important; align-items: center; justify-content: center; gap: 0.3rem; margin-bottom: 0.2rem; }
-          .np-logo-left { display: none !important; }
-          .np-header-ad-container { display: none; }
-          .np-search-input { width: 90px; padding: 0.2rem 0.4rem; font-size: 0.7rem; }
-          .np-search-btn { padding: 0.2rem 0.4rem; }
-          .np-logo-btns { flex-direction: row; gap: 0.2rem; }
-          .np-subscribe-btn, .np-report-btn { width: 65px; padding: 0.25rem 0; font-size: 0.65rem; }
-          .np-logo-right a { width: auto; }
-          .np-logo-section { padding: 0.15rem 0 !important; border-bottom: none !important; }
+          
+          /* Header Layout: 1행(로고/햄버거), 2행(검색) */
+          .np-logo-section { padding: 0.5rem 0 !important; border-bottom: none !important; }
+          .np-logo-inner { 
+            display: grid !important; 
+            grid-template-columns: 1fr auto; 
+            grid-template-rows: auto auto; 
+            gap: 0.8rem 0.5rem !important; 
+            align-items: center;
+          }
+          .np-logo-left { grid-column: 1 / 2; grid-row: 1 / 2; width: 100%; display: flex; align-items: center; }
+          .np-logo-link { text-align: left; }
+          .np-logo-title { font-size: 1.8rem; margin-bottom: 0.1rem; text-align: left; }
+          .np-logo-sub { font-size: 0.55rem; letter-spacing: 0; text-align: left; }
+          
+          .np-mobile-hamburger { grid-column: 2 / 3; grid-row: 1 / 2; display: flex; align-items: center; justify-content: flex-end; }
+          .np-hamburger-btn { background: none; border: none; padding: 0.2rem; cursor: pointer; color: #2E7D52; display: flex; align-items: center; }
+          
+          .np-logo-right { grid-column: 1 / 3; grid-row: 2 / 3; width: 100%; justify-content: center; margin-bottom: 0.2rem; }
+          .np-search-form { width: 100%; max-width: none; justify-content: space-between; }
+          .np-search-input { width: 100%; padding: 0.4rem 0.6rem; font-size: 0.85rem; }
+          .np-search-btn { padding: 0.4rem 0.8rem; }
+          
+          .np-logo-btns { display: none; } /* Hide subscribe button on mobile header */
           .np-nav { border-top: 1.5px solid #2E7D52 !important; }
           .np-nav-link { padding: 0.45rem 0 !important; font-size: 0.72rem; }
           .np-nav-item { margin-left: 0.1rem; padding-left: 0.1rem; }
