@@ -501,7 +501,23 @@ export default function AdminPage() {
                        <div><strong>누가:</strong> {report.who}</div><div><strong>무엇을:</strong> {report.what}</div><div><strong>언제:</strong> {report.when}</div>
                        <div><strong>어디서:</strong> {report.where}</div><div><strong>어떻게:</strong> {report.how}</div><div><strong>왜:</strong> {report.why}</div>
                     </div>
-                    <div style={{ display: 'flex', gap: '0.5rem' }}>
+                    <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
+                       <button 
+                         onClick={async (e) => {
+                           const btn = e.currentTarget;
+                           const originalText = btn.innerText;
+                           const textToCopy = `[다산어보 마을 리포터 제보 내용]\n다음 내용을 바탕으로 인터넷 신문사 '다산어보'의 기사 초안을 작성해주세요. 문체는 객관적이고 신뢰감 있게 작성해주시고, 제보 형식을 고려하여 적절한 톤앤매너를 유지해주세요.\n\n- 제보 형식: ${report.style}\n- 지역: ${report.where}\n- 누가: ${report.who}\n- 언제: ${report.when}\n- 어디서: ${report.where}\n- 무엇을: ${report.what}\n- 어떻게: ${report.how}\n- 왜: ${report.why}\n- 상세 내용 및 전달 사항: \n${report.extra || '없음'}`;
+                           try {
+                             await navigator.clipboard.writeText(textToCopy);
+                             btn.innerText = '복사 완료!';
+                             btn.style.background = '#10b981';
+                             setTimeout(() => { btn.innerText = originalText; btn.style.background = '#3b82f6'; }, 2000);
+                           } catch(err) { alert('복사 실패'); }
+                         }}
+                         style={{ background: '#3b82f6', color: 'white', border: 'none', padding: '5px 12px', borderRadius: '4px', fontSize: '0.75rem', cursor: 'pointer', fontWeight: 'bold' }}
+                       >
+                         Claude로 복사
+                       </button>
                        <Link href={report.high_res_url || '#'} target="_blank"><button style={{ background: '#4285F4', color: 'white', border: 'none', padding: '5px 12px', borderRadius: '4px', fontSize: '0.75rem', cursor: 'pointer' }}>원본 드라이브</button></Link>
                        <Link href={`/admin/new?reportId=${report.id}`}><button style={{ background: '#333', color: 'white', border: 'none', padding: '5px 12px', borderRadius: '4px', fontSize: '0.75rem', cursor: 'pointer' }}>기사 변환</button></Link>
                        <button onClick={() => handleDeleteReport(report.id)} style={{ background: 'none', border: '1px solid #ef4444', color: '#ef4444', padding: '4px 12px', borderRadius: '4px', fontSize: '0.75rem', cursor: 'pointer' }}>제보 삭제</button>
