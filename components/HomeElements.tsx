@@ -230,9 +230,12 @@ export function InfographicDashboard({ settings }: { settings?: any }) {
                 );
               })}
             </div>
-            <div style={{ marginTop: '1.5rem', paddingTop: '1rem', borderTop: '1px solid #f1f5f9', fontSize: '0.65rem', color: '#94a3b8', lineHeight: '1.4' }}>
-              출처: KAMIS (농산물유통정보)<br />
-              광주 각화동 경락가 매일 09시 기준
+            <div style={{ marginTop: '1.5rem', paddingTop: '1rem', borderTop: '1px solid #f1f5f9', fontSize: '0.65rem', color: '#94a3b8', lineHeight: '1.4', display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end' }}>
+              <div>
+                출처: KAMIS (농산물유통정보)<br />
+                광주 기준 소매가 (09시 업데이트)
+              </div>
+              <a href="https://www.kamis.or.kr" target="_blank" rel="noopener noreferrer" style={{ color: 'var(--primary-dark)', textDecoration: 'none', fontWeight: 700, paddingBottom: '2px' }}>전체 품목 보기 →</a>
             </div>
           </div>
         </div>

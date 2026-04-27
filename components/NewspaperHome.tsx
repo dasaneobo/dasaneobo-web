@@ -283,7 +283,10 @@ function RightSidebar({ farmPrices, sidebarAd }: { farmPrices: any[]; sidebarAd:
             );
           })}
         </div>
-        <p style={{ fontSize: '0.6rem', color: '#bbb', marginTop: '0.4rem' }}>출처: KAMIS</p>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '0.8rem' }}>
+          <span style={{ fontSize: '0.6rem', color: '#bbb' }}>출처: KAMIS (농산물유통정보)</span>
+          <a href="https://www.kamis.or.kr" target="_blank" rel="noopener noreferrer" style={{ fontSize: '0.65rem', color: '#2E7D52', textDecoration: 'none', fontWeight: 700 }}>다른 품목 가격 확인 →</a>
+        </div>
       </div>
 
       <div className="np-sidebar-services-grid">
