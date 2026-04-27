@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono, Noto_Sans_KR, Noto_Serif_KR } from "next/font/google";
+import Script from "next/script";
 import "./globals.css";
 import { SITE_CONFIG } from "@/constants/siteConfig";
 
@@ -62,12 +63,32 @@ export default function RootLayout({
     logo: { '@type': 'ImageObject', url: `${SITE_CONFIG.url}/logo.png` },
   };
 
+  const GA_TRACKING_ID = process.env.NEXT_PUBLIC_GA_ID;
+
   return (
     <html lang="ko" className={`${geistSans.variable} ${geistMono.variable} ${notoSansKR.variable} ${notoSerifKR.variable}`}>
       <head>
         <link rel="alternate" type="application/rss+xml" title={`${SITE_CONFIG.name} RSS`} href="/feed.xml" />
       </head>
       <body>
+        {GA_TRACKING_ID && (
+          <>
+            <Script
+              src={`https://www.googletagmanager.com/gtag/js?id=${GA_TRACKING_ID}`}
+              strategy="afterInteractive"
+            />
+            <Script id="google-analytics" strategy="afterInteractive">
+              {`
+                window.dataLayer = window.dataLayer || [];
+                function gtag(){window.dataLayer.push(arguments);}
+                gtag('js', new Date());
+                gtag('config', '${GA_TRACKING_ID}', {
+                  page_path: window.location.pathname,
+                });
+              `}
+            </Script>
+          </>
+        )}
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
@@ -77,4 +98,3 @@ export default function RootLayout({
     </html>
   );
 }
-
