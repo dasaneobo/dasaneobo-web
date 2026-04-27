@@ -25,9 +25,9 @@ const TARGET_ITEMS = [
   { cat: '100', item: '111', name: '쌀', unit: '20kg' },
   { cat: '200', item: '211', name: '배추', unit: '1포기' },
   { cat: '200', item: '258', name: '마늘', unit: '1kg' },
-  { cat: '100', item: '143', name: '고구마', unit: '1kg' },
+  { cat: '100', item: '151', name: '고구마', unit: '1kg' },
   { cat: '200', item: '245', name: '양파', unit: '1kg' },
-  { cat: '100', item: '141', name: '감자', unit: '1kg' },
+  { cat: '100', item: '152', name: '감자', unit: '100g' },
 ];
 
 export async function GET(req: Request) {
@@ -48,7 +48,7 @@ export async function GET(req: Request) {
     
     for (const cat of categories) {
       // 최신 KAMIS Open API 규격으로 엔드포인트 변경
-      const url = `http://www.kamis.or.kr/service/price/xml.do?action=dailyPriceByCategoryList&p_cert_key=${apiKey}&p_cert_id=222&p_returntype=json&p_product_cls_code=02&p_item_category_code=${cat}&p_country_code=2100&p_regday=${today}&p_convert_kg_yn=N`;
+      const url = `http://www.kamis.or.kr/service/price/xml.do?action=dailyPriceByCategoryList&p_cert_key=${apiKey}&p_cert_id=222&p_returntype=json&p_product_cls_code=01&p_item_category_code=${cat}&p_country_code=2100&p_regday=${today}&p_convert_kg_yn=N`;
       
       const res = await fetch(url);
       const data = await res.json();
