@@ -47,26 +47,42 @@ export async function GET(req: Request) {
     const categories = ['100', '200'];
     
     for (const cat of categories) {
-      const url = `https://apis.data.go.kr/B552895/openapi/service/priceSvc/getDailyPriceByCategoryList?serviceKey=${apiKey}&p_cert_key=111&p_cert_id=222&p_returntype=json&p_product_cls_code=02&p_item_category_code=${cat}&p_country_code=2100&p_regday=${today}&p_convert_kg_yn=N`;
+      // 최신 KAMIS Open API 규격으로 엔드포인트 변경
+      const url = `http://www.kamis.or.kr/service/price/xml.do?action=dailyPriceByCategoryList&p_cert_key=${apiKey}&p_cert_id=222&p_returntype=json&p_product_cls_code=02&p_item_category_code=${cat}&p_country_code=2100&p_regday=${today}&p_convert_kg_yn=N`;
       
       const res = await fetch(url);
       const data = await res.json();
       
-      if (data.data && data.data.item) {
+      // KAMIS API는 data 속성 안에 내부 data 속성 없이 바로 데이터 객체를 반환할 수 있으므로 구조 점검
+      // JSON 구조: { condition: [...], data: { item: [...] } } 또는 data 자체가 에러이거나 배열
+      if (data && data.data && data.data.item) {
         const items = Array.isArray(data.data.item) ? data.data.item : [data.data.item];
         
         // Filter for 광주 각화동 (Gwangju Gakhwa market often has name '각화' or '광주각화')
         // We'll filter items belonging to target list
         items.forEach((item: any) => {
           const target = TARGET_ITEMS.find(t => t.cat === cat && t.item === item.item_code);
-          if (target && (item.county_name?.includes('광주') || item.market_name?.includes('각화'))) {
-            results.push({
+          if (target) {
+            
+            const currentPriceStr = item.dpr1?.replace(/,/g, '') || '0'; // 당일 가격
+            const prevPriceStr = item.dpr2?.replace(/,/g, '') || '0';    // 1일전 가격
+            
+            const currentPrice = currentPriceStr === '-' ? 0 : parseInt(currentPriceStr);
+            const prevPrice = prevPriceStr === '-' ? 0 : parseInt(prevPriceStr);
+            const diff = currentPrice > 0 && prevPrice > 0 ? currentPrice - prevPrice : 0;
+
+            const newItem = {
               item_name: target.name,
-              price: item.dpr1?.replace(/,/g, '') || '0',
-              diff: item.dpr2?.replace(/,/g, '') || '0', // dpr2 is often the change
+              price: currentPrice.toString(),
+              diff: diff.toString(),
               unit: target.unit,
               updated_at: new Date().toISOString()
-            });
+            };
+            
+            // 중복 품목(상품/중품 등) 방지: 첫 번째 값(주로 상품)만 유지
+            if (!results.find(r => r.item_name === target.name)) {
+              results.push(newItem);
+            }
           }
         });
       }
