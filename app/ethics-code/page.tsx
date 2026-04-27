@@ -183,7 +183,7 @@ export default function EthicsCodePage() {
             </div>
             <div className="article">
               <span className="article-title">제30조 (고충 처리)</span>
-              <p>독자·시민의 고충은 press@dasaneobo.kr로 접수받아 14일 이내 답변한다.</p>
+              <p>독자·시민의 고충은 editor@dasaneobo.kr로 접수받아 14일 이내 답변한다.</p>
             </div>
             <div className="article">
               <span className="article-title">제31조 (취재원 보호)</span>
@@ -241,7 +241,7 @@ export default function EthicsCodePage() {
           <p style={{ margin: 0 }}>2026년 4월 30일 제정</p>
           <p style={{ margin: 0, fontWeight: 700, color: '#1e293b' }}>다산어보 언론협동조합</p>
           <p style={{ margin: 0 }}>편집국장 이득규 / 이사장 강상우</p>
-          <p style={{ margin: 0 }}>press@dasaneobo.kr</p>
+          <p style={{ margin: 0 }}>editor@dasaneobo.kr</p>
         </div>
 
       </div>

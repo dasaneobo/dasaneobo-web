@@ -134,7 +134,7 @@ export default function ReporterApplyPage() {
       // 2. Send Email Notification via EmailJS
       if (process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID) {
         const templateParams = {
-          to_email: 'press@dasaneobo.kr',
+          to_email: 'editor@dasaneobo.kr',
           subject: `[다산어보] 새 마을 리포터 신청이 접수되었습니다 — ${formData.name}`,
           name: formData.name,
           region: formData.region,

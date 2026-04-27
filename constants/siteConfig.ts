@@ -65,11 +65,11 @@ export const SITE_CONFIG = {
     address: "전라남도 강진군",
     phone: "061-000-0000",
     fax: "061-000-0001",
-    email: "press@dasaneobo.kr",
+    email: "editor@dasaneobo.kr",
     temporaryContact: {
       label: '연락처',
       value: '대표 이메일로 문의 부탁드립니다',
-      email: 'press@dasaneobo.kr',
+      email: 'editor@dasaneobo.kr',
     },
   },
   url: "https://www.dasaneobo.kr"
