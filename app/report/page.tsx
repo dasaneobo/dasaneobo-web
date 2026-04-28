@@ -237,7 +237,6 @@ function ReportContent() {
                 </button>
               </form>
             )}
-            <p style={{ fontSize: '0.85rem', color: '#64748b', marginTop: '1rem', marginBottom: 0 }}>※ 등록하지 않은 익명/일반 제보자는 이 과정을 건너뛰고 바로 아래 폼을 작성하시면 됩니다.</p>
           </div>
         ) : (
           <div style={{ background: '#1F5946', color: 'white', padding: '1.5rem 2rem', borderRadius: '16px', marginBottom: '2rem', display: 'flex', alignItems: 'center', gap: '1rem' }}>
