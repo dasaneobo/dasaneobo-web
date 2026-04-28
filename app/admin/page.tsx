@@ -460,6 +460,12 @@ export default function AdminPage() {
                   <div style={{ flex: 1 }}>
                     <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center', marginBottom: '0.5rem' }}>
                        {article.is_top && <span style={{ background: '#ef4444', color: 'white', padding: '2px 8px', borderRadius: '4px', fontSize: '0.7rem', fontWeight: 'bold' }}>메인 1면 톱</span>}
+                       {article.is_featured && (article.pin_until === null || new Date(article.pin_until) > new Date()) && (
+                         <span style={{ display: 'inline-flex', alignItems: 'center', gap: '0.4rem', background: '#ecfdf5', color: '#059669', padding: '2px 8px', borderRadius: '4px', fontSize: '0.7rem', fontWeight: 'bold' }}>
+                           <span style={{ width: '4px', height: '4px', borderRadius: '50%', background: '#059669' }} />
+                           초점 픽 {article.pin_until ? `· ${Math.ceil((new Date(article.pin_until).getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24))}일 남음` : '· 영구'}
+                         </span>
+                       )}
                        <span style={{ color: 'var(--primary-dark)', fontSize: '0.8rem', fontWeight: 'bold' }}>[{article.category}]</span>
                     </div>
                     <h4 style={{ margin: 0, fontSize: '1.1rem', fontWeight: 700 }}>{article.title}</h4>

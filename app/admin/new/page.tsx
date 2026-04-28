@@ -9,6 +9,8 @@ import { supabase } from '@/lib/supabase';
 import { marked } from 'marked';
 import RichTextEditor from '@/components/RichTextEditor';
 import { generateSlug } from '@/lib/utils/slugify';
+import FeaturedPickSection from '@/components/admin/articles/FeaturedPickSection';
+import { getActivePick } from '@/lib/queries/getActivePick';
 
 
 
@@ -30,8 +32,11 @@ function EditArticleForm() {
     image_url: '',
     category: '사회',
     region: '강진',
-    author_id: ''
+    author_id: '',
+    is_featured: false,
+    pin_until: null as string | null
   });
+  const [activePick, setActivePick] = useState<{ id: string; title: string; pin_until: string | null } | null>(null);
   const [authors, setAuthors] = useState<any[]>([]);
   const [bodyUploading, setBodyUploading] = useState(false);
   const [authLoading, setAuthLoading] = useState(true);
@@ -75,7 +80,9 @@ function EditArticleForm() {
             image_url: article.image_url || '',
             category: article.category || '사회',
             region: article.region || '강진',
-            author_id: article.author_id || ''
+            author_id: article.author_id || '',
+            is_featured: article.is_featured || false,
+            pin_until: article.pin_until || null
           });
         }
       } else if (reportId) {
@@ -106,6 +113,13 @@ function EditArticleForm() {
           .in('role', ['admin', 'editor', 'reporter', 'member'])
           .order('name');
         if (allProfiles) setAuthors(allProfiles);
+
+        try {
+          const pick = await getActivePick();
+          if (pick) setActivePick(pick);
+        } catch (err) {
+          console.error("Active pick fetch error (might be missing column)", err);
+        }
       }
       setAuthLoading(false);
     };
@@ -228,6 +242,18 @@ function EditArticleForm() {
         finalSlug = `${finalSlug}-${Math.random().toString(36).substring(2, 6)}`;
       }
 
+      // Validate pick date
+      if (formData.is_featured && formData.pin_until) {
+        const pinDate = new Date(formData.pin_until);
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+        if (pinDate < today) {
+          alert("만료일은 오늘 이후여야 합니다.");
+          setLoading(false);
+          return;
+        }
+      }
+
       const payload = { 
         title: formData.title,
         slug: finalSlug,
@@ -235,7 +261,9 @@ function EditArticleForm() {
         image_url: formData.image_url,
         category: formData.category,
         region: formData.region,
-        author_id: formData.author_id
+        author_id: formData.author_id,
+        is_featured: formData.is_featured,
+        pin_until: formData.is_featured ? formData.pin_until : null
       };
 
       if (isEditMode && articleId) {
@@ -256,7 +284,11 @@ function EditArticleForm() {
       }
       router.push('/admin');
     } catch (err: any) {
-      alert('오류 발생: ' + err?.message);
+      if (err?.message?.includes('is_featured')) {
+        alert('DB 에러: is_featured 컬럼이 아직 추가되지 않았습니다. Supabase SQL 에디터에서 마이그레이션을 먼저 실행해주세요!');
+      } else {
+        alert('오류 발생: ' + err?.message);
+      }
     } finally {
       setLoading(false);
     }
@@ -369,6 +401,23 @@ function EditArticleForm() {
               {formData.image_url ? <img src={formData.image_url} alt="Preview" style={{ width: '100%', height: '100%', objectFit: 'cover' }} /> : <span style={{ color: '#999', fontSize: '0.8rem' }}>이미지를 선택해 주세요.</span>}
             </div>
           </div>
+
+          {(userProfile?.role === 'admin' || userProfile?.role === 'editor') && (
+            <FeaturedPickSection
+              article={{
+                id: articleId || undefined,
+                title: formData.title,
+                image_url: formData.image_url,
+                category: formData.category,
+                author_id: formData.author_id,
+                created_at: new Date().toISOString()
+              }}
+              activePick={activePick?.id !== articleId ? activePick : null}
+              value={{ is_featured: formData.is_featured, pin_until: formData.pin_until }}
+              onChange={({ is_featured, pin_until }) => setFormData({ ...formData, is_featured, pin_until })}
+            />
+          )}
+
         </div>
       </div>
     </div>
