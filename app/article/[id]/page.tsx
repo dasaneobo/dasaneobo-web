@@ -140,7 +140,7 @@ export default async function ArticlePage({ params }: { params: Promise<{ id: st
     .from('articles')
     .select('id, title, created_at, category, slug')
     .eq('status', 'published')
-    .neq('id', id) // current article excluded
+    .neq('id', article.id) // current article excluded
     .order('created_at', { ascending: false })
     .limit(5);
 

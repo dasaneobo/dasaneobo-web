@@ -281,40 +281,69 @@ export default function AdminPage() {
 
   const handleReject = async (id: string) => {
     if (!confirm('삭제하시겠습니까?')) return;
-    const { error } = await supabase.from('articles').delete().eq('id', id);
-    if (!error) await fetchArticles();
+    try {
+      const res = await fetch('/api/admin/delete', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ table: 'articles', id })
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error);
+      setStatusMsg({ text: '삭제되었습니다.', type: 'success' });
+      await fetchArticles();
+    } catch (err: any) {
+      setStatusMsg({ text: '삭제 실패: ' + err.message, type: 'error' });
+    }
   };
 
   const handleDeleteReport = async (id: string) => {
     if (!confirm('제보를 삭제하시겠습니까?')) return;
-    const { error } = await supabase.from('village_reports').delete().eq('id', id);
-    if (error) {
-      setStatusMsg({ text: '제보 삭제 실패: ' + error.message, type: 'error' });
-    } else {
+    try {
+      const res = await fetch('/api/admin/delete', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ table: 'village_reports', id })
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error);
       setStatusMsg({ text: '제보가 삭제되었습니다.', type: 'success' });
       await fetchArticles();
+    } catch (err: any) {
+      setStatusMsg({ text: '제보 삭제 실패: ' + err.message, type: 'error' });
     }
   };
 
   const handleDeleteApplication = async (id: string) => {
     if (!confirm('해당 신청 내역을 삭제하시겠습니까?')) return;
-    const { error } = await supabase.from('reporter_applications').delete().eq('id', id);
-    if (error) {
-      setStatusMsg({ text: '삭제 실패: ' + error.message, type: 'error' });
-    } else {
+    try {
+      const res = await fetch('/api/admin/delete', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ table: 'reporter_applications', id })
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error);
       setStatusMsg({ text: '신청 내역이 삭제되었습니다.', type: 'success' });
       await fetchArticles();
+    } catch (err: any) {
+      setStatusMsg({ text: '삭제 실패: ' + err.message, type: 'error' });
     }
   };
 
   const handleDeleteAdApplication = async (id: string) => {
     if (!confirm('해당 광고 신청 내역을 삭제하시겠습니까?')) return;
-    const { error } = await supabase.from('ad_applications').delete().eq('id', id);
-    if (error) {
-      setStatusMsg({ text: '삭제 실패: ' + error.message, type: 'error' });
-    } else {
+    try {
+      const res = await fetch('/api/admin/delete', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ table: 'ad_applications', id })
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error);
       setStatusMsg({ text: '광고 신청 내역이 삭제되었습니다.', type: 'success' });
       await fetchArticles();
+    } catch (err: any) {
+      setStatusMsg({ text: '삭제 실패: ' + err.message, type: 'error' });
     }
   };
 
