@@ -3,7 +3,7 @@ import Footer from '@/components/Footer';
 
 export const metadata = {
   title: '편집윤리규정 | 다산어보 언론협동조합',
-  description: '다산어보 언론협동조합의 편집윤리규정. 독립 협동조합 언론의 정신을 지키기 위한 7개 장 36개 조의 편집·취재·보도 윤리 원칙.',
+  description: '다산어보 언론협동조합의 편집윤리규정. 본 강령 및 제1차 보강을 포함한 통합본.',
 };
 
 export default function EthicsCodePage() {
@@ -16,7 +16,7 @@ export default function EthicsCodePage() {
         <div style={{ textAlign: 'center', marginBottom: '4rem' }}>
           <h2 style={{ fontSize: '1.2rem', color: '#2E7D52', fontWeight: 800, marginBottom: '0.5rem' }}>다산어보 언론협동조합</h2>
           <h1 style={{ fontSize: '3rem', fontWeight: 900, color: '#111', margin: '0 0 1rem', fontFamily: '"Nanum Myeongjo", serif', letterSpacing: '-1px' }}>편집윤리규정</h1>
-          <p style={{ color: '#64748b', fontSize: '1rem' }}>2026년 4월 30일 시행</p>
+          <p style={{ color: '#64748b', fontSize: '1rem' }}>2026년 4월 30일 시행 (제1차 보강 포함)</p>
         </div>
 
         {/* Intro Box */}
@@ -61,6 +61,12 @@ export default function EthicsCodePage() {
               <span className="article-title">제3조 (기본 정신)</span>
               <p>사실 우선, 약자·소수자 우선, 독립, 균형, 지역성, 협동조합의 6대 원칙을 준수한다.</p>
             </div>
+            <div className="article">
+              <span className="article-title">제4조 (본 규정의 공개와 위상) <span className="amend-marker">〈신설 2026.4.30.〉</span></span>
+              <p>① 본 규정은 다산어보 사이트에 상시 공개하며, 모든 조합원·구성원이 접근할 수 있도록 한다.<br/>
+              ② 본 규정은 본 조합의 편집·보도와 관련된 다른 내부 규정·관행에 우선한다.<br/>
+              ③ 매년 1회 부칙 제4조에 따라 적용 사례를 점검하고 사이트에 공개한다.</p>
+            </div>
           </section>
 
           <section id="chap2">
@@ -80,6 +86,12 @@ export default function EthicsCodePage() {
             <div className="article">
               <span className="article-title">제8조 (이해관계 회피)</span>
               <p>본인·가족·소속 단체의 이해관계가 걸린 사안의 보도를 회피한다.</p>
+            </div>
+            <div className="article">
+              <span className="article-title">제8조의2 (협동조합 매체의 자기 보도) <span className="amend-marker">〈신설 2026.4.30.〉</span></span>
+              <p>① 본 조합·조합원·임원의 사업과 활동에 관한 보도는 일반 보도와 동일한 기준으로 다룬다.<br/>
+              ② 본 조합의 운영 관련 보도(총회·이사회 결정·재정 등) 시 본 조합의 이해관계를 본문 또는 말미에 명시한다.<br/>
+              ③ 조합원이 보도 대상이 되는 사안은 제8조 (이해관계 회피)에 따라 처리한다.</p>
             </div>
             <div className="article">
               <span className="article-title">제9조 (정치 활동 제한)</span>
@@ -102,8 +114,20 @@ export default function EthicsCodePage() {
               <p>갈등·분쟁 사안은 모든 당사자의 입장을 동등하게 듣는다.</p>
             </div>
             <div className="article">
+              <span className="article-title">제12조의2 (익명 취재원 사용) <span className="amend-marker">〈신설 2026.4.30.〉</span></span>
+              <p>① 취재원의 실명 공개가 신변·생계·가족에 위협이 될 우려가 있을 때에 한해 익명으로 보도한다.<br/>
+              ② 익명 취재원의 단독 발언은 보도하지 않으며, 둘 이상의 독립된 취재원으로 교차 확인한다.<br/>
+              ③ 익명 보도는 편집국장의 사전 승인을 받는다.</p>
+            </div>
+            <div className="article">
               <span className="article-title">제13조 (약자·소수자 우선)</span>
               <p>노인·아동·장애인·여성·이주민·빈곤층 등 사회적 약자의 목소리를 우선한다.</p>
+            </div>
+            <div className="article">
+              <span className="article-title">제13조의2 (지역성) <span className="amend-marker">〈신설 2026.4.30.〉</span></span>
+              <p>① 강진·고흥·보성·장흥 4개 군의 시각에서 지역의 이슈를 우선 보도한다.<br/>
+              ② 외부 매체의 보도를 인용할 때에는 지역의 맥락에서 다시 해석한다.<br/>
+              ③ 특정 지역에 대한 부정적 일반화·고정관념을 사용하지 않는다.</p>
             </div>
             <div className="article">
               <span className="article-title">제14조 (혐오 표현 금지)</span>
@@ -120,6 +144,13 @@ export default function EthicsCodePage() {
             <div className="article">
               <span className="article-title">제17조 (선거 보도)</span>
               <p>모든 후보자에게 기회를 균등하게 제공하고, 특정 후보를 지지·반대하지 않는다.</p>
+            </div>
+            <div className="article">
+              <span className="article-title">제17조의2 (사진·영상의 진실성) <span className="amend-marker">〈신설 2026.4.30.〉</span></span>
+              <p>① 보도용 사진과 영상은 촬영 시점과 장소의 사실을 그대로 담는다. 디지털 합성·변조·연출은 하지 않으며, 부득이한 재구성은 그 사실을 명확히 표시한다.<br/>
+              ② 자료 사진은 「자료 사진」으로 표기하고 촬영 시점을 함께 적는다.<br/>
+              ③ 군중·범죄 현장·피해자가 식별되는 얼굴은 본인 동의가 없는 한 모자이크 처리한다.<br/>
+              ④ 외부에서 받은 사진과 영상은 출처와 촬영자를 본문에 명시한다.</p>
             </div>
           </section>
 
@@ -144,6 +175,19 @@ export default function EthicsCodePage() {
             <div className="article">
               <span className="article-title">제22조 (저작권)</span>
               <p>타인 저작권을 존중하며, 출처 명시와 공정 이용 범위를 지킨다.</p>
+            </div>
+            <div className="article">
+              <span className="article-title">제22조의2 (제보 기반 보도) <span className="amend-marker">〈신설 2026.4.30.〉</span></span>
+              <p>① 편집국은 마을 리포터와 일반 시민의 제보를 사실 확인 후 기사로 작성한다. 둘 이상의 독립된 자료·증언으로 교차 검증한 경우에 한해 발행한다.<br/>
+              ② 제보자가 제공한 사진·영상은 출처와 진위를 검증한 뒤 사용한다. 본 강령 제17조의2를 함께 따른다.<br/>
+              ③ 제보 내용에 기초한 보도의 모든 법적 책임은 편집국이 진다. 다만 제보자가 의도적으로 허위 사실을 제공한 사실이 입증된 경우에는 책임 분담을 재검토한다.</p>
+            </div>
+            <div className="article">
+              <span className="article-title">제22조의3 (생성형 인공지능 활용) <span className="amend-marker">〈신설 2026.4.30.〉</span></span>
+              <p>① 생성형 인공지능(이하 「AI」)을 기사 작성·번역·요약·교정에 보조적으로 활용할 수 있다. 최종 사실 확인과 모든 책임은 편집국 구성원에게 있다.<br/>
+              ② AI가 생성한 이미지·영상·음성은 보도 자료로 사용하지 않는다. 명백히 「AI 생성」으로 표기하는 시각화는 예외로 한다.<br/>
+              ③ AI가 본문 작성에 핵심적으로 사용된 기사는 그 사실을 본문 말미에 명시한다.<br/>
+              ④ 취재원의 발언과 인용을 AI로 재구성하거나 변형하지 않는다.</p>
             </div>
           </section>
 
@@ -229,22 +273,155 @@ export default function EthicsCodePage() {
               <span className="article-title">제3조 (윤리위원회 구성 시점)</span>
               <p>조합원 10인 이상 또는 설립등기 후 6개월 시점 중 빠른 시점에 구성. 그 이전에는 편집국장이 잠정 행사.</p>
             </div>
-            <div className="article" style={{ marginBottom: 0 }}>
+            <div className="article" style={{ marginBottom: '1rem' }}>
               <span className="article-title">제4조 (적용 사례 축적)</span>
               <p>적용 사례를 매년 사이트에 공개.</p>
             </div>
+            <div className="article" style={{ marginBottom: 0 }}>
+              <span className="article-title">제5조 (제1차 보강 시행일) <span className="amend-marker">〈신설 2026.4.30.〉</span></span>
+              <p>본 규정 제1차 보강 (제4조, 제8조의2, 제12조의2, 제13조의2, 제17조의2, 제22조의2, 제22조의3 신설)은 본 규정과 함께 2026년 4월 30일 시행한다.</p>
+            </div>
           </section>
+
+          {/* Appendix Section */}
+          <section id="appendix" style={{ marginTop: '4rem', borderTop: '2px dashed #e2e8f0', paddingTop: '3rem' }}>
+            <h2 style={{ fontSize: '1.4rem', fontWeight: 800, marginBottom: '1.5rem', color: '#1e293b' }}>부록 · 신설 조항 vs 6대 원칙 매핑</h2>
+            <p style={{ color: '#475569', marginBottom: '1.5rem' }}>본 통합본은 제3조의 6대 원칙을 모두 본문 조항에 매핑한다.</p>
+            
+            <div style={{ overflowX: 'auto', marginBottom: '3rem' }}>
+              <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', minWidth: '600px' }}>
+                <thead>
+                  <tr style={{ background: '#f1f5f9', borderBottom: '2px solid #cbd5e1' }}>
+                    <th style={{ padding: '1rem', color: '#334155', fontWeight: 700, width: '25%' }}>원칙</th>
+                    <th style={{ padding: '1rem', color: '#334155', fontWeight: 700, width: '35%' }}>본문 조항</th>
+                    <th style={{ padding: '1rem', color: '#334155', fontWeight: 700, width: '40%' }}>비고</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr style={{ borderBottom: '1px solid #e2e8f0' }}>
+                    <td style={{ padding: '1rem', color: '#475569' }}>사실 우선</td>
+                    <td style={{ padding: '1rem', color: '#475569' }}>제10조, 제11조</td>
+                    <td style={{ padding: '1rem', color: '#475569' }}></td>
+                  </tr>
+                  <tr style={{ borderBottom: '1px solid #e2e8f0' }}>
+                    <td style={{ padding: '1rem', color: '#475569' }}>약자·소수자 우선</td>
+                    <td style={{ padding: '1rem', color: '#475569' }}>제13조, 제14조, 제16조</td>
+                    <td style={{ padding: '1rem', color: '#475569' }}></td>
+                  </tr>
+                  <tr style={{ borderBottom: '1px solid #e2e8f0' }}>
+                    <td style={{ padding: '1rem', color: '#475569' }}>독립</td>
+                    <td style={{ padding: '1rem', color: '#475569' }}>제2장 전체 + 제8조의2</td>
+                    <td style={{ padding: '1rem', color: '#475569' }}>협동조합 자기 보도 (신설)</td>
+                  </tr>
+                  <tr style={{ borderBottom: '1px solid #e2e8f0' }}>
+                    <td style={{ padding: '1rem', color: '#475569' }}>균형</td>
+                    <td style={{ padding: '1rem', color: '#475569' }}>제12조, 제17조 + 제12조의2</td>
+                    <td style={{ padding: '1rem', color: '#475569' }}>익명 보도 사용 조건 (신설)</td>
+                  </tr>
+                  <tr style={{ borderBottom: '1px solid #e2e8f0' }}>
+                    <td style={{ padding: '1rem', color: '#1e293b', fontWeight: 700 }}>지역성</td>
+                    <td style={{ padding: '1rem', color: '#1e293b', fontWeight: 700 }}>제13조의2</td>
+                    <td style={{ padding: '1rem', color: '#1e293b', fontWeight: 700 }}>신설 — 본 강령에 없던 정체성 명시</td>
+                  </tr>
+                  <tr style={{ borderBottom: '1px solid #e2e8f0' }}>
+                    <td style={{ padding: '1rem', color: '#1e293b', fontWeight: 700 }}>협동조합</td>
+                    <td style={{ padding: '1rem', color: '#475569' }}>제27조 + 제8조의2</td>
+                    <td style={{ padding: '1rem', color: '#475569' }}>잉여금 + 자기 보도 (강화)</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <h2 style={{ fontSize: '1.4rem', fontWeight: 800, marginBottom: '1.5rem', color: '#1e293b' }}>부록 · 신설 조항 상호 참조</h2>
+            <p style={{ color: '#475569', marginBottom: '1.5rem', lineHeight: '1.6' }}>
+              본 강령 내부 일관성을 위해 세 군데 cross-reference를 박았다:
+            </p>
+
+            <div style={{ overflowX: 'auto', marginBottom: '1rem' }}>
+              <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', minWidth: '600px' }}>
+                <thead>
+                  <tr style={{ background: '#f1f5f9', borderBottom: '2px solid #cbd5e1' }}>
+                    <th style={{ padding: '1rem', color: '#334155', fontWeight: 700, width: '20%' }}>조항</th>
+                    <th style={{ padding: '1rem', color: '#334155', fontWeight: 700, width: '40%' }}>참조</th>
+                    <th style={{ padding: '1rem', color: '#334155', fontWeight: 700, width: '40%' }}>의미</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr style={{ borderBottom: '1px solid #e2e8f0' }}>
+                    <td style={{ padding: '1rem', color: '#475569', fontWeight: 600 }}>제4조 ③</td>
+                    <td style={{ padding: '1rem', color: '#475569' }}>부칙 제4조</td>
+                    <td style={{ padding: '1rem', color: '#475569' }}>적용 사례 매년 공개</td>
+                  </tr>
+                  <tr style={{ borderBottom: '1px solid #e2e8f0' }}>
+                    <td style={{ padding: '1rem', color: '#475569', fontWeight: 600 }}>제8조의2 ③</td>
+                    <td style={{ padding: '1rem', color: '#475569' }}>제8조 (이해관계 회피)</td>
+                    <td style={{ padding: '1rem', color: '#475569' }}>조합원 보도 처리 절차</td>
+                  </tr>
+                  <tr style={{ borderBottom: '1px solid #e2e8f0' }}>
+                    <td style={{ padding: '1rem', color: '#475569', fontWeight: 600 }}>제22조의2 ②</td>
+                    <td style={{ padding: '1rem', color: '#475569' }}>제17조의2 (사진·영상의 진실성)</td>
+                    <td style={{ padding: '1rem', color: '#475569' }}>제보 사진 검증 기준</td>
+                  </tr>
+                  <tr style={{ borderBottom: '1px solid #e2e8f0' }}>
+                    <td style={{ padding: '1rem', color: '#475569', fontWeight: 600 }}>부칙 제5조</td>
+                    <td style={{ padding: '1rem', color: '#475569' }}>본문 7개 신설 조항</td>
+                    <td style={{ padding: '1rem', color: '#475569' }}>보강 시행일 명시</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            
+            <p style={{ color: '#475569', fontSize: '0.95rem', lineHeight: '1.6', background: '#f8fafc', padding: '1rem', borderRadius: '8px' }}>
+              이 cross-reference로 한 조항만 떼어 보는 사례를 줄이고, 분쟁 발생 시 관련 조항이 자동으로 함께 적용된다.
+            </p>
+          </section>
+
         </div>
 
         {/* Footer Info */}
         <div style={{ marginTop: '3rem', textAlign: 'right', color: '#64748b', fontSize: '0.95rem', lineHeight: '1.8' }}>
-          <p style={{ margin: 0 }}>2026년 4월 30일 제정</p>
+          <p style={{ margin: 0 }}>2026년 4월 30일 제정 (제1차 보강 포함)</p>
           <p style={{ margin: 0, fontWeight: 700, color: '#1e293b' }}>다산어보 언론협동조합</p>
           <p style={{ margin: 0 }}>편집국장 이득규 / 이사장 강상우</p>
           <p style={{ margin: 0 }}>editor@dasaneobo.kr</p>
         </div>
 
       </div>
+
+      <style dangerouslySetInnerHTML={{__html: `
+        .ethics-content h2 {
+          font-size: 1.5rem;
+          color: #1e293b;
+          margin: 0 0 1.5rem;
+          padding-bottom: 0.5rem;
+          border-bottom: 2px solid #e2e8f0;
+          font-family: 'Nanum Myeongjo', serif;
+        }
+        .ethics-content section {
+          margin-bottom: 4rem;
+        }
+        .ethics-content .article {
+          margin-bottom: 1.5rem;
+        }
+        .ethics-content .article-title {
+          display: block;
+          font-weight: 800;
+          color: #334155;
+          margin-bottom: 0.5rem;
+          font-size: 1.05rem;
+        }
+        .ethics-content p {
+          margin: 0;
+          color: #475569;
+          line-height: 1.6;
+        }
+        .amend-marker {
+          font-size: 0.75em;
+          color: #1F5946;
+          font-weight: 400;
+          margin-left: 6px;
+        }
+      `}} />
 
       <Footer />
 
