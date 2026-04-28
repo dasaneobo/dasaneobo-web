@@ -114,7 +114,8 @@ function NoticeFounding() {
    LEFT SIDEBAR
    ========================================= */
 function LeftSidebar({ popularArticles, articles }: { popularArticles: any[]; articles: any[] }) {
-  const photoArticles = articles.filter((a) => a.image_url && !a.image_url.includes('fallback')).slice(0, 4);
+  // Only show articles that are likely to have a real photo (have image_url and not fallback)
+  const photoArticles = articles.filter((a) => a.image_url && !a.image_url.includes('fallback') && !a.image_url.includes('default')).slice(0, 4);
 
   return (
     <aside className="np-sidebar np-left-sidebar">
@@ -134,14 +135,16 @@ function LeftSidebar({ popularArticles, articles }: { popularArticles: any[]; ar
       </div>
 
         {/* 최신 포토 - 2 columns on mobile */}
-        {photoArticles.length >= 4 && (
+        {photoArticles.length >= 2 && (
           <div className="np-sidebar-item">
             <SectionHeader title="포토 뉴스" />
             <div className="np-sidebar-photo-grid">
               {photoArticles.map((art) => (
                 <Link key={art.id} href={`/article/${art.slug ?? art.id}`} style={{ textDecoration: 'none', color: 'inherit' }}>
-                  <div style={{ position: 'relative', width: '100%', aspectRatio: '3/2', overflow: 'hidden', marginBottom: '0.3rem' }}>
-                    <Image src={art.image_url} alt={art.title} fill style={{ objectFit: 'cover' }} />
+                  <div style={{ position: 'relative', width: '100%', aspectRatio: '3/2', overflow: 'hidden', marginBottom: '0.3rem', background: '#f5f5f5' }}>
+                    <Image src={art.image_url} alt={art.title} fill style={{ objectFit: 'cover' }}
+                      onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
+                    />
                   </div>
                   <p style={{ margin: 0, fontSize: '0.72rem', fontWeight: 600, color: '#333', lineHeight: 1.3, display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>{art.title}</p>
                 </Link>
@@ -388,15 +391,17 @@ function BottomSections({ articles }: { articles: any[] }) {
         )}
       </div>
 
-      {/* 포토뉴스 */}
-      {photos.length >= 4 && (
+      {/* 포토뉴스: 이미지 있는 기사만, 2개 이상일 때 노출 */}
+      {photos.filter(a => !a.image_url.includes('fallback') && !a.image_url.includes('default')).length >= 2 && (
         <div className="np-bottom-photos">
           <SectionHeader title="포토 뉴스" href="/region" />
           <div className="np-bottom-photos-grid">
-            {photos.map((art) => (
+            {photos.filter(a => !a.image_url.includes('fallback') && !a.image_url.includes('default')).map((art) => (
               <Link key={art.id} href={`/article/${art.slug ?? art.id}`} className="np-bottom-photo-item">
-                <div className="np-bottom-photo-img-wrap">
-                  <Image src={art.image_url} alt={art.title} fill style={{ objectFit: 'cover' }} />
+                <div className="np-bottom-photo-img-wrap" style={{ background: '#f5f5f5' }}>
+                  <Image src={art.image_url} alt={art.title} fill style={{ objectFit: 'cover' }}
+                    onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
+                  />
                 </div>
                 <p className="np-bottom-photo-title">{art.title}</p>
               </Link>
@@ -418,10 +423,11 @@ export function NewspaperMain({ articles, popularArticles, farmPrices, sidebarAd
       <div className="np-three-col">
         {/* Mobile order: Center(1) -> Left(2) -> Right(3) */}
         <div className="np-col-center">
-          <div className="mobile-gold-ad">
-            <Link href="/ad-apply">
-              <div style={{ position: 'relative', width: '100%', aspectRatio: '460/100', overflow: 'hidden', borderRadius: '4px', border: '1px solid #ddd' }}>
-                <Image src="/ads/gold_fisher_v2.png" alt="황금어장 광고" fill style={{ objectFit: 'cover' }} />
+          <div className="mobile-gold-ad" style={{ position: 'relative', marginBottom: '0.8rem' }}>
+            <div style={{ position: 'absolute', top: '6px', left: '6px', fontSize: '11px', color: '#78716c', fontWeight: 500, zIndex: 10 }}>광고</div>
+            <Link href="/ad-apply" target="_blank" rel="noopener sponsored">
+              <div style={{ position: 'relative', width: '100%', height: '80px', overflow: 'hidden', borderRadius: '4px', border: '1px solid #e7e5e4', background: '#fafaf9' }}>
+                <Image src="/ads/gold_fisher_v2.png" alt="광고: 황금어장" fill style={{ objectFit: 'contain' }} />
               </div>
             </Link>
           </div>
