@@ -207,38 +207,8 @@ function ReportContent() {
           </div>
         )}
 
-        {/* Auth Section */}
-        {!reporter ? (
-          <div style={{ background: 'white', padding: '2rem', borderRadius: '16px', boxShadow: '0 4px 6px -1px rgba(0,0,0,0.05)', marginBottom: '2rem', border: '1px solid #e2e8f0' }}>
-            <h3 style={{ fontSize: '1.2rem', fontWeight: 800, color: '#0f172a', marginBottom: '1rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-              <Key size={20} color="#1F5946" /> 마을 리포터 로그인 (선택)
-            </h3>
-            {magicSent ? (
-              <div style={{ background: '#f8fafc', padding: '1.5rem', borderRadius: '8px', textAlign: 'center', color: '#334155' }}>
-                <p style={{ fontWeight: 700, marginBottom: '0.5rem' }}>이메일이 발송되었습니다.</p>
-                <p style={{ fontSize: '0.9rem', margin: 0 }}>메일함의 링크를 클릭하시면 본인 정보가 자동으로 입력됩니다.</p>
-              </div>
-            ) : (
-              <form onSubmit={handleSendMagicLink} style={{ display: 'flex', gap: '1rem' }}>
-                <input 
-                  type="email" 
-                  required 
-                  value={magicEmail} 
-                  onChange={e => setMagicEmail(e.target.value)} 
-                  placeholder="등록하신 이메일 주소" 
-                  style={{ flex: 1, padding: '1rem', borderRadius: '8px', border: '1px solid #cbd5e1' }} 
-                />
-                <button 
-                  type="submit" 
-                  disabled={magicSending}
-                  style={{ padding: '0 2rem', background: '#334155', color: 'white', border: 'none', borderRadius: '8px', fontWeight: 700, cursor: magicSending ? 'not-allowed' : 'pointer' }}
-                >
-                  {magicSending ? '발송 중...' : '인증 링크 받기'}
-                </button>
-              </form>
-            )}
-          </div>
-        ) : (
+        {/* Auth Section (Only shown if logged in via email link) */}
+        {reporter && (
           <div style={{ background: '#1F5946', color: 'white', padding: '1.5rem 2rem', borderRadius: '16px', marginBottom: '2rem', display: 'flex', alignItems: 'center', gap: '1rem' }}>
             <CheckCircle size={24} color="#a7f3d0" />
             <div>
