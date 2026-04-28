@@ -355,7 +355,10 @@ function BottomSections({ articles }: { articles: any[] }) {
         <div className="np-bottom-latest-grid">
           {latest.map((art) => (
             <Link key={art.id} href={`/article/${art.slug ?? art.id}`} className="np-bottom-latest-item">
-              <span className="np-bottom-latest-title">{art.title}</span>
+              <div style={{ display: 'flex', gap: '0.6rem', alignItems: 'flex-start', flex: 1 }}>
+                <CategoryBadge category={art.category} />
+                <span className="np-bottom-latest-title">{art.title}</span>
+              </div>
               <ArticleDate dateStr={art.created_at} viewCount={art.view_count} />
             </Link>
           ))}
@@ -403,6 +406,9 @@ function BottomSections({ articles }: { articles: any[] }) {
                   <Image src={art.image_url} alt={art.title} fill style={{ objectFit: 'cover' }}
                     onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
                   />
+                </div>
+                <div style={{ marginBottom: '0.4rem' }}>
+                  <CategoryBadge category={art.category} />
                 </div>
                 <p className="np-bottom-photo-title">{art.title}</p>
               </Link>
