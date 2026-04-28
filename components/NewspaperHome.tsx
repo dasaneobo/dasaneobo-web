@@ -423,14 +423,7 @@ export function NewspaperMain({ articles, popularArticles, farmPrices, sidebarAd
       <div className="np-three-col">
         {/* Mobile order: Center(1) -> Left(2) -> Right(3) */}
         <div className="np-col-center">
-          <div className="mobile-gold-ad" style={{ position: 'relative', marginBottom: '0.8rem' }}>
-            <div style={{ position: 'absolute', top: '6px', left: '6px', fontSize: '11px', color: '#78716c', fontWeight: 500, zIndex: 10 }}>광고</div>
-            <Link href="/ad-apply" target="_blank" rel="noopener sponsored">
-              <div style={{ position: 'relative', width: '100%', height: '80px', overflow: 'hidden', borderRadius: '4px', border: '1px solid #e7e5e4', background: '#fafaf9' }}>
-                <Image src="/ads/gold_fisher_v2.png" alt="광고: 황금어장" fill style={{ objectFit: 'contain' }} />
-              </div>
-            </Link>
-          </div>
+          {/* 모바일 띠배너 슬롯 — 새 이미지 업로드 후 복원 예정 */}
           <CenterMain articles={articles} />
         </div>
         

@@ -244,12 +244,14 @@ export default function Header() {
         </div>
       )}
 
+      {/* 띠배너 광고 슬롯 — 새 이미지 업로드 후 BannerAd 복원 예정
       <BannerAd
         slot="header-bottom"
-        fallbackSrc="/ads/gold_fisher_v2.png"
+        fallbackSrc="/ads/banner_leaderboard.png"
         href="/ad-apply"
-        alt="광고: 황금어장"
+        alt="광고"
       />
+      */}
 
       <style jsx>{`
         .np-header {
