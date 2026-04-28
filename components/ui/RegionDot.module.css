@@ -1,0 +1,48 @@
+/* 4대 권역 컬러팔레트 토큰 */
+.gangjin_accent   { background-color: #5C7B8A; }
+.gangjin_border   { border-color: #5C7B8A; }
+.gangjin_text     { color: #2E4A5C; }
+.gangjin_bg       { background-color: #E8EEEF; }
+
+.goheung_accent   { background-color: #C68B1F; }
+.goheung_border   { border-color: #C68B1F; }
+.goheung_text     { color: #7A4F0C; }
+.goheung_bg       { background-color: #FBF1DC; }
+
+.boseong_accent   { background-color: #7A9460; }
+.boseong_border   { border-color: #7A9460; }
+.boseong_text     { color: #4A5B30; }
+.boseong_bg       { background-color: #ECF0E2; }
+
+.jangheung_accent { background-color: #A85432; }
+.jangheung_border { border-color: #A85432; }
+.jangheung_text   { color: #6B3422; }
+.jangheung_bg     { background-color: #F5E5DD; }
+
+.fallback_accent  { background-color: #9CA3AF; } /* gray-400 */
+.fallback_border  { border-color: #9CA3AF; }
+.fallback_text    { color: #374151; }
+
+/* 공통 클래스 */
+.container {
+  display: inline-flex;
+  align-items: center;
+}
+
+.dot {
+  border-radius: 9999px;
+  flex-shrink: 0;
+}
+
+/* 크기별 스타일 */
+.size_sm_gap { gap: 6px; }
+.size_sm_dot { width: 8px; height: 8px; }
+.size_sm_label { font-size: 12px; }
+
+.size_md_gap { gap: 8px; }
+.size_md_dot { width: 10px; height: 10px; }
+.size_md_label { font-size: 14px; }
+
+.size_lg_gap { gap: 10px; }
+.size_lg_dot { width: 12px; height: 12px; }
+.size_lg_label { font-size: 18px; font-weight: 500; }

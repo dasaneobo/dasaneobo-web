@@ -5,6 +5,9 @@ import { Clock, User as UserIcon, Calendar, ArrowRight } from 'lucide-react';
 import CategoryBadge from '@/components/ui/CategoryBadge';
 import { getCategoryMeta } from '@/lib/categoryMeta';
 import badgeStyles from '@/components/ui/CategoryBadge.module.css';
+import RegionDot from '@/components/ui/RegionDot';
+import { getRegionMeta } from '@/lib/regionMeta';
+import regionStyles from '@/components/ui/RegionDot.module.css';
 
 interface Article {
   id: string;
@@ -102,9 +105,15 @@ export default async function NewspaperLayout({ title, type, value, page = 1 }: 
         display: 'flex', 
         justifyContent: 'space-between', 
         alignItems: 'flex-end',
-        ...(type === 'category' && getCategoryMeta(value) ? { borderLeft: '4px solid', paddingLeft: '1rem' } : {})
+        ...((type === 'category' && getCategoryMeta(value)) || (type === 'region' && getRegionMeta(value)) ? { borderLeft: '4px solid', paddingLeft: '1rem' } : {})
       }}
-      className={type === 'category' && getCategoryMeta(value) ? badgeStyles[`${getCategoryMeta(value)!.key}_accent`] : ''}
+      className={
+        type === 'category' && getCategoryMeta(value) 
+          ? badgeStyles[`${getCategoryMeta(value)!.key}_accent`] 
+          : type === 'region' && getRegionMeta(value)
+            ? regionStyles[`${getRegionMeta(value)!.key}_border`]
+            : ''
+      }
       >
         <div>
            <h2 style={{ fontSize: '2.5rem', fontWeight: 900, color: 'var(--primary-dark)', margin: 0, fontFamily: '"Nanum Myeongjo", serif' }}>
@@ -113,6 +122,11 @@ export default async function NewspaperLayout({ title, type, value, page = 1 }: 
            {type === 'category' && getCategoryMeta(value) && (
              <p style={{ margin: '0.5rem 0 0 0', fontSize: '0.9rem', color: '#666', fontWeight: 600 }}>
                {getCategoryMeta(value)!.tone}
+             </p>
+           )}
+           {type === 'region' && getRegionMeta(value) && (
+             <p style={{ margin: '0.5rem 0 0 0', fontSize: '0.9rem', color: '#666', fontWeight: 600 }}>
+               {getRegionMeta(value)!.tone} · {getRegionMeta(value)!.motif}
              </p>
            )}
            <div style={{ marginTop: '0.5rem', display: 'flex', alignItems: 'center', gap: '0.8rem', color: '#666', fontSize: '0.9rem' }}>
@@ -194,8 +208,9 @@ export default async function NewspaperLayout({ title, type, value, page = 1 }: 
                       style={{ objectFit: 'cover' }} 
                     />
                   </div>
-                  <div style={{ marginBottom: '0.5rem' }}>
+                  <div style={{ marginBottom: '0.5rem', display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
                     <CategoryBadge category={article.category} />
+                    {article.region && <RegionDot region={article.region} size="sm" />}
                   </div>
                   <h5 style={{ fontSize: '1.1rem', fontWeight: 800, margin: '0 0 0.5rem', lineHeight: 1.4, display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
                     {article.title}

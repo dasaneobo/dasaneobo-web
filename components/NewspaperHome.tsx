@@ -8,6 +8,7 @@ import { Eye } from 'lucide-react';
 import { SITE_CONFIG } from '@/constants/siteConfig';
 import HeroFocusBox from '@/components/home/HeroFocusBox';
 import CategoryBadge from '@/components/ui/CategoryBadge';
+import RegionDot from '@/components/ui/RegionDot';
 
 /* =========================================
    BREAKING NEWS TICKER
@@ -192,7 +193,10 @@ function CenterMain({ articles, featured }: { articles: any[]; featured: any }) 
             <Link key={art.id} href={`/article/${art.slug ?? art.id}`} style={{ textDecoration: 'none', color: 'inherit', display: 'flex', gap: '0.8rem', alignItems: 'flex-start', paddingBottom: '0.8rem', borderBottom: '1px solid #f0f0f0' }}>
               <ArticleImg src={art.image_url} alt={art.title} width={90} height={65} />
               <div>
-                <CategoryBadge category={art.category} />
+                <div style={{ display: 'flex', gap: '0.8rem', alignItems: 'center' }}>
+                  <CategoryBadge category={art.category} />
+                  {art.region && <RegionDot region={art.region} size="sm" />}
+                </div>
                 <h4 style={{ margin: '0.2rem 0 0.3rem', fontSize: '0.92rem', fontWeight: 700, lineHeight: 1.35, wordBreak: 'keep-all', color: '#111' }}>{art.title}</h4>
                 <ArticleDate dateStr={art.created_at} viewCount={art.view_count} />
               </div>
@@ -221,7 +225,9 @@ function RegionalNews({ articles }: { articles: any[] }) {
           return (
             <div key={region} className="np-region-item">
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.7rem' }}>
-                <h4 style={{ margin: 0, fontSize: '0.88rem', fontWeight: 900, color: '#2E7D52', fontFamily: 'Noto Serif KR, serif' }}>● {region}</h4>
+                <h4 style={{ margin: 0, fontSize: '0.88rem', fontWeight: 900, color: '#2E7D52', fontFamily: 'Noto Serif KR, serif' }}>
+                  <RegionDot region={region} size="md" />
+                </h4>
                 <Link href={regionRoutes[region]} style={{ fontSize: '0.68rem', color: '#888', textDecoration: 'none' }}>더보기</Link>
               </div>
               {regionArticles.length > 0 ? regionArticles.map((art, i) => (
@@ -357,6 +363,7 @@ function BottomSections({ articles }: { articles: any[] }) {
             <Link key={art.id} href={`/article/${art.slug ?? art.id}`} className="np-bottom-latest-item">
               <div style={{ display: 'flex', gap: '0.6rem', alignItems: 'flex-start', flex: 1 }}>
                 <CategoryBadge category={art.category} />
+                {art.region && <RegionDot region={art.region} size="sm" />}
                 <span className="np-bottom-latest-title">{art.title}</span>
               </div>
               <ArticleDate dateStr={art.created_at} viewCount={art.view_count} />
@@ -407,8 +414,9 @@ function BottomSections({ articles }: { articles: any[] }) {
                     onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
                   />
                 </div>
-                <div style={{ marginBottom: '0.4rem' }}>
+                <div style={{ marginBottom: '0.4rem', display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
                   <CategoryBadge category={art.category} />
+                  {art.region && <RegionDot region={art.region} size="sm" />}
                 </div>
                 <p className="np-bottom-photo-title">{art.title}</p>
               </Link>
