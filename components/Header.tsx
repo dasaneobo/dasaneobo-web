@@ -166,6 +166,12 @@ export default function Header() {
             </button>
           </div>
 
+          <div className="np-logo-center">
+            <Link href="/" className="np-logo-hanja-link" title="다산어보 한자 제호">
+              <span className="np-logo-hanja">茶山語報</span>
+            </Link>
+          </div>
+
           <div className="np-logo-right">
             <form onSubmit={handleSearch} className="np-search-form">
               <input
@@ -310,15 +316,14 @@ export default function Header() {
           border-bottom: 1px solid #ddd;
         }
         .np-logo-inner {
-          display: flex;
+          display: grid;
+          grid-template-columns: 1fr auto 1fr;
           align-items: center;
-          justify-content: space-between;
           gap: 1rem;
         }
         .np-logo-link {
           text-decoration: none;
           text-align: left;
-          flex-shrink: 0;
           display: block;
         }
         .np-logo-title {
@@ -337,10 +342,32 @@ export default function Header() {
           font-weight: 600;
         }
 
+        /* Center Hanja Area */
+        .np-logo-center {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+        }
+        .np-logo-hanja-link {
+          text-decoration: none;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+        .np-logo-hanja {
+          font-family: 'Noto Serif KR', 'Nanum Myeongjo', 'Batang', serif;
+          font-size: 2.8rem;
+          font-weight: 900;
+          color: #1a1a1a;
+          letter-spacing: 0.3rem;
+          line-height: 1;
+        }
+
         /* Search & Right Area */
         .np-logo-left {
-          display: block;
-          flex: 1;
+          display: flex;
+          justify-content: flex-start;
+          align-items: center;
         }
         .np-logo-right {
           display: flex;
@@ -493,6 +520,8 @@ export default function Header() {
           .np-logo-link { text-align: left; }
           .np-logo-title { font-size: 1.8rem; margin-bottom: 0.1rem; text-align: left; }
           .np-logo-sub { font-size: 0.55rem; letter-spacing: 0; text-align: left; }
+          
+          .np-logo-center { display: none; } /* Hide Hanja on mobile to save space */
           
           .np-mobile-hamburger { grid-column: 2 / 3; grid-row: 1 / 2; display: flex; align-items: center; justify-content: flex-end; }
           .np-hamburger-btn { background: none; border: none; padding: 0.2rem; cursor: pointer; color: #2E7D52; display: flex; align-items: center; }
