@@ -23,6 +23,7 @@ function ReporterWriteForm() {
     author_id: '',
   });
   const [authLoading, setAuthLoading] = useState(true);
+  const [accessDenied, setAccessDenied] = useState(false);
 
   useEffect(() => {
     const checkAuth = async () => {
@@ -33,10 +34,12 @@ function ReporterWriteForm() {
         return;
       }
       const { data: profile } = await supabase.from('profiles').select('*').eq('id', session.user.id).single();
-      const allowedRoles = ['admin', 'editor', 'reporter', 'member'];
+      
+      // 일반 회원(member)은 제외하고 오직 리포터 이상만 직접 기사 작성 허용
+      const allowedRoles = ['admin', 'editor', 'reporter'];
       if (!profile || !allowedRoles.includes(profile.role)) {
-        alert("기사 작성 권한이 없습니다.");
-        router.push('/');
+        setAccessDenied(true);
+        setAuthLoading(false);
         return;
       }
       setUserProfile(profile);
@@ -132,6 +135,28 @@ function ReporterWriteForm() {
 
   if (authLoading) {
     return <div style={{ padding: '10rem 0', textAlign: 'center', fontSize: '1.2rem', color: '#666' }}>권한을 확인하는 중입니다...</div>;
+  }
+
+  if (accessDenied) {
+    return (
+      <div style={{ maxWidth: '600px', margin: '4rem auto', textAlign: 'center', padding: '4rem 2rem', background: 'white', borderRadius: '24px', boxShadow: '0 10px 40px rgba(0,0,0,0.05)' }}>
+        <h2 style={{ fontSize: '2rem', fontWeight: 900, color: '#b45309', marginBottom: '1rem' }}>잠깐! 권한이 필요합니다</h2>
+        <p style={{ fontSize: '1.1rem', color: '#475569', lineHeight: 1.6, marginBottom: '2.5rem' }}>
+          정식으로 승인된 마을 리포터 및 편집국 이상 등급만<br/>
+          완성된 형태의 기사를 직접 작성할 수 있습니다.
+        </p>
+        <div style={{ background: '#f8fafc', padding: '1.5rem', borderRadius: '12px', marginBottom: '2.5rem', border: '1px solid #e2e8f0', textAlign: 'left' }}>
+          <ul style={{ margin: 0, paddingLeft: '1.5rem', color: '#334155', lineHeight: 1.7 }}>
+            <li>일반 회원님은 사진과 메모를 남기는 <strong>[간편 제보]</strong>를 이용해 주세요. 편집국에서 멋진 기사로 완성해 드립니다!</li>
+            <li>직접 기사를 작성하고 싶으시다면 <strong>[마을 리포터]</strong>로 지원해 주세요. 누구나 참여할 수 있습니다.</li>
+          </ul>
+        </div>
+        <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center' }}>
+          <Link href="/report" style={{ padding: '1rem 2rem', borderRadius: '8px', border: 'none', background: '#1F5946', color: 'white', fontWeight: 700, textDecoration: 'none' }}>간편 제보하기</Link>
+          <Link href="/reporter-apply" style={{ padding: '1rem 2rem', borderRadius: '8px', border: '1px solid #cbd5e1', background: 'white', color: '#334155', fontWeight: 700, textDecoration: 'none' }}>마을 리포터 지원</Link>
+        </div>
+      </div>
+    );
   }
 
   return (
