@@ -2,6 +2,7 @@ import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import { BreakingTicker, NewspaperMain } from '@/components/NewspaperHome';
 import { supabase } from '@/lib/supabase';
+import { getFeaturedArticle } from '@/lib/queries/getFeaturedArticle';
 
 export const revalidate = 0;
 
@@ -23,6 +24,7 @@ export default async function Home() {
     .limit(5);
 
   const safeArticles = recentArticles || [];
+  const featured = await getFeaturedArticle();
 
   // Fetch ads
   const { data: adsData } = await supabase.from('ads').select('*').eq('is_active', true);
@@ -51,6 +53,7 @@ export default async function Home() {
         farmPrices={farmPrices || []}
         sidebarAd={sidebarAd}
         settings={settings}
+        featured={featured}
       />
 
       <Footer />

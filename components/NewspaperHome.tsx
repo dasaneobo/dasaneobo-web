@@ -6,7 +6,7 @@ import Image from 'next/image';
 import { supabase } from '@/lib/supabase';
 import { Eye } from 'lucide-react';
 import { SITE_CONFIG } from '@/constants/siteConfig';
-import MainNewsHero from '@/components/home/MainNewsHero';
+import HeroFocusBox from '@/components/home/HeroFocusBox';
 
 /* =========================================
    BREAKING NEWS TICKER
@@ -163,9 +163,9 @@ function LeftSidebar({ popularArticles, articles }: { popularArticles: any[]; ar
 /* =========================================
    CENTER MAIN
    ========================================= */
-function CenterMain({ articles }: { articles: any[] }) {
-  const topStory = articles.find((a) => a.is_top) || articles[0];
-  const importantNews = articles.filter((a) => a.id !== topStory?.id).slice(0, 5);
+function CenterMain({ articles, featured }: { articles: any[]; featured: any }) {
+  // Filter the featured article out of the important news list
+  const importantNews = articles.filter((a) => a.id !== featured?.id).slice(0, 5);
   const regions = ['강진', '고흥', '보성', '장흥'];
   const regionRoutes: Record<string, string> = { 강진: '/gangjin', 고흥: '/goheung', 보성: '/boseong', 장흥: '/jangheung' };
 
@@ -176,8 +176,8 @@ function CenterMain({ articles }: { articles: any[] }) {
         <div style={{ borderBottom: '3px solid #2E7D52', paddingBottom: '0.4rem', marginBottom: '1rem', display: 'flex', alignItems: 'center', gap: '0.8rem' }}>
           <span style={{ background: '#2E7D52', color: '#fff', fontSize: '0.72rem', fontWeight: 900, padding: '0.2rem 0.7rem', letterSpacing: '1px' }}>{SITE_CONFIG.labels.topNews}</span>
         </div>
-        {topStory && (
-          <MainNewsHero article={topStory} />
+        {featured && (
+          <HeroFocusBox article={featured} />
         )}
       </div>
 
@@ -416,7 +416,7 @@ function BottomSections({ articles }: { articles: any[] }) {
 /* =========================================
    MAIN EXPORT
    ========================================= */
-export function NewspaperMain({ articles, popularArticles, farmPrices, sidebarAd, settings }: { articles: any[]; popularArticles: any[]; farmPrices: any[]; sidebarAd: any; settings: any }) {
+export function NewspaperMain({ articles, popularArticles, farmPrices, sidebarAd, settings, featured }: { articles: any[]; popularArticles: any[]; farmPrices: any[]; sidebarAd: any; settings: any; featured?: any }) {
   return (
     <div className="container np-main-container">
       {/* 3-column layout */}
@@ -424,7 +424,7 @@ export function NewspaperMain({ articles, popularArticles, farmPrices, sidebarAd
         {/* Mobile order: Center(1) -> Left(2) -> Right(3) */}
         <div className="np-col-center">
           {/* 모바일 띠배너 슬롯 — 새 이미지 업로드 후 복원 예정 */}
-          <CenterMain articles={articles} />
+          <CenterMain articles={articles} featured={featured} />
         </div>
         
         <div className="np-col-left">
