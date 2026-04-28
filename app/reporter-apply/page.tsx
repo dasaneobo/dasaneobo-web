@@ -15,7 +15,7 @@ const FAQ_ITEMS = [
   },
   {
     q: "보수가 있나요?",
-    a: "정기 보수와 취재 실비 정산은 없습니다. 다산어보 마을 리포터는 재능나눔 모델로 운영됩니다. 대신 누적 활동에 따른 단계별 혜택(평생 구독·명함·정기 교육·조합원 우대)과 연 1회 다산어보의 날 시상이 있습니다."
+    a: "정기 보수와 취재 실비 정산은 없습니다. 다산어보 마을 리포터는 재능나눔 모델로 운영됩니다. 대신 누적 활동에 따른 단계별 혜택(평생 구독·명함·정기 교육)과 연 1회 다산어보의 날 시상이 있습니다."
   },
   {
     q: "얼마나 자주 알려야 하나요?",
@@ -352,7 +352,6 @@ export default function ReporterRecruitPage() {
                 <span style={{ fontSize: '0.85rem', opacity: 0.8 }}>누적 12회 또는 1년 이상</span>
               </div>
               <ul style={{ padding: '1.5rem', margin: 0, listStyle: 'none', display: 'flex', flexDirection: 'column', gap: '1rem', fontSize: '0.95rem', color: '#334155' }}>
-                <li>• 조합원 출자금 50% 우대</li>
                 <li>• 제보 우선 처리 (24시간 내)</li>
                 <li>• 편집 방향 자문 회의 참석</li>
                 <li>• 우수 리포터 후보 자동 등록</li>
