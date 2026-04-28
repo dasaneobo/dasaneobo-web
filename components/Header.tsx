@@ -168,7 +168,14 @@ export default function Header() {
 
           <div className="np-logo-center">
             <Link href="/" className="np-logo-hanja-link" title="다산어보 한자 제호">
-              <span className="np-logo-hanja">茶山語報</span>
+              <Image 
+                src="/images/hanja-logo.png" 
+                alt="茶山語報" 
+                width={200} 
+                height={55} 
+                className="np-logo-hanja-img"
+                priority 
+              />
             </Link>
           </div>
 
@@ -354,13 +361,10 @@ export default function Header() {
           align-items: center;
           justify-content: center;
         }
-        .np-logo-hanja {
-          font-family: 'Noto Serif KR', 'Nanum Myeongjo', 'Batang', serif;
-          font-size: 2.8rem;
-          font-weight: 900;
-          color: #1a1a1a;
-          letter-spacing: 0.3rem;
-          line-height: 1;
+        .np-logo-hanja-img {
+          height: 48px;
+          width: auto;
+          object-fit: contain;
         }
 
         /* Search & Right Area */
