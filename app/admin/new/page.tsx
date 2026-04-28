@@ -21,6 +21,7 @@ function EditArticleForm() {
   const [loading, setLoading] = useState(false);
   const [isEditMode, setIsEditMode] = useState(false);
   const [uploading, setUploading] = useState(false);
+  const [imageValidation, setImageValidation] = useState<{ message: string, isValid: boolean } | null>(null);
   const [userProfile, setUserProfile] = useState<any>(null);
   const [formData, setFormData] = useState({
     title: '',
@@ -111,9 +112,38 @@ function EditArticleForm() {
     checkAuth();
   }, [router, articleId]);
 
+  const validateImage = (file: File): Promise<{ message: string, isValid: boolean }> => {
+    return new Promise((resolve) => {
+      const img = new Image();
+      img.onload = () => {
+        const width = img.naturalWidth;
+        const height = img.naturalHeight;
+        
+        if (width < 1200) {
+          resolve({ message: '해상도 위반: 최소 1200×675 권장', isValid: false });
+          return;
+        }
+        
+        const ratio = width / height;
+        const targetRatio = 16 / 9;
+        if (ratio < targetRatio * 0.85 || ratio > targetRatio * 1.15) {
+          resolve({ message: '비율 위반: 16:9 가까운 이미지로 업로드해 주세요', isValid: false });
+          return;
+        }
+        
+        resolve({ message: '✅ 히어로 이미지로 적합합니다', isValid: true });
+      };
+      img.src = URL.createObjectURL(file);
+    });
+  };
+
   const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
+
+    const validationResult = await validateImage(file);
+    setImageValidation(validationResult);
+
     setUploading(true);
 
     try {
@@ -323,8 +353,14 @@ function EditArticleForm() {
             <h4 style={{ marginBottom: '1.5rem', display: 'flex', alignItems: 'center', gap: '0.5rem', borderBottom: '1px solid #eee', paddingBottom: '0.5rem' }}><ImageIcon size={18} /> 썸네일 업로드</h4>
             <div style={{ fontSize: '0.8rem', color: '#666', marginBottom: '1rem', lineHeight: '1.5', background: '#f8f9fa', padding: '0.8rem', borderRadius: '6px' }}>
               썸네일이 없으면 다산어보 기본 이미지로 표시됩니다. 가급적 기사 내용을 잘 보여주는 사진(현장 사진, 인물 사진 등)을 첨부해 주세요. 공문 스캔이나 표 이미지는 피해주세요.<br/>
-              <strong>* 권장 비율:</strong> 1200×630 (웹 가로형)
+              <strong>* 권장 비율:</strong> 1200×675 (16:9 가로형)<br/>
+              <span style={{ fontSize: '0.75rem', color: '#888' }}>* 기준 미달 시, 홈 주요 뉴스에서 자동으로 텍스트 폴백 모드로 게재됩니다.</span>
             </div>
+            {imageValidation && (
+              <div style={{ padding: '0.6rem', marginBottom: '1rem', borderRadius: '4px', fontSize: '0.85rem', fontWeight: 600, background: imageValidation.isValid ? '#dcfce7' : '#fee2e2', color: imageValidation.isValid ? '#166534' : '#991b1b' }}>
+                {imageValidation.message}
+              </div>
+            )}
             <input type="file" accept="image/*" onChange={handleImageUpload} disabled={uploading} style={{ display: 'none' }} id="image-upload" />
             <label htmlFor="image-upload" style={{ display: 'block', width: '100%', padding: '0.8rem', textAlign: 'center', background: uploading ? '#eee' : 'var(--primary)', color: '#fff', borderRadius: '8px', fontWeight: 'bold', cursor: 'pointer', marginBottom: '1rem' }}>
               {uploading ? '처리 중...' : '이미지 파일 선택'}
