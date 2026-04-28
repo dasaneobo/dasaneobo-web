@@ -298,6 +298,7 @@ export default function ReporterRecruitPage() {
               </div>
               <div>
                 <p style={{ fontWeight: 700, marginBottom: '0.5rem', color: '#1e293b' }}>2. 사진 1~5장 (스마트폰 사진으로 충분)</p>
+                <p style={{ fontSize: '0.95rem', color: '#b45309', fontWeight: 600, marginBottom: '0.5rem' }}>※ 사진은 가급적 스마트폰 최고 화질로 촬영해 주시기를 부탁드립니다.</p>
                 <p style={{ fontSize: '0.95rem', color: '#64748b', margin: 0 }}>추가 메모는 자유롭게 남겨주시면 편집국이 기사로 풀어내는 데 도움이 됩니다.</p>
               </div>
             </div>
