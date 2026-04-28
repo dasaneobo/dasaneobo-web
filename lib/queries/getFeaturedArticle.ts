@@ -17,18 +17,15 @@ export interface FeaturedArticle {
  * 메인홈 초점 박스에 노출할 기사 1건을 반환.
  */
 export async function getFeaturedArticle(): Promise<FeaturedArticle | null> {
-  const now = new Date().toISOString()
-
   const baseSelect =
-    'id, slug, title, content, image_url, category, created_at, is_featured, pin_until'
+    'id, slug, title, content, image_url, category, created_at, is_top'
 
-  // 1. 편집국 픽 (만료 전)
+  // 1. 어드민에서 지정한 톱뉴스(is_top)
   const { data: pick, error: pickError } = await supabase
     .from('articles')
     .select(baseSelect)
-    .eq('is_featured', true)
+    .eq('is_top', true)
     .not('image_url', 'is', null)
-    .or(`pin_until.is.null,pin_until.gt.${now}`)
     .order('created_at', { ascending: false })
     .limit(1)
     .maybeSingle()
