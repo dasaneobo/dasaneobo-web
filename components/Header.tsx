@@ -157,7 +157,7 @@ export default function Header() {
             <Link href="/" className="np-logo-link">
               <h1 className="np-logo-title">{SITE_CONFIG.name}</h1>
               <div className="np-logo-sub" style={{ whiteSpace: 'nowrap' }}>
-                다산어보 <span className="np-subtitle-hanja">茶山語報</span> — 강진·고흥·보성·장흥 밀착 독립언론
+                강진·고흥·보성·장흥 밀착 독립언론
               </div>
             </Link>
           </div>
@@ -350,12 +350,6 @@ export default function Header() {
           letter-spacing: 0px;
           font-weight: 600;
         }
-        .np-subtitle-hanja {
-          font-size: 0.85em;
-          color: rgba(20, 50, 42, 0.7);
-          letter-spacing: 0.05em;
-          font-family: 'Batang', serif;
-        }
 
         /* Center Hanja Area */
         .np-logo-center {
@@ -532,7 +526,6 @@ export default function Header() {
           .np-logo-link { text-align: left; }
           .np-logo-title { font-size: 1.8rem; margin-bottom: 0.1rem; text-align: left; }
           .np-logo-sub { font-size: 0.55rem; letter-spacing: 0; text-align: left; white-space: normal !important; }
-          .np-subtitle-hanja { display: none; }
           
           .np-logo-center { display: none; } /* Hide Hanja on mobile to save space */
           
