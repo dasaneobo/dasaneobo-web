@@ -451,7 +451,7 @@ export default function ReporterRecruitPage() {
           
           <form onSubmit={handleSubmit} style={{ background: 'white', padding: '3rem 2.5rem', borderRadius: '24px', boxShadow: '0 10px 40px rgba(0,0,0,0.05)', display: 'grid', gap: '1.5rem' }}>
             
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.5rem' }}>
+            <div className="form-grid" style={{ gap: '1.5rem' }}>
               <div>
                 <label style={{ display: 'block', fontWeight: 700, marginBottom: '0.5rem', fontSize: '0.9rem' }}>이름 (본명) *</label>
                 <input type="text" required value={formData.full_name} onChange={e => setFormData({...formData, full_name: e.target.value})} minLength={2} maxLength={10} style={{ width: '100%', padding: '0.8rem 1rem', borderRadius: '8px', border: '1px solid #cbd5e1' }} />
@@ -493,7 +493,7 @@ export default function ReporterRecruitPage() {
             {isMinor() && (
               <div style={{ background: '#fffbeb', padding: '1.5rem', borderRadius: '12px', border: '1px solid #fcd34d' }}>
                 <h4 style={{ fontSize: '0.95rem', fontWeight: 800, color: '#b45309', margin: '0 0 1rem' }}>미성년자 보호자 정보 (만 18세 미만)</h4>
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', marginBottom: '1rem' }}>
+                <div className="form-grid" style={{ gap: '1rem', marginBottom: '1rem' }}>
                   <input type="text" placeholder="보호자 성함" value={formData.guardian_name} onChange={e => setFormData({...formData, guardian_name: e.target.value})} required style={{ width: '100%', padding: '0.8rem', borderRadius: '8px', border: '1px solid #fcd34d' }} />
                   <input type="tel" placeholder="보호자 연락처" value={formData.guardian_phone} onChange={e => setFormData({...formData, guardian_phone: e.target.value})} required style={{ width: '100%', padding: '0.8rem', borderRadius: '8px', border: '1px solid #fcd34d' }} />
                 </div>
@@ -540,7 +540,7 @@ export default function ReporterRecruitPage() {
               />
             </div>
 
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.5rem' }}>
+            <div className="form-grid" style={{ gap: '1.5rem' }}>
               <div>
                 <label style={{ display: 'block', fontWeight: 700, marginBottom: '0.5rem', fontSize: '0.9rem' }}>활동 가능 빈도 *</label>
                 <select required value={formData.frequency} onChange={e => setFormData({...formData, frequency: e.target.value})} style={{ width: '100%', padding: '0.8rem 1rem', borderRadius: '8px', border: '1px solid #cbd5e1', background: 'white' }}>
@@ -580,14 +580,13 @@ export default function ReporterRecruitPage() {
 
       <Footer />
       
-      <style jsx>{`
+      <style dangerouslySetInnerHTML={{ __html: `
+        .form-grid { display: grid; grid-template-columns: 1fr 1fr; }
         @media (max-width: 768px) {
-          form > div[style*="grid-template-columns: 1fr 1fr"] {
-            grid-template-columns: 1fr !important;
-          }
+          .form-grid { grid-template-columns: 1fr !important; }
           .container { padding-left: 1.5rem; padding-right: 1.5rem; }
         }
-      `}</style>
+      `}} />
     </main>
   );
 }
