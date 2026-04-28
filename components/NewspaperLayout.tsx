@@ -2,6 +2,9 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { supabase } from '@/lib/supabase';
 import { Clock, User as UserIcon, Calendar, ArrowRight } from 'lucide-react';
+import CategoryBadge from '@/components/ui/CategoryBadge';
+import { getCategoryMeta } from '@/lib/categoryMeta';
+import badgeStyles from '@/components/ui/CategoryBadge.module.css';
 
 interface Article {
   id: string;
@@ -92,11 +95,26 @@ export default async function NewspaperLayout({ title, type, value, page = 1 }: 
   return (
     <div className="container" style={{ paddingTop: '3rem', paddingBottom: '6rem' }}>
       {/* Newspaper Header */}
-      <div style={{ borderBottom: '4px solid #111', paddingBottom: '1.5rem', marginBottom: '3rem', display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end' }}>
+      <div style={{ 
+        borderBottom: '4px solid #111', 
+        paddingBottom: '1.5rem', 
+        marginBottom: '3rem', 
+        display: 'flex', 
+        justifyContent: 'space-between', 
+        alignItems: 'flex-end',
+        ...(type === 'category' && getCategoryMeta(value) ? { borderLeft: '4px solid', paddingLeft: '1rem' } : {})
+      }}
+      className={type === 'category' && getCategoryMeta(value) ? badgeStyles[`${getCategoryMeta(value)!.key}_accent`] : ''}
+      >
         <div>
            <h2 style={{ fontSize: '2.5rem', fontWeight: 900, color: 'var(--primary-dark)', margin: 0, fontFamily: '"Nanum Myeongjo", serif' }}>
              {title}
            </h2>
+           {type === 'category' && getCategoryMeta(value) && (
+             <p style={{ margin: '0.5rem 0 0 0', fontSize: '0.9rem', color: '#666', fontWeight: 600 }}>
+               {getCategoryMeta(value)!.tone}
+             </p>
+           )}
            <div style={{ marginTop: '0.5rem', display: 'flex', alignItems: 'center', gap: '0.8rem', color: '#666', fontSize: '0.9rem' }}>
              <Clock size={16} /> 최근 업데이트: {new Date(articles[0].created_at).toLocaleString()}
            </div>
@@ -177,9 +195,7 @@ export default async function NewspaperLayout({ title, type, value, page = 1 }: 
                     />
                   </div>
                   <div style={{ marginBottom: '0.5rem' }}>
-                    <span style={{ fontSize: '0.7rem', fontWeight: 800, color: 'var(--primary-dark)', padding: '2px 8px', background: 'var(--primary-light)', borderRadius: '4px' }}>
-                      {article.category}
-                    </span>
+                    <CategoryBadge category={article.category} />
                   </div>
                   <h5 style={{ fontSize: '1.1rem', fontWeight: 800, margin: '0 0 0.5rem', lineHeight: 1.4, display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
                     {article.title}

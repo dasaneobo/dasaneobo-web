@@ -7,6 +7,7 @@ import { supabase } from '@/lib/supabase';
 import { Eye } from 'lucide-react';
 import { SITE_CONFIG } from '@/constants/siteConfig';
 import HeroFocusBox from '@/components/home/HeroFocusBox';
+import CategoryBadge from '@/components/ui/CategoryBadge';
 
 /* =========================================
    BREAKING NEWS TICKER
@@ -191,7 +192,7 @@ function CenterMain({ articles, featured }: { articles: any[]; featured: any }) 
             <Link key={art.id} href={`/article/${art.slug ?? art.id}`} style={{ textDecoration: 'none', color: 'inherit', display: 'flex', gap: '0.8rem', alignItems: 'flex-start', paddingBottom: '0.8rem', borderBottom: '1px solid #f0f0f0' }}>
               <ArticleImg src={art.image_url} alt={art.title} width={90} height={65} />
               <div>
-                <span style={{ fontSize: '0.68rem', color: '#2E7D52', fontWeight: 700 }}>{art.category}</span>
+                <CategoryBadge category={art.category} />
                 <h4 style={{ margin: '0.2rem 0 0.3rem', fontSize: '0.92rem', fontWeight: 700, lineHeight: 1.35, wordBreak: 'keep-all', color: '#111' }}>{art.title}</h4>
                 <ArticleDate dateStr={art.created_at} viewCount={art.view_count} />
               </div>

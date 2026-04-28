@@ -11,6 +11,7 @@ import MarkdownRenderer from '@/components/MarkdownRenderer';
 import ViewCounter from '@/components/ViewCounter';
 import { SITE_CONFIG } from '@/constants/siteConfig';
 import Footer from '@/components/Footer';
+import CategoryBadge from '@/components/ui/CategoryBadge';
 
 export const revalidate = 0; // Ensure data is always fetch freshly
 
@@ -186,18 +187,9 @@ export default async function ArticlePage({ params }: { params: Promise<{ id: st
 
             {/* Header */}
             <header style={{ marginBottom: '2.5rem', paddingBottom: '1.5rem', borderBottom: '1px solid #eee' }}>
-              <span style={{ 
-                color: 'var(--primary-dark)', 
-                fontWeight: 'bold', 
-                fontSize: '0.9rem', 
-                display: 'inline-block',
-                marginBottom: '1rem',
-                border: '1px solid var(--primary-light)',
-                padding: '2px 8px',
-                borderRadius: '4px'
-              }}>
-                {article.category}
-              </span>
+              <div style={{ marginBottom: '1rem' }}>
+                <CategoryBadge category={article.category} size="md" variant="solid" />
+              </div>
               <h1 className="article-title" style={{ 
                 fontWeight: 900, 
                 margin: '1rem 0 1.5rem',
@@ -292,8 +284,8 @@ export default async function ArticlePage({ params }: { params: Promise<{ id: st
               <div style={{ display: 'flex', flexDirection: 'column', gap: '1.2rem' }}>
                 {recentArticles?.map(art => (
                   <Link key={art.id} href={`/article/${art.slug ?? art.id}`} style={{ textDecoration: 'none', color: 'inherit' }}>
-                    <div style={{ cursor: 'pointer' }}>
-                      <span style={{ fontSize: '0.75rem', color: 'var(--primary-dark)', fontWeight: 'bold' }}>{art.category}</span>
+                    <div style={{ cursor: 'pointer', marginBottom: '1rem' }}>
+                      <CategoryBadge category={art.category} />
                       <h4 style={{ fontSize: '0.95rem', margin: '0.3rem 0', lineHeight: 1.4, fontWeight: 700 }}>{art.title}</h4>
                       <span style={{ fontSize: '0.75rem', color: '#bbb' }}>{new Date(art.created_at).toLocaleDateString()}</span>
                     </div>

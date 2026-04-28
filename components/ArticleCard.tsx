@@ -3,6 +3,7 @@
 import Image from 'next/image';
 import { Article } from '@/lib/supabase';
 import { Eye } from 'lucide-react';
+import CategoryBadge from '@/components/ui/CategoryBadge';
 
 export default function ArticleCard({ article }: { article: Article }) {
   return (
@@ -36,12 +37,7 @@ export default function ArticleCard({ article }: { article: Article }) {
         />
       </div>
       <div style={{ padding: '1.2rem' }}>
-        <span style={{
-          fontSize: '0.75rem',
-          fontWeight: 700,
-          color: 'var(--primary-dark)',
-          letterSpacing: '1px'
-        }}>{article.category}</span>
+        <CategoryBadge category={article.category} />
         <h3 style={{ 
           fontSize: '1.2rem', 
           margin: '0.5rem 0',
