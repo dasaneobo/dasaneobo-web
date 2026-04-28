@@ -218,6 +218,18 @@ function ReportContent() {
           </div>
         )}
 
+        {/* Action Choice Banner */}
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', marginBottom: '2rem' }} className="grid-2col">
+          <div style={{ background: '#1F5946', color: 'white', padding: '1.5rem', borderRadius: '16px', textAlign: 'center', border: '2px solid #1F5946', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+            <h3 style={{ margin: '0 0 0.5rem', fontSize: '1.3rem', fontWeight: 800 }}>간편 제보 (현재 페이지)</h3>
+            <p style={{ margin: 0, fontSize: '0.95rem', opacity: 0.9 }}>사진과 육하원칙 메모만 남겨주시면 편집국에서 기사로 만들어 드립니다.</p>
+          </div>
+          <Link href="/reporter/write" style={{ background: 'white', color: '#1F5946', padding: '1.5rem', borderRadius: '16px', textAlign: 'center', border: '2px solid #1F5946', textDecoration: 'none', display: 'flex', flexDirection: 'column', justifyContent: 'center', transition: 'all 0.2s' }}>
+            <h3 style={{ margin: '0 0 0.5rem', fontSize: '1.3rem', fontWeight: 800 }}>직접 기사 쓰기 </h3>
+            <p style={{ margin: 0, fontSize: '0.95rem', color: '#475569' }}>정식 리포터이신 경우, 완성된 형태의 기사를 전용 에디터로 직접 작성할 수 있습니다.</p>
+          </Link>
+        </div>
+
         {/* Report Form */}
         <div style={{ background: 'white', padding: '3rem', borderRadius: '24px', boxShadow: '0 10px 40px rgba(0,0,0,0.05)' }}>
           
