@@ -1,208 +1,359 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Suspense } from 'react';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import { supabase } from '@/lib/supabase';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
+import { requestMagicLink, verifyMagicToken } from './actions';
+import emailjs from '@emailjs/browser';
+import Link from 'next/link';
+import { CheckCircle, Upload, AlertCircle, Send, Key } from 'lucide-react';
 
-export default function PublicReportPage() {
+function ReportContent() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const token = searchParams.get('token');
+
+  const [reporter, setReporter] = useState<any>(null);
+  const [loadingAuth, setLoadingAuth] = useState(true);
+
+  // Magic Link State
+  const [magicEmail, setMagicEmail] = useState('');
+  const [magicSending, setMagicSending] = useState(false);
+  const [magicSent, setMagicSent] = useState(false);
+
+  // Form State
   const [submitting, setSubmitting] = useState(false);
-  const [notice, setNotice] = useState<{ msg: string; success: boolean } | null>(null);
-
-  const [selectedStyle, setSelectedStyle] = useState('중립 보도');
-  const [file, setFile] = useState<File | null>(null);
-  const [preview, setPreview] = useState<string | null>(null);
+  const [submitted, setSubmitted] = useState(false);
   const [formData, setFormData] = useState({
-    who: '', what: '', when: '', where: '', how: '', why: '', extra: '',
-    senderName: '', senderContact: '',
-    hp: '' // Honeypot field
+    who: '', what: '', when_text: '', where_text: '', how: '', why: '', memo: '',
+    region: '강진', contact_email: '', contact_phone: ''
   });
+  const [files, setFiles] = useState<File[]>([]);
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  useEffect(() => {
+    async function checkToken() {
+      if (!token) {
+        setLoadingAuth(false);
+        return;
+      }
+      const res = await verifyMagicToken(token);
+      if (res.success && res.reporter) {
+        setReporter(res.reporter);
+        setFormData(prev => ({
+          ...prev,
+          contact_email: res.reporter.email,
+          contact_phone: res.reporter.contact_phone,
+          region: res.reporter.region
+        }));
+      }
+      setLoadingAuth(false);
+    }
+    checkToken();
+  }, [token]);
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { id, value } = e.target;
     setFormData(prev => ({ ...prev, [id]: value }));
   };
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const selectedFile = e.target.files?.[0];
-    if (selectedFile) {
-      setFile(selectedFile);
-      const reader = new FileReader();
-      reader.onloadend = () => setPreview(reader.result as string);
-      reader.readAsDataURL(selectedFile);
+    if (e.target.files) {
+      const selected = Array.from(e.target.files).slice(0, 5); // Max 5
+      setFiles(selected);
     }
   };
 
-  const todayStr = () => {
-    const d = new Date();
-    const days = ['일','월','화','수','목','금','토'];
-    return `${d.getFullYear()}년 ${d.getMonth()+1}월 ${d.getDate()}일 (${days[d.getDay()]})`;
-  };
-
-  const sendReport = async () => {
-    // Honeypot check
-    if (formData.hp) {
-      console.log("Spam detected");
+  const handleSendMagicLink = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!magicEmail) return;
+    
+    setMagicSending(true);
+    const res = await requestMagicLink(magicEmail);
+    
+    if (!res.success) {
+      alert(res.message);
+      setMagicSending(false);
       return;
     }
 
-    const { who, what, when } = formData;
-    if (!who || !what || !when) {
-      setNotice({ msg: '누가, 무엇을, 언제 항목은 필수입니다.', success: false });
+    try {
+      const loginUrl = `${window.location.origin}/report?token=${res.token}`;
+      
+      // We send the email using EmailJS to the user's email
+      await emailjs.send(
+        process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID || '',
+        process.env.NEXT_PUBLIC_EMAILJS_MAGIC_LINK_TEMPLATE_ID || 'template_default',
+        {
+          to_email: res.email,
+          name: res.name,
+          login_link: loginUrl
+        },
+        process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY || ''
+      );
+      setMagicSent(true);
+    } catch (err) {
+      console.error('EmailJS Error:', err);
+      // Fallback for development if email template is missing
+      alert(`[개발/테스트용 임시 알림]\n메일 전송에 실패했습니다. 아래 링크로 바로 접속하세요:\n${window.location.origin}/report?token=${res.token}`);
+    } finally {
+      setMagicSending(false);
+    }
+  };
+
+  const sendReport = async () => {
+    if (!formData.what || !formData.who) {
+      alert('누가, 무엇을 항목은 필수입니다.');
+      return;
+    }
+
+    if (!reporter && (!formData.contact_email && !formData.contact_phone)) {
+      alert('비회원 제보 시 연락처(이메일 또는 전화번호)를 하나 이상 남겨주세요.');
       return;
     }
 
     setSubmitting(true);
-    setNotice(null);
 
     try {
+      // 1. Upload Photos
+      const photo_urls: string[] = [];
+      for (const file of files) {
+        const fileExt = file.name.split('.').pop();
+        const fileName = `${Date.now()}-${Math.random().toString(36).substring(7)}.${fileExt}`;
+        const { error: uploadError } = await supabase.storage
+          .from('reporter-submissions')
+          .upload(fileName, file);
+          
+        if (!uploadError) {
+          const { data } = supabase.storage.from('reporter-submissions').getPublicUrl(fileName);
+          photo_urls.push(data.publicUrl);
+        }
+      }
+
+      // 2. Save Submission
       const { error: dbError } = await supabase
-        .from('village_reports')
+        .from('submissions')
         .insert([{
-          style: selectedStyle,
+          reporter_id: reporter?.id || null,
+          contact_email: formData.contact_email,
+          contact_phone: formData.contact_phone,
+          region: formData.region,
           who: formData.who,
+          when_text: formData.when_text,
+          where_text: formData.where_text,
           what: formData.what,
-          when: formData.when,
-          where: formData.where,
-          how: formData.how,
           why: formData.why,
-          extra: formData.extra,
-          sender_name: formData.senderName,
-          sender_contact: formData.senderContact,
-          status: 'new'
+          how: formData.how,
+          memo: formData.memo,
+          photo_urls,
+          status: 'pending'
         }]);
  
-      if (dbError) throw new Error('접수 중 오류가 발생했습니다: ' + dbError.message);
+      if (dbError) throw new Error(dbError.message);
 
-      setNotice({ msg: '✓ 제보가 성공적으로 접수되었습니다! 편집국에서 검토 후 연락드리겠습니다.', success: true });
-      setFormData({
-        who: '', what: '', when: '', where: '', how: '', why: '', extra: '',
-        senderName: '',
-        senderContact: '',
-        hp: ''
-      });
-      setFile(null);
-      setPreview(null);
-      setSelectedStyle('중립 보도');
+      setSubmitted(true);
+      window.scrollTo(0, 0);
 
     } catch (err: any) {
-      setNotice({ msg: '전송 실패: ' + err.message, success: false });
+      alert('제보 전송 실패: ' + err.message);
     } finally {
       setSubmitting(false);
     }
   };
 
+  if (loadingAuth) {
+    return <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>인증 정보를 확인 중입니다...</div>;
+  }
+
+  if (submitted) {
+    return (
+      <div style={{ maxWidth: '600px', margin: '4rem auto', textAlign: 'center', padding: '4rem 2rem', background: 'white', borderRadius: '24px', boxShadow: '0 10px 40px rgba(0,0,0,0.05)' }}>
+        <CheckCircle size={80} color="#1F5946" style={{ margin: '0 auto 1.5rem' }} />
+        <h2 style={{ fontSize: '2rem', fontWeight: 900, color: '#1F5946', marginBottom: '1rem' }}>제보가 접수되었습니다</h2>
+        <p style={{ fontSize: '1.1rem', color: '#475569', lineHeight: 1.6, marginBottom: '2.5rem' }}>
+          소중한 제보 감사합니다.<br />
+          편집국에서 내용을 확인하고 기사로 작성·발행하겠습니다.
+        </p>
+        <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center' }}>
+          <button onClick={() => { setSubmitted(false); setFormData({...formData, what:'', who:'', when_text:'', where_text:'', how:'', why:'', memo:''}); setFiles([]); }} style={{ padding: '1rem 2rem', borderRadius: '8px', border: '1px solid #cbd5e1', background: 'white', fontWeight: 700, cursor: 'pointer' }}>새 제보하기</button>
+          <Link href="/" style={{ padding: '1rem 2rem', borderRadius: '8px', border: 'none', background: '#1F5946', color: 'white', fontWeight: 700, textDecoration: 'none' }}>메인으로</Link>
+        </div>
+      </div>
+    );
+  }
+
   return (
-    <main className="report-body">
-      <Header />
-      <div className="report-masthead" style={{ background: '#2E7D52', color: 'white', padding: '3rem 0', textAlign: 'center' }}>
+    <>
+      <div style={{ background: '#2E7D52', color: 'white', padding: '4rem 0', textAlign: 'center' }}>
         <div className="container">
-          <h1 style={{ fontSize: '2.2rem', fontWeight: 900, marginBottom: '0.5rem', fontFamily: 'Noto Serif KR, serif' }}>기사 제보</h1>
-          <p style={{ opacity: 0.9, fontSize: '1rem' }}>현장의 목소리를 전해주세요. 여러분의 제보가 우리 지역의 역사가 됩니다.</p>
+          <h1 style={{ fontSize: '2.5rem', fontWeight: 900, marginBottom: '1rem', fontFamily: 'Noto Serif KR, serif' }}>우리 동네 제보하기</h1>
+          <p style={{ opacity: 0.9, fontSize: '1.1rem' }}>여러분의 제보가 우리 지역의 역사가 됩니다.</p>
         </div>
       </div>
 
       <div className="container" style={{ maxWidth: '800px', margin: '3rem auto 5rem' }}>
-        <div className="report-container" style={{ background: 'white', padding: '2.5rem', borderRadius: '12px', boxShadow: '0 10px 40px rgba(0,0,0,0.05)' }}>
-          
-          {/* Honeypot */}
-          <div style={{ display: 'none' }}>
-            <input type="text" id="hp" value={formData.hp} onChange={handleInputChange} tabIndex={-1} autoComplete="off" />
+        
+        {/* Banner */}
+        {!reporter && (
+          <div style={{ background: '#f0fdf4', border: '1px solid #bbf7d0', padding: '1.5rem 2rem', borderRadius: '12px', marginBottom: '2rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1rem' }}>
+            <div>
+              <h3 style={{ fontSize: '1.1rem', fontWeight: 800, color: '#166534', margin: '0 0 0.4rem' }}>자주 제보하신다면 마을 리포터로 등록해보세요!</h3>
+              <p style={{ margin: 0, color: '#15803d', fontSize: '0.95rem' }}>제보 내역이 누적되어 평생 구독, 명함 발급 등의 혜택을 드립니다.</p>
+            </div>
+            <Link href="/reporter-apply" style={{ background: '#166534', color: 'white', padding: '0.8rem 1.5rem', borderRadius: '8px', fontWeight: 700, textDecoration: 'none', fontSize: '0.95rem', whiteSpace: 'nowrap' }}>
+              마을 리포터 안내 보기
+            </Link>
           </div>
+        )}
 
-          <div className="report-section-head" style={{ marginBottom: '1.5rem', borderBottom: '2px solid #eee', paddingBottom: '0.5rem' }}>
-            <span style={{ fontWeight: 800, color: '#2E7D52' }}>제보 형식</span>
+        {/* Auth Section */}
+        {!reporter ? (
+          <div style={{ background: 'white', padding: '2rem', borderRadius: '16px', boxShadow: '0 4px 6px -1px rgba(0,0,0,0.05)', marginBottom: '2rem', border: '1px solid #e2e8f0' }}>
+            <h3 style={{ fontSize: '1.2rem', fontWeight: 800, color: '#0f172a', marginBottom: '1rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+              <Key size={20} color="#1F5946" /> 마을 리포터 로그인 (선택)
+            </h3>
+            {magicSent ? (
+              <div style={{ background: '#f8fafc', padding: '1.5rem', borderRadius: '8px', textAlign: 'center', color: '#334155' }}>
+                <p style={{ fontWeight: 700, marginBottom: '0.5rem' }}>이메일이 발송되었습니다.</p>
+                <p style={{ fontSize: '0.9rem', margin: 0 }}>메일함의 링크를 클릭하시면 본인 정보가 자동으로 입력됩니다.</p>
+              </div>
+            ) : (
+              <form onSubmit={handleSendMagicLink} style={{ display: 'flex', gap: '1rem' }}>
+                <input 
+                  type="email" 
+                  required 
+                  value={magicEmail} 
+                  onChange={e => setMagicEmail(e.target.value)} 
+                  placeholder="등록하신 이메일 주소" 
+                  style={{ flex: 1, padding: '1rem', borderRadius: '8px', border: '1px solid #cbd5e1' }} 
+                />
+                <button 
+                  type="submit" 
+                  disabled={magicSending}
+                  style={{ padding: '0 2rem', background: '#334155', color: 'white', border: 'none', borderRadius: '8px', fontWeight: 700, cursor: magicSending ? 'not-allowed' : 'pointer' }}
+                >
+                  {magicSending ? '발송 중...' : '인증 링크 받기'}
+                </button>
+              </form>
+            )}
+            <p style={{ fontSize: '0.85rem', color: '#64748b', marginTop: '1rem', marginBottom: 0 }}>※ 등록하지 않은 익명/일반 제보자는 이 과정을 건너뛰고 바로 아래 폼을 작성하시면 됩니다.</p>
           </div>
-          
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))', gap: '1rem', marginBottom: '2.5rem' }}>
-            {['중립 보도', '따뜻한 마을 소식', '공식 공지문', '짧은 단신'].map(style => (
-              <button
-                key={style}
-                type="button"
-                onClick={() => setSelectedStyle(style)}
-                style={{
-                  padding: '1rem',
-                  borderRadius: '8px',
-                  border: selectedStyle === style ? '2px solid #2E7D52' : '1px solid #ddd',
-                  background: selectedStyle === style ? '#f0faf5' : 'white',
-                  color: selectedStyle === style ? '#2E7D52' : '#666',
-                  fontWeight: selectedStyle === style ? 800 : 500,
-                  cursor: 'pointer',
-                  transition: 'all 0.2s'
-                }}
-              >
-                {style}
-              </button>
-            ))}
+        ) : (
+          <div style={{ background: '#1F5946', color: 'white', padding: '1.5rem 2rem', borderRadius: '16px', marginBottom: '2rem', display: 'flex', alignItems: 'center', gap: '1rem' }}>
+            <CheckCircle size={24} color="#a7f3d0" />
+            <div>
+              <p style={{ margin: '0 0 0.3rem', fontWeight: 800, fontSize: '1.1rem' }}>{reporter.full_name} 마을 리포터님, 환영합니다.</p>
+              <p style={{ margin: 0, fontSize: '0.9rem', opacity: 0.9 }}>제보하신 내용은 리포터님의 누적 실적으로 자동 기록됩니다.</p>
+            </div>
           </div>
+        )}
 
-          <div className="report-section-head" style={{ marginBottom: '1.5rem', borderBottom: '2px solid #eee', paddingBottom: '0.5rem' }}>
-            <span style={{ fontWeight: 800, color: '#2E7D52' }}>제보 내용 (육하원칙)</span>
-          </div>
+        {/* Report Form */}
+        <div style={{ background: 'white', padding: '3rem', borderRadius: '24px', boxShadow: '0 10px 40px rgba(0,0,0,0.05)' }}>
           
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.2rem', marginBottom: '2rem' }}>
+          <h3 style={{ fontSize: '1.4rem', fontWeight: 800, color: '#0f172a', marginBottom: '2rem', borderBottom: '2px solid #e2e8f0', paddingBottom: '1rem' }}>제보 내용 (육하원칙)</h3>
+          
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.5rem', marginBottom: '2rem' }} className="grid-2col">
             {[
-              { id: 'who', label: '누가', placeholder: '주민 30명, 청년회 등' },
-              { id: 'what', label: '무엇을', placeholder: '마을 청소, 경로잔치 등' },
-              { id: 'when', label: '언제', placeholder: '5월 10일 오전 10시 등' },
-              { id: 'where', label: '어디서', placeholder: '마을 회관 앞 등' },
-              { id: 'how', label: '어떻게', placeholder: '다같이 힘을 모아 등' },
-              { id: 'why', label: '왜', placeholder: '환경 개선을 위해 등' }
+              { id: 'who', label: '누가 (필수)', placeholder: '예: 주민 30명, ○○마을 청년회 등', req: true },
+              { id: 'what', label: '무엇을 (필수)', placeholder: '예: 마을 대청소, 도로 파손 등', req: true },
+              { id: 'when_text', label: '언제', placeholder: '예: 5월 10일 오전 10시경', req: false },
+              { id: 'where_text', label: '어디서', placeholder: '예: ○○면 마을회관 앞', req: false },
+              { id: 'how', label: '어떻게', placeholder: '예: 다같이 힘을 모아, 갑자기', req: false },
+              { id: 'why', label: '왜', placeholder: '예: 환경 개선을 위해, 비가 와서', req: false }
             ].map(field => (
-              <div key={field.id} style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
-                <label htmlFor={field.id} style={{ fontSize: '0.85rem', fontWeight: 700, color: '#444' }}>{field.label}</label>
+              <div key={field.id} style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+                <label htmlFor={field.id} style={{ fontSize: '0.95rem', fontWeight: 700, color: '#334155' }}>{field.label}</label>
                 <input 
                   type="text" 
                   id={field.id} 
-                  className="report-input" 
                   value={(formData as any)[field.id]} 
                   onChange={handleInputChange} 
                   placeholder={field.placeholder}
-                  style={{ width: '100%', padding: '0.8rem', borderRadius: '6px', border: '1px solid #ddd', outline: 'none' }}
+                  style={{ width: '100%', padding: '1rem', borderRadius: '8px', border: '1px solid #cbd5e1', outline: 'none' }}
                 />
               </div>
             ))}
           </div>
 
           <div style={{ marginBottom: '2.5rem' }}>
-            <label htmlFor="extra" style={{ display: 'block', fontSize: '0.85rem', fontWeight: 700, color: '#444', marginBottom: '0.4rem' }}>상세 내용 및 전달 사항</label>
+            <label htmlFor="memo" style={{ display: 'block', fontSize: '0.95rem', fontWeight: 700, color: '#334155', marginBottom: '0.5rem' }}>추가 설명 및 메모</label>
             <textarea 
-              id="extra" 
-              value={formData.extra} 
+              id="memo" 
+              value={formData.memo} 
               onChange={handleInputChange} 
-              placeholder="추가적인 설명이나 기자에게 전달할 내용을 자유롭게 적어주세요."
-              style={{ width: '100%', minHeight: '120px', padding: '0.8rem', borderRadius: '6px', border: '1px solid #ddd', outline: 'none', resize: 'vertical' }}
+              placeholder="위의 내용 외에 추가적인 설명이나 기자에게 전달할 내용을 자유롭게 적어주세요."
+              style={{ width: '100%', minHeight: '120px', padding: '1rem', borderRadius: '8px', border: '1px solid #cbd5e1', outline: 'none', resize: 'vertical' }}
             />
           </div>
 
-          <div className="report-section-head" style={{ marginBottom: '1.5rem', borderBottom: '2px solid #eee', paddingBottom: '0.5rem' }}>
-            <span style={{ fontWeight: 800, color: '#2E7D52' }}>제보자 정보</span>
+          <div style={{ marginBottom: '3rem', background: '#f8fafc', padding: '2rem', borderRadius: '12px', border: '1px solid #e2e8f0' }}>
+            <label style={{ display: 'block', fontSize: '1.05rem', fontWeight: 800, color: '#1e293b', marginBottom: '1rem' }}>
+              사진 첨부 <span style={{fontSize:'0.85rem', color:'#64748b', fontWeight:400}}>(선택, 최대 5장)</span>
+            </label>
+            <p style={{ fontSize: '0.9rem', color: '#b45309', fontWeight: 600, marginBottom: '1rem' }}>
+              ※ 사진은 가급적 스마트폰 최고 화질로 촬영해 주시기를 부탁드립니다.
+            </p>
+            <input 
+              type="file" 
+              multiple 
+              accept="image/*" 
+              onChange={handleFileChange}
+              style={{ display: 'block', width: '100%', padding: '1rem', background: 'white', borderRadius: '8px', border: '1px dashed #94a3b8' }}
+            />
+            {files.length > 0 && (
+              <div style={{ marginTop: '1rem', fontSize: '0.9rem', color: '#475569' }}>
+                선택된 파일: {files.length}개
+              </div>
+            )}
           </div>
 
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.2rem', marginBottom: '3rem' }}>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
-              <label htmlFor="senderName" style={{ fontSize: '0.85rem', fontWeight: 700, color: '#444' }}>성함 / 연락처</label>
-              <input 
-                type="text" 
-                id="senderName" 
-                value={formData.senderName} 
-                onChange={handleInputChange} 
-                placeholder="홍길동"
-                style={{ width: '100%', padding: '0.8rem', borderRadius: '6px', border: '1px solid #ddd', outline: 'none' }}
-              />
+          <h3 style={{ fontSize: '1.4rem', fontWeight: 800, color: '#0f172a', marginBottom: '2rem', borderBottom: '2px solid #e2e8f0', paddingBottom: '1rem' }}>지역 및 연락처</h3>
+
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: '1.5rem', marginBottom: '3rem' }}>
+            <div>
+              <label htmlFor="region" style={{ display: 'block', fontSize: '0.95rem', fontWeight: 700, color: '#334155', marginBottom: '0.5rem' }}>해당 지역</label>
+              <select 
+                id="region" 
+                value={formData.region} 
+                onChange={handleInputChange}
+                disabled={!!reporter}
+                style={{ width: '100%', padding: '1rem', borderRadius: '8px', border: '1px solid #cbd5e1', outline: 'none', background: reporter ? '#f1f5f9' : 'white' }}
+              >
+                <option value="강진">강진</option>
+                <option value="고흥">고흥</option>
+                <option value="보성">보성</option>
+                <option value="장흥">장흥</option>
+                <option value="기타">기타</option>
+              </select>
             </div>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
-              <label htmlFor="senderContact" style={{ fontSize: '0.85rem', fontWeight: 700, color: '#444' }}>이메일 또는 전화번호</label>
-              <input 
-                type="text" 
-                id="senderContact" 
-                value={formData.senderContact} 
-                onChange={handleInputChange} 
-                placeholder="010-0000-0000"
-                style={{ width: '100%', padding: '0.8rem', borderRadius: '6px', border: '1px solid #ddd', outline: 'none' }}
-              />
+            
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.5rem' }} className="grid-2col">
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+                <label htmlFor="contact_phone" style={{ fontSize: '0.95rem', fontWeight: 700, color: '#334155' }}>연락처 (전화번호)</label>
+                <input 
+                  type="tel" 
+                  id="contact_phone" 
+                  value={formData.contact_phone} 
+                  onChange={handleInputChange} 
+                  readOnly={!!reporter}
+                  placeholder="010-0000-0000"
+                  style={{ width: '100%', padding: '1rem', borderRadius: '8px', border: '1px solid #cbd5e1', outline: 'none', background: reporter ? '#f1f5f9' : 'white' }}
+                />
+              </div>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+                <label htmlFor="contact_email" style={{ fontSize: '0.95rem', fontWeight: 700, color: '#334155' }}>이메일</label>
+                <input 
+                  type="email" 
+                  id="contact_email" 
+                  value={formData.contact_email} 
+                  onChange={handleInputChange} 
+                  readOnly={!!reporter}
+                  placeholder="example@email.com"
+                  style={{ width: '100%', padding: '1rem', borderRadius: '8px', border: '1px solid #cbd5e1', outline: 'none', background: reporter ? '#f1f5f9' : 'white' }}
+                />
+              </div>
             </div>
           </div>
 
@@ -212,37 +363,41 @@ export default function PublicReportPage() {
             style={{
               width: '100%',
               padding: '1.2rem',
-              background: '#2E7D52',
+              background: '#1F5946',
               color: 'white',
               border: 'none',
-              borderRadius: '8px',
+              borderRadius: '12px',
               fontSize: '1.1rem',
               fontWeight: 800,
               cursor: submitting ? 'not-allowed' : 'pointer',
               transition: 'background 0.2s',
-              opacity: submitting ? 0.7 : 1
+              opacity: submitting ? 0.7 : 1,
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: '0.5rem'
             }}
           >
-            {submitting ? '제보 접수 중...' : '기사 제보 보내기'}
+            {submitting ? '제보 접수 중...' : <><Send size={20} /> 마을 리포터 제보 보내기</>}
           </button>
-
-          {notice && (
-            <div style={{ 
-              marginTop: '1.5rem', 
-              padding: '1rem', 
-              borderRadius: '6px', 
-              textAlign: 'center',
-              background: notice.success ? '#f0faf5' : '#fff5f5',
-              color: notice.success ? '#2E7D52' : '#c0392b',
-              border: `1px solid ${notice.success ? '#2E7D52' : '#c0392b'}`,
-              fontSize: '0.9rem',
-              fontWeight: 600
-            }}>
-              {notice.msg}
-            </div>
-          )}
         </div>
       </div>
+      <style dangerouslySetInnerHTML={{ __html: `
+        @media (max-width: 768px) {
+          .grid-2col { grid-template-columns: 1fr !important; }
+        }
+      `}} />
+    </>
+  );
+}
+
+export default function PublicReportPage() {
+  return (
+    <main className="report-body" style={{ minHeight: '100vh', background: '#f8fafc' }}>
+      <Header />
+      <Suspense fallback={<div style={{ minHeight: '50vh', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>로딩 중...</div>}>
+        <ReportContent />
+      </Suspense>
       <Footer />
     </main>
   );
