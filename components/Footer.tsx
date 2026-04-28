@@ -14,6 +14,11 @@ export default function Footer() {
             <div className="np-footer-brand">
               <h3 className="np-footer-logo">{SITE_CONFIG.name}</h3>
               <p className="np-footer-tagline" dangerouslySetInnerHTML={{ __html: SITE_CONFIG.description.replace(/\. /g, '.<br />') }} />
+              <div style={{ marginTop: '0.8rem' }}>
+                <Link href="/about" style={{ color: '#aaa', fontSize: '0.82rem', textDecoration: 'none', borderBottom: '1px solid #aaa', paddingBottom: '2px' }}>
+                  → 다산어보 소개
+                </Link>
+              </div>
             </div>
 
             {/* 권역 뉴스 */}
