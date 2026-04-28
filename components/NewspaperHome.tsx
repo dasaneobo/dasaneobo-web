@@ -172,14 +172,14 @@ function CenterMain({ articles, featured }: { articles: any[]; featured: any }) 
   return (
     <div>
       {/* TOP NEWS */}
-      <div style={{ marginBottom: '1.8rem' }}>
-        <div style={{ borderBottom: '3px solid #2E7D52', paddingBottom: '0.4rem', marginBottom: '1rem', display: 'flex', alignItems: 'center', gap: '0.8rem' }}>
-          <span style={{ background: '#2E7D52', color: '#fff', fontSize: '0.72rem', fontWeight: 900, padding: '0.2rem 0.7rem', letterSpacing: '1px' }}>{SITE_CONFIG.labels.topNews}</span>
-        </div>
-        {featured && (
+      {featured && (
+        <div style={{ marginBottom: '1.8rem' }}>
+          <div style={{ borderBottom: '3px solid #2E7D52', paddingBottom: '0.4rem', marginBottom: '1rem', display: 'flex', alignItems: 'center', gap: '0.8rem' }}>
+            <span style={{ background: '#2E7D52', color: '#fff', fontSize: '0.72rem', fontWeight: 900, padding: '0.2rem 0.7rem', letterSpacing: '1px' }}>{SITE_CONFIG.labels.topNews}</span>
+          </div>
           <HeroFocusBox article={featured} />
-        )}
-      </div>
+        </div>
+      )}
 
       {/* IMPORTANT NEWS */}
       <div style={{ marginBottom: '1.8rem' }}>
