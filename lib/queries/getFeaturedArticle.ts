@@ -22,11 +22,11 @@ export async function getFeaturedArticle(): Promise<FeaturedArticle | null> {
   const baseSelect =
     'id, slug, title, subtitle, content, image_url, category, source, created_at'
 
-  // 1. 편집국 픽 (만료 전)
+  // 1. 편집국 픽 (만료 전) 또는 어드민에서 지정한 톱뉴스(is_top)
   const { data: pick, error: pickError } = await supabase
     .from('articles')
     .select(baseSelect)
-    .eq('is_featured', true)
+    .or('is_featured.eq.true,is_top.eq.true')
     .not('image_url', 'is', null)
     .or(`pin_until.is.null,pin_until.gt.${now}`)
     .order('created_at', { ascending: false })
