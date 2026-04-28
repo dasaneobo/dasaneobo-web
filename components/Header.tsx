@@ -244,9 +244,9 @@ export default function Header() {
         </div>
       )}
 
-      <BannerAd 
+      <BannerAd
         slot="header-bottom"
-        src="/ads/gold_fisher_v2.png"
+        fallbackSrc="/ads/gold_fisher_v2.png"
         href="/ad-apply"
         alt="광고: 황금어장"
       />
